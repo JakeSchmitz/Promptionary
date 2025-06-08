@@ -16,31 +16,33 @@ ROOT_DIR="$(pwd)"
 BACKEND_LOG="$ROOT_DIR/tmp/backend.log"
 FRONTEND_LOG="$ROOT_DIR/tmp/frontend.log"
 
-# Start backend server and redirect output to a file
+# Start backend server
 echo "Starting backend server..."
-cd backend && npm run dev > "$BACKEND_LOG" 2>&1 &
+cd backend
+npx prisma generate
+npm run dev > "$BACKEND_LOG" 2>&1 &
 BACKEND_PID=$!
-cd "$ROOT_DIR"
 
-# Wait a moment for backend to start
-sleep 2
-
-# Start frontend server and redirect output to a file
+# Start frontend server
 echo "Starting frontend server..."
+cd ..
 npm run dev > "$FRONTEND_LOG" 2>&1 &
 FRONTEND_PID=$!
 
 # Function to handle script termination
 cleanup() {
     echo "Shutting down servers..."
-    kill $BACKEND_PID 2>/dev/null
-    kill $FRONTEND_PID 2>/dev/null
+    kill $BACKEND_PID
+    kill $FRONTEND_PID
     rm -rf tmp
     exit 0
 }
 
 # Set up trap to catch termination signal
 trap cleanup SIGINT SIGTERM
+
+# Wait for both processes
+wait $BACKEND_PID $FRONTEND_PID
 
 # Keep script running and display backend logs
 echo "Servers are running. Press Ctrl+C to stop."

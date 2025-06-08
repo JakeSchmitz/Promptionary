@@ -2,70 +2,10 @@
 > backend@1.0.0 dev
 > ts-node-dev --respawn --transpile-only src/server.ts
 
-[INFO] 19:46:19 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.8.3)
-OpenAI API Key available: true
-Server running at http://localhost:3000
-Received prompt: Gate over moat leading to large brick and rock s
-Calling OpenAI API...
-OpenAI API response: {
-  created: 1749340272,
-  data: [
-    {
-      revised_prompt: 'A large, sturdy gate made of aged wood and iron, standing firmly across a deep, quiet moat filled with clear water. Beyond the moat, an imposing fortress constructed of vibrant red bricks and rough, grey rocks comes into view. The fortress features tall towers guarded by protective ramparts, with ivy creeping along parts of its walls. Rays of sunlight break through the scattered clouds above, casting a beautiful glow on the scene. The landscape is serene and quiet, filled with a sense of vast history and ancient tales.',
-      url: 'https://oaidalleapiprodscus.blob.core.windows.net/private/org-6sfzUDzZvHHxJ4zgNp7ZOFHX/user-d0kCa8GJCArfJZ2Siz6MmSBQ/img-UH5i75B9yU6J6ummFsabs2lm.png?st=2025-06-07T22%3A51%3A12Z&se=2025-06-08T00%3A51%3A12Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=475fd488-6c59-44a5-9aa9-31c4db451bea&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-06-07T07%3A10%3A19Z&ske=2025-06-08T07%3A10%3A19Z&sks=b&skv=2024-08-04&sig=i%2BNSA5G82GyPRSrPhGvwxm0OVPIBtyVRNBeqtJXxfWY%3D'
-    }
-  ]
-}
-Sending image URL to client: https://oaidalleapiprodscus.blob.core.windows.net/private/org-6sfzUDzZvHHxJ4zgNp7ZOFHX/user-d0kCa8GJCArfJZ2Siz6MmSBQ/img-UH5i75B9yU6J6ummFsabs2lm.png?st=2025-06-07T22%3A51%3A12Z&se=2025-06-08T00%3A51%3A12Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=475fd488-6c59-44a5-9aa9-31c4db451bea&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-06-07T07%3A10%3A19Z&ske=2025-06-08T07%3A10%3A19Z&sks=b&skv=2024-08-04&sig=i%2BNSA5G82GyPRSrPhGvwxm0OVPIBtyVRNBeqtJXxfWY%3D
-[INFO] 20:00:58 Restarting: /Users/jacobschmitz/Development/Promptionary/backend/src/server.ts has been modified
-Error: @prisma/client did not initialize yet. Please run "prisma generate" and try to import it again.
-    at new PrismaClient (/Users/jacobschmitz/Development/Promptionary/backend/node_modules/.prisma/client/default.js:43:11)
-    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/backend/src/db.ts:3:16)
-    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
-    at Module._compile (/Users/jacobschmitz/Development/Promptionary/backend/node_modules/source-map-support/source-map-support.js:568:25)
-    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-9018414952390488.js:69:33)
-    at node:internal/modules/cjs/loader:1706:10
-    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-9018414952390488.js:114:20)
-    at require.extensions.<computed> (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-9018414952390488.js:71:20)
-    at Object.nodeDevHook [as .ts] (/Users/jacobschmitz/Development/Promptionary/backend/node_modules/ts-node-dev/lib/hook.js:63:13)
-    at Module.load (node:internal/modules/cjs/loader:1289:32)
-[ERROR] 20:00:58 Error: @prisma/client did not initialize yet. Please run "prisma generate" and try to import it again.
-[INFO] 20:01:03 Restarting: /Users/jacobschmitz/Development/Promptionary/backend/src/server.ts has been modified
-Error: @prisma/client did not initialize yet. Please run "prisma generate" and try to import it again.
-    at new PrismaClient (/Users/jacobschmitz/Development/Promptionary/backend/node_modules/.prisma/client/default.js:43:11)
-    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/backend/src/db.ts:3:16)
-    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
-    at Module._compile (/Users/jacobschmitz/Development/Promptionary/backend/node_modules/source-map-support/source-map-support.js:568:25)
-    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-9018414952390488.js:69:33)
-    at node:internal/modules/cjs/loader:1706:10
-    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-9018414952390488.js:114:20)
-    at require.extensions.<computed> (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-9018414952390488.js:71:20)
-    at Object.nodeDevHook [as .ts] (/Users/jacobschmitz/Development/Promptionary/backend/node_modules/ts-node-dev/lib/hook.js:63:13)
-    at Module.load (node:internal/modules/cjs/loader:1289:32)
-[ERROR] 20:01:03 Error: @prisma/client did not initialize yet. Please run "prisma generate" and try to import it again.
-[INFO] 20:01:09 Restarting: /Users/jacobschmitz/Development/Promptionary/backend/src/server.ts has been modified
-Error: @prisma/client did not initialize yet. Please run "prisma generate" and try to import it again.
-    at new PrismaClient (/Users/jacobschmitz/Development/Promptionary/backend/node_modules/.prisma/client/default.js:43:11)
-    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/backend/src/db.ts:3:16)
-    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
-    at Module._compile (/Users/jacobschmitz/Development/Promptionary/backend/node_modules/source-map-support/source-map-support.js:568:25)
-    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-9018414952390488.js:69:33)
-    at node:internal/modules/cjs/loader:1706:10
-    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-9018414952390488.js:114:20)
-    at require.extensions.<computed> (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-9018414952390488.js:71:20)
-    at Object.nodeDevHook [as .ts] (/Users/jacobschmitz/Development/Promptionary/backend/node_modules/ts-node-dev/lib/hook.js:63:13)
-    at Module.load (node:internal/modules/cjs/loader:1289:32)
-[ERROR] 20:01:09 Error: @prisma/client did not initialize yet. Please run "prisma generate" and try to import it again.
-[INFO] 20:01:15 Restarting: /Users/jacobschmitz/Development/Promptionary/backend/src/server.ts has been modified
-Error: @prisma/client did not initialize yet. Please run "prisma generate" and try to import it again.
-    at new PrismaClient (/Users/jacobschmitz/Development/Promptionary/backend/node_modules/.prisma/client/default.js:43:11)
-    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/backend/src/db.ts:3:16)
-    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
-    at Module._compile (/Users/jacobschmitz/Development/Promptionary/backend/node_modules/source-map-support/source-map-support.js:568:25)
-    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-9018414952390488.js:69:33)
-    at node:internal/modules/cjs/loader:1706:10
-    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-9018414952390488.js:114:20)
-    at require.extensions.<computed> (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-9018414952390488.js:71:20)
-    at Object.nodeDevHook [as .ts] (/Users/jacobschmitz/Development/Promptionary/backend/node_modules/ts-node-dev/lib/hook.js:63:13)
-    at Module.load (node:internal/modules/cjs/loader:1289:32)
-[ERROR] 20:01:15 Error: @prisma/client did not initialize yet. Please run "prisma generate" and try to import it again.
+[INFO] 20:18:32 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.8.3)
+Server running at http://localhost:3001
+Environment: { NODE_ENV: undefined, PORT: 3001, OPENAI_API_KEY: 'Set' }
+2025-06-08T00:19:00.666Z - GET /api/health
+2025-06-08T00:19:00.692Z - POST /api/generate-image
+Generating image: { prompt: 'Intergalactic stuff' }
+Image generated: https://oaidalleapiprodscus.blob.core.windows.net/private/org-6sfzUDzZvHHxJ4zgNp7ZOFHX/user-d0kCa8GJCArfJZ2Siz6MmSBQ/img-FMzsESjDIr6wkSYj3eve894M.png?st=2025-06-07T23%3A19%3A15Z&se=2025-06-08T01%3A19%3A15Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=475fd488-6c59-44a5-9aa9-31c4db451bea&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-06-07T06%3A54%3A57Z&ske=2025-06-08T06%3A54%3A57Z&sks=b&skv=2024-08-04&sig=8xcV89ePr7wYe0zFI/M7i6NFWpuWOPc/347NrdVSGQ8%3D
