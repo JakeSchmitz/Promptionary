@@ -11,6 +11,7 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react'
+import { useGame } from '../context/GameContext'
 
 // Mock data for past games
 const mockPastGames = [
@@ -22,9 +23,12 @@ const Dashboard = () => {
   const [roomCode, setRoomCode] = useState('')
   const navigate = useNavigate()
   const toast = useToast()
+  const { createOrJoinGame } = useGame()
 
-  const handleNewGame = () => {
+  const handleNewGame = async () => {
     const newRoomId = Math.random().toString(36).substring(2, 8)
+    const username = localStorage.getItem('user') || 'Player'
+    await createOrJoinGame(newRoomId, username)
     navigate(`/game/${newRoomId}`)
   }
 
