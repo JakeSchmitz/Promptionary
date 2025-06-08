@@ -13,64 +13,64 @@ import {
   Image,
 } from '@chakra-ui/react'
 import { useGame } from '../context/GameContext'
+import { gameWords } from '../data/words'
 
 const PLACEHOLDER_IMAGE = 'https://placehold.co/1024x1024/png?text=NPC+Image'
 
-type GamePhase = 'lobby' | 'prompt' | 'voting' | 'results'
-
 const GameRoom = () => {
-  const { roomId } = useParams()
+  const { roomId: urlRoomId } = useParams()
   const navigate = useNavigate()
-  const { gameState, submitPrompt, startGame, startNextRound, submitVote } = useGame()
+  const { gameState, roomId, playerId, playerName, submitPrompt, startGame, startNextRound, submitVote } = useGame()
 
   const [prompt, setPrompt] = useState('')
   const [timeLeft, setTimeLeft] = useState(30)
   const [votingTimeLeft, setVotingTimeLeft] = useState(30)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const players = gameState.players.length > 0 ? gameState.players.map(p => p.name) : ['Player 1', 'Player 2', 'Player 3']
-  const phase = gameState.phase as GamePhase
-  const images = gameState.images
-  const votes = gameState.votes
-  const scores = gameState.players.reduce((acc, p) => ({ ...acc, [p.name]: p.score }), {})
-  const currentWord = gameState.currentWord?.word || ''
-  const excludedWords = gameState.currentWord?.excluded || []
+  // Ensure roomId from URL matches context
+  useEffect(() => {
+    if (urlRoomId && urlRoomId !== roomId) {
+      // Optionally handle mismatch, e.g., redirect or error
+      console.error('Room ID mismatch')
+    }
+  }, [urlRoomId, roomId])
+
+  const players = gameState?.players || []
+  const phase = gameState?.phase || 'LOBBY'
+  const images = gameState?.images || []
+  const votes = gameState?.votes || []
+  const scores = players.reduce((acc, p) => ({ ...acc, [p.name]: p.score }), {})
+  const currentWord = gameState?.currentWord || ''
+  const excludedWords = gameWords.find(w => w.word === currentWord)?.excluded || []
 
   useEffect(() => {
-    if (phase === 'prompt' && timeLeft > 0) {
+    if (phase === 'PROMPT' && timeLeft > 0) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000)
       return () => clearTimeout(timer)
-    } else if (phase === 'prompt' && timeLeft === 0) {
+    } else if (phase === 'PROMPT' && timeLeft === 0) {
       handlePromptSubmit()
     }
   }, [phase, timeLeft])
 
   useEffect(() => {
-    if (phase === 'voting' && votingTimeLeft > 0) {
+    if (phase === 'VOTING' && votingTimeLeft > 0) {
       const timer = setTimeout(() => setVotingTimeLeft(votingTimeLeft - 1), 1000)
       return () => clearTimeout(timer)
-    } else if (phase === 'voting' && votingTimeLeft === 0) {
+    } else if (phase === 'VOTING' && votingTimeLeft === 0) {
       handleRoundEnd()
     }
   }, [phase, votingTimeLeft])
 
   const handlePromptSubmit = async () => {
-    if (isSubmitting) return
+    if (isSubmitting || !prompt.trim()) return
     setIsSubmitting(true)
-    // Only generate image for the first player (user), others are NPCs
     await submitPrompt(prompt)
-    // Fill in placeholder images for NPCs if needed
-    const totalPlayers = players.length
-    if (gameState.images.length < totalPlayers) {
-      const placeholders = Array(totalPlayers - gameState.images.length).fill(PLACEHOLDER_IMAGE)
-      gameState.images.push(...placeholders)
-    }
     setIsSubmitting(false)
     setVotingTimeLeft(30)
   }
 
-  const handleVote = (imageIndex: number) => {
-    submitVote(imageIndex)
+  const handleVote = (imageId: string) => {
+    submitVote(imageId)
   }
 
   const handleRoundEnd = () => {
@@ -82,12 +82,12 @@ const GameRoom = () => {
       <VStack spacing={8}>
         <Heading>Game Room: {roomId}</Heading>
 
-        {phase === 'lobby' && (
+        {phase === 'LOBBY' && (
           <Box w="100%" p={6} borderWidth={1} borderRadius="lg">
             <VStack spacing={4}>
               <Heading size="md">Players</Heading>
-              {players.map((player, index) => (
-                <Text key={index}>{player}</Text>
+              {players.map((player) => (
+                <Text key={player.id}>{player.name}</Text>
               ))}
               <Button colorScheme="blue" onClick={startGame}>
                 Start Game
@@ -96,7 +96,7 @@ const GameRoom = () => {
           </Box>
         )}
 
-        {phase === 'prompt' && (
+        {phase === 'PROMPT' && (
           <Box w="100%" p={6} borderWidth={1} borderRadius="lg">
             <VStack spacing={4}>
               <Heading size="md">Your Word: {currentWord}</Heading>
@@ -119,21 +119,34 @@ const GameRoom = () => {
           </Box>
         )}
 
-        {phase === 'voting' && (
+        {phase === 'VOTING' && (
           <Box w="100%" p={6} borderWidth={1} borderRadius="lg">
             <VStack spacing={4}>
               <Heading size="md">Vote for the Best Image</Heading>
               <Text>Time left: {votingTimeLeft}s</Text>
               <SimpleGrid columns={3} spacing={4}>
-                {images.map((image, index) => (
+                {images.map((image) => (
                   <Box
-                    key={index}
+                    key={image.id}
                     cursor="pointer"
-                    onClick={() => handleVote(index)}
+                    onClick={() => handleVote(image.id)}
                     _hover={{ transform: 'scale(1.05)' }}
                     transition="transform 0.2s"
+                    p={2}
+                    borderWidth={1}
+                    borderRadius="md"
                   >
-                    <Image src={image} alt={`Image ${index + 1}`} />
+                    <Image 
+                      src={image.url} 
+                      alt={`Image by ${players.find(p => p.id === image.playerId)?.name || 'Unknown'}`}
+                      borderRadius="md"
+                      objectFit="cover"
+                      w="100%"
+                      h="300px"
+                    />
+                    <Text mt={2} fontSize="sm" color="gray.600">
+                      By: {players.find(p => p.id === image.playerId)?.name || 'Unknown'}
+                    </Text>
                   </Box>
                 ))}
               </SimpleGrid>
@@ -141,16 +154,28 @@ const GameRoom = () => {
           </Box>
         )}
 
-        {phase === 'results' && (
+        {phase === 'RESULTS' && (
           <Box w="100%" p={6} borderWidth={1} borderRadius="lg">
             <VStack spacing={4}>
               <Heading size="md">Round Results</Heading>
               <SimpleGrid columns={3} spacing={4}>
-                {images.map((image, index) => (
-                  <Box key={index}>
-                    <Image src={image} alt={`Image ${index + 1}`} />
-                    <Text>Votes: {votes[index] || 0}</Text>
-                    <Text>Created by: {players[index]}</Text>
+                {images.map((image) => (
+                  <Box 
+                    key={image.id}
+                    p={2}
+                    borderWidth={1}
+                    borderRadius="md"
+                  >
+                    <Image 
+                      src={image.url} 
+                      alt={`Image by ${players.find(p => p.id === image.playerId)?.name || 'Unknown'}`}
+                      borderRadius="md"
+                      objectFit="cover"
+                      w="100%"
+                      h="300px"
+                    />
+                    <Text mt={2}>Votes: {votes.filter(v => v.imageId === image.id).length}</Text>
+                    <Text>Created by: {players.find(p => p.id === image.playerId)?.name || 'Unknown'}</Text>
                   </Box>
                 ))}
               </SimpleGrid>

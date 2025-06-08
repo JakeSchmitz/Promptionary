@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Game {
+  id            String    @id @default(uuid())
+  roomId        String    @unique
+  currentRound  Int       @default(1)
+  maxRounds     Int       @default(5)
+  currentWord   String?
+  phase         GamePhase @default(LOBBY)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  players       Player[]
+  images        Image[]
+  votes         Vote[]
+}
+
+model Player {
+  id        String   @id @default(uuid())
+  name      String
+  score     Int      @default(0)
+  gameId    String
+  game      Game     @relation(fields: [gameId], references: [id])
+  images    Image[]
+  votes     Vote[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Image {
+  id        String   @id @default(uuid())
+  url       String
+  prompt    String
+  gameId    String
+  game      Game     @relation(fields: [gameId], references: [id])
+  playerId  String
+  player    Player   @relation(fields: [playerId], references: [id])
+  votes     Vote[]
+  createdAt DateTime @default(now())
+}
+
+model Vote {
+  id        String   @id @default(uuid())
+  gameId    String
+  game      Game     @relation(fields: [gameId], references: [id])
+  imageId   String
+  image     Image    @relation(fields: [imageId], references: [id])
+  voterId   String
+  voter     Player   @relation(fields: [voterId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([gameId, voterId])
+}
+
+enum GamePhase {
+  LOBBY
+  PROMPT
+  VOTING
+  RESULTS
+}

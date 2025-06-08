@@ -21,12 +21,14 @@ const Login = () => {
     // Mock login - log the username and redirect to dashboard
     console.log('Logging in as:', username)
     localStorage.setItem('user', username)
+    localStorage.setItem('playerName', username)
     navigate('/dashboard')
   }
 
   const handleGuestLogin = () => {
     console.log('Logging in as Guest')
     localStorage.setItem('user', 'Guest')
+    localStorage.setItem('playerName', 'Guest')
     navigate('/dashboard')
   }
 

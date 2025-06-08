@@ -1,6 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react'
-import { gameWords, WordData } from '../data/words'
-import { generateImage } from '../utils/api'
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import * as api from '../utils/api'
 
 interface Player {
   id: string
@@ -9,145 +8,115 @@ interface Player {
 }
 
 interface GameState {
+  id: string
   roomId: string
   players: Player[]
   currentRound: number
   maxRounds: number
-  currentWord: WordData | null
-  phase: 'lobby' | 'prompt' | 'voting' | 'results'
-  images: string[]
-  votes: Record<string, number>
+  currentWord: string | null
+  phase: 'LOBBY' | 'PROMPT' | 'VOTING' | 'RESULTS'
+  images: any[]
+  votes: any[]
 }
 
 interface GameContextType {
-  gameState: GameState
-  addPlayer: (name: string) => void
-  removePlayer: (id: string) => void
-  startGame: () => void
-  startNextRound: () => void
-  submitPrompt: (prompt: string) => void
-  submitVote: (imageIndex: number) => void
-  endGame: () => void
+  gameState: GameState | null
+  roomId: string | null
+  playerId: string | null
+  playerName: string | null
+  createOrJoinGame: (roomId: string, playerName: string) => Promise<void>
+  startGame: () => Promise<void>
+  startNextRound: () => Promise<void>
+  submitPrompt: (prompt: string) => Promise<void>
+  submitVote: (imageId: string) => Promise<void>
+  refreshGame: () => Promise<void>
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined)
 
 export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [gameState, setGameState] = useState<GameState>({
-    roomId: '',
-    players: [],
-    currentRound: 0,
-    maxRounds: 5,
-    currentWord: null,
-    phase: 'lobby',
-    images: [],
-    votes: {},
-  })
+  const [gameState, setGameState] = useState<GameState | null>(null)
+  const [roomId, setRoomId] = useState<string | null>(() => localStorage.getItem('roomId'))
+  const [playerId, setPlayerId] = useState<string | null>(() => localStorage.getItem('playerId'))
+  const [playerName, setPlayerName] = useState<string | null>(() => localStorage.getItem('playerName'))
 
-  const addPlayer = (name: string) => {
-    setGameState(prev => ({
-      ...prev,
-      players: [...prev.players, { id: Math.random().toString(), name, score: 0 }]
-    }))
+  // Fetch game state from backend
+  const refreshGame = async () => {
+    if (!roomId) return
+    const game = await api.getGame(roomId)
+    setGameState(game)
   }
 
-  const removePlayer = (id: string) => {
-    setGameState(prev => ({
-      ...prev,
-      players: prev.players.filter(player => player.id !== id)
-    }))
-  }
-
-  const startGame = () => {
-    const randomWord = gameWords[Math.floor(Math.random() * gameWords.length)]
-    setGameState(prev => ({
-      ...prev,
-      currentRound: 1,
-      currentWord: randomWord,
-      phase: 'prompt'
-    }))
-  }
-
-  const startNextRound = () => {
-    if (gameState.currentRound >= gameState.maxRounds) {
-      endGame()
-      return
+  // Create or join a game
+  const createOrJoinGame = async (roomIdInput: string, playerNameInput: string) => {
+    let game
+    try {
+      game = await api.createGame(roomIdInput)
+    } catch {
+      // If game already exists, just fetch it
+      game = await api.getGame(roomIdInput)
     }
+    setRoomId(roomIdInput)
+    localStorage.setItem('roomId', roomIdInput)
+    // Add player
+    const player = await api.addPlayer(roomIdInput, playerNameInput)
+    setPlayerId(player.id)
+    setPlayerName(player.name)
+    localStorage.setItem('playerId', player.id)
+    localStorage.setItem('playerName', player.name)
+    setGameState(game)
+    await refreshGame()
+  }
 
-    const randomWord = gameWords[Math.floor(Math.random() * gameWords.length)]
-    setGameState(prev => ({
-      ...prev,
-      currentRound: prev.currentRound + 1,
-      currentWord: randomWord,
-      phase: 'prompt',
-      images: [],
-      votes: {}
-    }))
+  const startGame = async () => {
+    if (!roomId) return
+    await api.startGame(roomId)
+    await refreshGame()
+  }
+
+  const startNextRound = async () => {
+    if (!roomId) return
+    await api.nextRound(roomId)
+    await refreshGame()
   }
 
   const submitPrompt = async (prompt: string) => {
+    if (!roomId || !playerId) return
     try {
-      const imageUrl = await generateImage(prompt)
-      setGameState(prev => ({
-        ...prev,
-        images: [...prev.images, imageUrl],
-        phase: 'voting'
-      }))
+      const updatedGame = await api.generateImage(prompt, roomId, playerId)
+      setGameState(updatedGame)
     } catch (error) {
-      console.error('Error generating image:', error)
-      // Handle error appropriately
+      console.error('Error submitting prompt:', error)
+      // Optionally show an error message to the user
     }
   }
 
-  const submitVote = (imageIndex: number) => {
-    const newVotes = { ...gameState.votes }
-    newVotes[imageIndex] = (newVotes[imageIndex] || 0) + 1
+  const submitVote = async (imageId: string) => {
+    if (!roomId || !playerId) return
+    await api.vote(roomId, imageId, playerId)
+    await refreshGame()
+  }
 
-    // Check if all players have voted
-    if (Object.keys(newVotes).length === gameState.players.length - 1) {
-      // Find winner and update scores
-      const winnerIndex = Object.entries(newVotes).reduce((a, b) => 
-        (b[1] > (newVotes[a] || 0)) ? parseInt(b[0]) : a, 0
-      )
-
-      const updatedPlayers = gameState.players.map((player, index) => 
-        index === winnerIndex
-          ? { ...player, score: player.score + 1 }
-          : player
-      )
-
-      setGameState(prev => ({
-        ...prev,
-        players: updatedPlayers,
-        votes: newVotes,
-        phase: 'results'
-      }))
-    } else {
-      setGameState(prev => ({
-        ...prev,
-        votes: newVotes
-      }))
+  useEffect(() => {
+    if (roomId) {
+      refreshGame()
     }
-  }
-
-  const endGame = () => {
-    setGameState(prev => ({
-      ...prev,
-      phase: 'results'
-    }))
-  }
+    // eslint-disable-next-line
+  }, [roomId])
 
   return (
     <GameContext.Provider
       value={{
         gameState,
-        addPlayer,
-        removePlayer,
+        roomId,
+        playerId,
+        playerName,
+        createOrJoinGame,
         startGame,
         startNextRound,
         submitPrompt,
         submitVote,
-        endGame,
+        refreshGame,
       }}
     >
       {children}

@@ -1,41 +1,63 @@
 const API_BASE_URL = 'http://localhost:3001/api';
 
-export const generateImage = async (prompt: string): Promise<string> => {
-  try {
-    console.log('Sending request to backend:', `${API_BASE_URL}/generate-image`);
-    console.log('Request payload:', { prompt });
-    
-    // First check if the backend is available
-    const healthCheck = await fetch(`${API_BASE_URL}/health`);
-    if (!healthCheck.ok) {
-      throw new Error('Backend server is not available');
-    }
-    
-    const response = await fetch(`${API_BASE_URL}/generate-image`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ prompt }),
-    });
+export const createGame = async (roomId: string) => {
+  const res = await fetch(`${API_BASE_URL}/games`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ roomId }),
+  });
+  if (!res.ok) throw new Error('Failed to create game');
+  return res.json();
+};
 
-    console.log('Response status:', response.status);
-    
-    if (!response.ok) {
-      const error = await response.json();
-      console.error('Error response from backend:', error);
-      throw new Error(error.details || error.error || 'Failed to generate image');
-    }
+export const getGame = async (roomId: string) => {
+  const res = await fetch(`${API_BASE_URL}/games/${roomId}`);
+  if (!res.ok) throw new Error('Failed to fetch game');
+  return res.json();
+};
 
-    const data = await response.json();
-    console.log('Success response from backend:', data);
-    return data.imageUrl;
-  } catch (error) {
-    console.error('Error generating image:', error);
-    if (error instanceof Error) {
-      console.error('Error details:', error.message);
-    }
-    // Return a more reliable placeholder image
-    return 'https://placehold.co/1024x1024/png?text=Image+Generation+Failed';
-  }
+export const addPlayer = async (roomId: string, name: string) => {
+  const res = await fetch(`${API_BASE_URL}/games/${roomId}/players`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name }),
+  });
+  if (!res.ok) throw new Error('Failed to add player');
+  return res.json();
+};
+
+export const startGame = async (roomId: string) => {
+  const res = await fetch(`${API_BASE_URL}/games/${roomId}/start`, {
+    method: 'POST',
+  });
+  if (!res.ok) throw new Error('Failed to start game');
+  return res.json();
+};
+
+export const nextRound = async (roomId: string) => {
+  const res = await fetch(`${API_BASE_URL}/games/${roomId}/next-round`, {
+    method: 'POST',
+  });
+  if (!res.ok) throw new Error('Failed to start next round');
+  return res.json();
+};
+
+export const generateImage = async (prompt: string, roomId: string, playerId: string) => {
+  const res = await fetch(`${API_BASE_URL}/generate-image`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt, roomId, playerId }),
+  });
+  if (!res.ok) throw new Error('Failed to generate image');
+  return res.json();
+};
+
+export const vote = async (roomId: string, imageId: string, voterId: string) => {
+  const res = await fetch(`${API_BASE_URL}/games/${roomId}/vote`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ imageId, voterId }),
+  });
+  if (!res.ok) throw new Error('Failed to submit vote');
+  return res.json();
 }; 
