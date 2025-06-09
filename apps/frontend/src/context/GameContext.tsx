@@ -120,11 +120,34 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Load initial state from localStorage and server
   useEffect(() => {
+    let isMounted = true;
+
     const loadInitialState = async () => {
       const roomId = getRoomId()
-      if (roomId) {
+      if (roomId && isMounted) {
         try {
-          await refreshGameState()
+          const response = await fetch(`${API_URL}/games/${roomId}`)
+          if (!response.ok) {
+            throw new Error('Failed to fetch game state')
+          }
+
+          const data = await response.json()
+          
+          if (isMounted) {
+            // Update game state
+            setGameState(data)
+            
+            // Update current player if we have one
+            if (currentUser) {
+              const player = data.players.find((p: Player) => p.id === currentUser.id)
+              if (player) {
+                setCurrentPlayer(player)
+              }
+            }
+
+            // Store in localStorage
+            localStorage.setItem('gameState', JSON.stringify(data))
+          }
         } catch (error) {
           console.error('Error loading initial game state:', error)
         }
@@ -132,7 +155,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     loadInitialState()
-  }, []) // Only run once when component mounts
+
+    return () => {
+      isMounted = false
+    }
+  }, []) // Empty dependency array ensures this only runs once on mount
 
   // Save game state to localStorage whenever it changes
   useEffect(() => {
@@ -378,6 +405,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Store the game state and room ID
         localStorage.setItem('gameState', JSON.stringify(updatedGameState));
         localStorage.setItem('roomId', roomId);
+        // Mark that this guest has joined this room
+        localStorage.setItem('guestJoined', roomId);
       }
     } catch (error) {
       console.error('Error joining game:', error);
@@ -402,38 +431,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       // Get the current game state
       const gameState = await gameResponse.json();
-      
-      // Check if the current user is already in the game
-      const isPlayerInGame = gameState.players.some((player: Player) => player.id === currentUser?.id);
-      
-      // Only add the player if they're a guest AND not already in the game
-      if (currentUser?.isGuest && !isPlayerInGame) {
-        const playerResponse = await fetch(`${API_URL}/games/${roomId}/players`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name: currentUser.name,
-            playerId: currentUser.id,
-          }),
-        });
-
-        if (!playerResponse.ok) {
-          throw new Error('Failed to join game');
-        }
-
-        // Get the updated game state
-        const updatedGameState = await playerResponse.json();
-        setGameState(updatedGameState);
-        localStorage.setItem('gameState', JSON.stringify(updatedGameState));
-      } else {
-        // Just update the game state
-        setGameState(gameState);
-      }
-      
+      setGameState(gameState);
       // Always store the room ID
       localStorage.setItem('roomId', roomId);
+      localStorage.setItem('gameState', JSON.stringify(gameState));
     } catch (error) {
       console.error('Error initializing game:', error);
       throw error;
