@@ -1,50 +1,45 @@
 #!/bin/bash
 
-# Kill any existing Node.js processes on ports 3000 and 5173/5174
+# Get the absolute path to the project root
+PROJECT_ROOT="$(cd "$(dirname "$0")" && pwd)"
+LOG_DIR="$PROJECT_ROOT/tmp"
+BACKEND_LOG="$LOG_DIR/backend.log"
+FRONTEND_LOG="$LOG_DIR/frontend.log"
+BACKEND_PID_FILE="$LOG_DIR/backend.pid"
+FRONTEND_PID_FILE="$LOG_DIR/frontend.pid"
+
+# Clean up old processes
 echo "Cleaning up old processes..."
-lsof -ti:3000 | xargs kill -9 2>/dev/null
-lsof -ti:5173 | xargs kill -9 2>/dev/null
-lsof -ti:5174 | xargs kill -9 2>/dev/null
+pkill -f "node.*server.js" || true
+pkill -f "vite" || true
 
-# Create a temporary directory for logs
-echo "Setting up log directory..."
-rm -rf tmp
-mkdir -p tmp
+# Create log directory if it doesn't exist
+mkdir -p "$LOG_DIR"
 
-# Get absolute paths for logs
-ROOT_DIR="$(pwd)"
-BACKEND_LOG="$ROOT_DIR/tmp/backend.log"
-FRONTEND_LOG="$ROOT_DIR/tmp/frontend.log"
+# Kill any process running on port 3000
+echo "Killing any process running on port 3000..."
+lsof -ti :3000 | xargs kill -9 2>/dev/null || true
 
 # Start backend server
 echo "Starting backend server..."
-cd backend
-npx prisma generate
-npm run dev > "$BACKEND_LOG" 2>&1 &
+cd "$PROJECT_ROOT/apps/backend"
+PORT=3000 npm run dev > "$BACKEND_LOG" 2>&1 &
 BACKEND_PID=$!
+
+# Wait for backend to start
+sleep 2
 
 # Start frontend server
 echo "Starting frontend server..."
-cd ..
+cd "$PROJECT_ROOT/apps/frontend"
 npm run dev > "$FRONTEND_LOG" 2>&1 &
 FRONTEND_PID=$!
 
-# Function to handle script termination
-cleanup() {
-    echo "Shutting down servers..."
-    kill $BACKEND_PID
-    kill $FRONTEND_PID
-    rm -rf tmp
-    exit 0
-}
+# Save PIDs to file
+echo $BACKEND_PID > "$BACKEND_PID_FILE"
+echo $FRONTEND_PID > "$FRONTEND_PID_FILE"
 
-# Set up trap to catch termination signal
-trap cleanup SIGINT SIGTERM
-
-# Wait for both processes
-wait $BACKEND_PID $FRONTEND_PID
-
-# Keep script running and display backend logs
-echo "Servers are running. Press Ctrl+C to stop."
-echo "Backend logs:"
-tail -f "$BACKEND_LOG" 
+echo "Servers started!"
+echo "Backend running at http://localhost:3000"
+echo "Frontend running at http://localhost:5173"
+echo "Check $BACKEND_LOG and $FRONTEND_LOG for logs" 

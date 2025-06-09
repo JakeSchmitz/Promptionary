@@ -13,24 +13,37 @@ import {
   Icon,
 } from '@chakra-ui/react'
 import { FaPlus, FaGamepad, FaHistory, FaUser } from 'react-icons/fa'
+import { useGame } from '../context/GameContext'
 
 const Dashboard = () => {
   const navigate = useNavigate()
   const toast = useToast()
   const [isCreating, setIsCreating] = useState(false)
+  const { createGame } = useGame()
 
   const handleCreateGame = async () => {
     try {
+      console.log('Starting game creation...')
       setIsCreating(true)
-      // TODO: Call backend API to create a new game
-      // For now, we'll generate a random room ID
-      const roomId = Math.random().toString(36).substring(2, 8)
+      console.log('Calling createGame from context...')
+      const roomId = await createGame()
+      console.log('Game created with roomId:', roomId)
+      
+      toast({
+        title: 'Game Created',
+        description: 'Your game room is ready!',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      
+      console.log('Navigating to game room:', `/game/${roomId}`)
       navigate(`/game/${roomId}`)
     } catch (error) {
-      console.error('Error creating game:', error)
+      console.error('Error in handleCreateGame:', error)
       toast({
         title: 'Error',
-        description: 'Failed to create a new game',
+        description: 'Failed to create game',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -43,38 +56,38 @@ const Dashboard = () => {
   const menuItems = [
     {
       title: 'New Game',
-      description: 'Start a new game of Promptionary',
+      description: 'Create a new game room and invite friends to play',
       icon: FaPlus,
       onClick: handleCreateGame,
       isLoading: isCreating,
     },
     {
       title: 'Join Game',
-      description: 'Join an existing game',
+      description: 'Enter a game room code to join an existing game',
       icon: FaGamepad,
-      onClick: () => navigate('/'),
+      onClick: () => navigate('/join'),
     },
     {
       title: 'Game History',
-      description: 'View your past games',
+      description: 'View your past games and results',
       icon: FaHistory,
       onClick: () => navigate('/history'),
     },
     {
       title: 'Account',
-      description: 'Manage your account settings',
+      description: 'Manage your account settings and preferences',
       icon: FaUser,
       onClick: () => navigate('/account'),
     },
   ]
 
   return (
-    <Container maxW="container.xl" py={10}>
+    <Container maxW="container.xl" py={20}>
       <VStack spacing={8} align="stretch">
         <Box>
           <Heading size="lg">Welcome to Promptionary</Heading>
           <Text mt={2} color="gray.600">
-            Create a new game or join an existing one
+            Create or join a game to start playing!
           </Text>
         </Box>
 
@@ -88,8 +101,7 @@ const Dashboard = () => {
               p={6}
               borderWidth={1}
               borderRadius="lg"
-              bg="white"
-              _hover={{ transform: 'translateY(-2px)', shadow: 'md' }}
+              _hover={{ transform: 'translateY(-4px)', shadow: 'lg' }}
               transition="all 0.2s"
               cursor="pointer"
               onClick={item.onClick}
@@ -97,17 +109,20 @@ const Dashboard = () => {
               flexDirection="column"
               height="100%"
             >
-              <VStack spacing={4} align="start" flex="1">
-                <HStack>
-                  <Icon as={item.icon} boxSize={6} color="blue.500" />
-                  <Heading size="md">{item.title}</Heading>
-                </HStack>
-                <Text color="gray.600" flex="1">{item.description}</Text>
+              <VStack spacing={4} align="stretch" flex="1">
+                <Icon as={item.icon} boxSize={8} color="blue.500" />
+                <Heading size="md">{item.title}</Heading>
+                <Text color="gray.600" flex="1">
+                  {item.description}
+                </Text>
                 <Button
                   colorScheme="blue"
-                  width="100%"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    item.onClick()
+                  }}
                   isLoading={item.isLoading}
-                  loadingText="Creating..."
+                  width="100%"
                   mt="auto"
                 >
                   {item.title}

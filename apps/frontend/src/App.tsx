@@ -7,6 +7,7 @@ import Layout from './components/Layout'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import GameRoom from './pages/GameRoom'
+import JoinGame from './pages/JoinGame'
 import Scoreboard from './pages/Scoreboard'
 import GameHistory from './pages/GameHistory'
 import Account from './pages/Account'
@@ -38,6 +39,32 @@ class ErrorBoundary extends React.Component<
   }
 }
 
+// Protected route wrapper component
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const isAuthenticated = !!localStorage.getItem('user')
+  return isAuthenticated ? <>{children}</> : <Navigate to="/" replace />
+}
+
+// Public route wrapper component (redirects to dashboard if already logged in)
+const PublicRoute = ({ children }: { children: React.ReactNode }) => {
+  const isAuthenticated = !!localStorage.getItem('user')
+  return isAuthenticated ? <Navigate to="/dashboard" replace /> : <>{children}</>
+}
+
+// Game route wrapper component (handles both authenticated and unauthenticated users)
+const GameRoute = ({ children }: { children: React.ReactNode }) => {
+  const isAuthenticated = !!localStorage.getItem('user')
+  const hasGameState = !!localStorage.getItem('gameState')
+  
+  // Allow access if either authenticated or has game state
+  if (isAuthenticated || hasGameState) {
+    return <>{children}</>
+  }
+  
+  // If neither authenticated nor has game state, redirect to login
+  return <Navigate to="/" replace />
+}
+
 const App = () => {
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
   console.log('Google Client ID:', clientId)
@@ -51,11 +78,21 @@ const App = () => {
               <GameProvider>
                 <Layout>
                   <Routes>
-                    <Route path="/" element={<Login />} />
-                    <Route path="/game/:roomId" element={<GameRoom />} />
-                    <Route path="/scoreboard/:gameId" element={<Scoreboard />} />
-                    <Route path="/history" element={<GameHistory />} />
-                    <Route path="/account" element={<Account />} />
+                    {/* Public routes */}
+                    <Route path="/" element={<PublicRoute><Login /></PublicRoute>} />
+                    <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+                    
+                    {/* Game routes (can be accessed by both authenticated and unauthenticated users) */}
+                    <Route path="/game/:roomId" element={<GameRoute><GameRoom /></GameRoute>} />
+                    
+                    {/* Protected routes */}
+                    <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                    <Route path="/join" element={<ProtectedRoute><JoinGame /></ProtectedRoute>} />
+                    <Route path="/scoreboard/:gameId" element={<ProtectedRoute><Scoreboard /></ProtectedRoute>} />
+                    <Route path="/history" element={<ProtectedRoute><GameHistory /></ProtectedRoute>} />
+                    <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
+                    
+                    {/* Catch all route */}
                     <Route path="*" element={<Navigate to="/" replace />} />
                   </Routes>
                 </Layout>
