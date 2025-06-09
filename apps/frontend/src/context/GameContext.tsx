@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
+import { useAuth } from './AuthContext'
 
 // Remove the /api suffix from the fallback since it's now in the env var
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
@@ -46,55 +48,73 @@ interface GameContextType {
   startGame: () => Promise<void>
 }
 
-export const GameContext = createContext<GameContextType>({
-  gameState: null,
-  currentPlayer: null,
-  submitPrompt: async () => {},
-  submitVote: async () => {},
-  startNewRound: async () => {},
-  createGame: async () => '',
-  refreshGameState: async () => {},
-  startGame: async () => {},
-})
+const GameContext = createContext<GameContextType | undefined>(undefined)
 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [gameState, setGameState] = useState<GameState | null>(null)
   const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null)
+  const location = useLocation()
+  const { currentUser } = useAuth()
 
-  // Initialize game state from localStorage or create new game
+  // Update currentPlayer when auth user changes
   useEffect(() => {
-    const savedGame = localStorage.getItem('gameState')
-    const savedPlayer = localStorage.getItem('user')
-    
-    if (savedGame && savedPlayer) {
-      const parsedGame = JSON.parse(savedGame)
-      setGameState(parsedGame)
+    if (currentUser) {
       setCurrentPlayer({
-        id: savedPlayer,
-        name: savedPlayer,
+        id: currentUser.id,
+        name: currentUser.name,
         score: 0
       })
+    }
+  }, [currentUser])
 
-      // Fetch the latest game state from the server
-      const fetchLatestState = async () => {
-        try {
-          console.log('Fetching latest game state for room:', parsedGame.roomId)
-          const response = await fetch(`${API_URL}/games/${parsedGame.roomId}`)
-          if (response.ok) {
-            const data = await response.json()
-            console.log('Latest game state:', data)
-            setGameState(data)
-          } else {
-            console.error('Failed to fetch latest game state')
-          }
-        } catch (error) {
-          console.error('Error fetching latest game state:', error)
-        }
+  // Get room ID from URL or localStorage
+  const getRoomId = () => {
+    // First try to get from URL
+    const urlRoomId = location.pathname.split('/game/')[1]
+    if (urlRoomId) {
+      // If we have a URL room ID, update localStorage
+      localStorage.setItem('roomId', urlRoomId)
+      return urlRoomId
+    }
+    // Fall back to localStorage
+    return localStorage.getItem('roomId')
+  }
+
+  const refreshGameState = async () => {
+    try {
+      const roomId = getRoomId()
+      if (!roomId) {
+        throw new Error('No room ID found')
       }
 
-      fetchLatestState()
+      const response = await fetch(`${API_URL}/games/${roomId}`)
+      if (!response.ok) {
+        throw new Error('Failed to fetch game state')
+      }
+
+      const data = await response.json()
+      setGameState(data)
+    } catch (error) {
+      console.error('Error refreshing game state:', error)
+      throw error
     }
-  }, [])
+  }
+
+  // Load initial state from localStorage and server
+  useEffect(() => {
+    const loadInitialState = async () => {
+      const roomId = getRoomId()
+      if (roomId) {
+        try {
+          await refreshGameState()
+        } catch (error) {
+          console.error('Error loading initial game state:', error)
+        }
+      }
+    }
+
+    loadInitialState()
+  }, []) // Only run once when component mounts
 
   // Save game state to localStorage whenever it changes
   useEffect(() => {
@@ -219,8 +239,12 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const createGame = async (): Promise<string> => {
     try {
+      if (!currentUser) {
+        throw new Error('You must be logged in to create a game')
+      }
+
       console.log('GameContext: Creating new game...')
-      console.log('Current player:', currentPlayer)
+      console.log('Current user:', currentUser)
       console.log('API URL:', `${API_URL}/games`)
       
       // Generate a random room ID
@@ -229,8 +253,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       const requestBody = {
         roomId,
-        playerId: currentPlayer?.id,
-        playerName: currentPlayer?.name,
+        playerId: currentUser.id,
+        playerName: currentUser.name,
       }
       console.log('Request body:', requestBody)
       
@@ -262,12 +286,13 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw new Error('Invalid JSON response from server')
       }
       
+      // Use the server response directly
       const newGameState: GameState = {
         id: data.id,
-        roomId: roomId,
-        players: [currentPlayer!],
-        currentRound: 0,
-        totalRounds: 5,
+        roomId: data.roomId,
+        players: data.players,
+        currentRound: data.currentRound,
+        totalRounds: data.maxRounds,
         rounds: [],
         isComplete: false,
         phase: 'LOBBY',
@@ -279,56 +304,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return roomId
     } catch (error) {
       console.error('GameContext: Error creating game:', error)
-      throw error
-    }
-  }
-
-  const refreshGameState = async () => {
-    if (!gameState) {
-      console.error('Cannot refresh game state: gameState is null')
-      return
-    }
-
-    try {
-      console.log('Refreshing game state...')
-      console.log('Current game state:', gameState)
-      console.log('Using room ID:', gameState.roomId)
-      console.log('API URL:', `${API_URL}/games/${gameState.roomId}`)
-      
-      const response = await fetch(`${API_URL}/games/${gameState.roomId}`)
-      console.log('Refresh response status:', response.status)
-      console.log('Refresh response headers:', Object.fromEntries(response.headers.entries()))
-      
-      const responseText = await response.text()
-      console.log('Raw response text:', responseText)
-      
-      if (!response.ok) {
-        console.error('Failed to fetch game state:', responseText)
-        throw new Error(`Failed to fetch game state: ${responseText}`)
-      }
-
-      let data
-      try {
-        data = JSON.parse(responseText)
-        console.log('Parsed game state:', data)
-      } catch (e) {
-        console.error('Failed to parse response as JSON:', e)
-        throw new Error('Invalid JSON response from server')
-      }
-
-      // Ensure current player is in the players list
-      if (currentPlayer && data.players) {
-        const playerExists = data.players.some(p => p.id === currentPlayer.id)
-        if (!playerExists) {
-          console.log('Adding current player to refreshed game state')
-          data.players = [...data.players, currentPlayer]
-        }
-      }
-
-      setGameState(data)
-      console.log('Game state updated successfully')
-    } catch (error) {
-      console.error('Error refreshing game state:', error)
       throw error
     }
   }

@@ -14,31 +14,20 @@ import {
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { useGame } from '../context/GameContext'
+import { useAuth } from '../context/AuthContext'
 
 const Navbar = () => {
   const navigate = useNavigate()
   const { playerName } = useGame()
+  const { currentUser, logout } = useAuth()
   const bgColor = 'blue.500'
   const textColor = 'white'
   
-  // Get user info from localStorage
-  const user = localStorage.getItem('user')
-  const displayName = user || playerName
+  const displayName = currentUser?.name || playerName
 
   const handleLogout = () => {
-    // Clear all authentication and user data
-    localStorage.removeItem('user')
-    localStorage.removeItem('playerId')
-    localStorage.removeItem('playerName')
-    localStorage.removeItem('roomId')
-    localStorage.removeItem('googleAccessToken')
-    
-    // Clear any other game-related data
-    localStorage.removeItem('gameState')
-    localStorage.removeItem('gameSettings')
-    
-    // Force a page reload to clear any in-memory state
-    window.location.href = '/'
+    logout()
+    navigate('/')
   }
 
   return (
