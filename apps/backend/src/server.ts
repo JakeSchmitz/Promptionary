@@ -5,7 +5,7 @@ import prisma from './db';
 import { gameWords } from './data/words';
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 
 // Enable CORS for all routes
 app.use(cors({
