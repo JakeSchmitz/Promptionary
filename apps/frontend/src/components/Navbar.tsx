@@ -63,7 +63,7 @@ const Navbar = () => {
         </ChakraLink>
 
         {/* User Menu */}
-        {displayName && displayName !== 'Guest' && (
+        {displayName && (
           <Menu>
             <MenuButton
               as={Button}
@@ -77,20 +77,24 @@ const Navbar = () => {
               {displayName}
             </MenuButton>
             <MenuList bg="white" borderColor="blue.400" boxShadow="md">
-              <MenuItem 
-                onClick={() => navigate('/history')}
-                _hover={{ bg: 'blue.50' }}
-                color="blue.500"
-              >
-                Game History
-              </MenuItem>
-              <MenuItem 
-                onClick={() => navigate('/account')}
-                _hover={{ bg: 'blue.50' }}
-                color="blue.500"
-              >
-                Account
-              </MenuItem>
+              {!currentUser?.isGuest && (
+                <>
+                  <MenuItem 
+                    onClick={() => navigate('/history')}
+                    _hover={{ bg: 'blue.50' }}
+                    color="blue.500"
+                  >
+                    Game History
+                  </MenuItem>
+                  <MenuItem 
+                    onClick={() => navigate('/account')}
+                    _hover={{ bg: 'blue.50' }}
+                    color="blue.500"
+                  >
+                    Account
+                  </MenuItem>
+                </>
+              )}
               <MenuItem 
                 onClick={handleLogout}
                 _hover={{ bg: 'blue.50' }}

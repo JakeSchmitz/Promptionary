@@ -11,11 +11,13 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { useAuth } from '../context/AuthContext'
+import { useGame } from '../context/GameContext'
 
 const JoinGame = () => {
   const navigate = useNavigate()
   const toast = useToast()
   const { currentUser, setGuestName } = useAuth()
+  const { joinGame } = useGame()
   const [roomId, setRoomId] = useState('')
   const [guestName, setLocalGuestName] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -49,32 +51,8 @@ const JoinGame = () => {
 
     setIsLoading(true)
     try {
-      // First verify the game exists
-      const gameResponse = await fetch(`${import.meta.env.VITE_API_URL}/games/${roomId}`)
-      if (!gameResponse.ok) {
-        throw new Error('Game not found')
-      }
-
-      // Add player to the game
-      const playerResponse = await fetch(`${import.meta.env.VITE_API_URL}/games/${roomId}/players`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: currentUser?.name || guestName,
-          playerId: currentUser?.id || `guest-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
-        }),
-      })
-
-      if (!playerResponse.ok) {
-        throw new Error('Failed to join game')
-      }
-
-      // Get the updated game state
-      const gameState = await playerResponse.json()
-      localStorage.setItem('gameState', JSON.stringify(gameState))
-
+      await joinGame(roomId)
+      
       toast({
         title: 'Success',
         description: 'Successfully joined the game',

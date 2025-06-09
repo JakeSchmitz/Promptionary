@@ -137,15 +137,18 @@ apiRouter.post('/games/:roomId/players', async (req, res) => {
       return res.status(404).json({ error: 'Game not found' });
     }
 
-    // Check if player already exists in the game
-    const existingPlayer = game.players.find(p => p.id === playerId);
-    if (existingPlayer) {
-      // If player exists, just return the current game state
-      return res.json(game);
-    }
+    // Debug log
+    console.log(`[JOIN] Attempting to add player: name='${name}', playerId='${playerId}' to roomId='${roomId}'`);
 
     // Generate a unique ID for the player if not provided
     const finalPlayerId = playerId || `guest-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+
+    // Check if player already exists in the game
+    const existingPlayer = game.players.find(p => p.id === finalPlayerId);
+    if (existingPlayer) {
+      console.log(`[JOIN] Player already exists: id='${finalPlayerId}', name='${name}'`);
+      return res.json(game);
+    }
 
     // Create the player and get the updated game state in a transaction
     const updatedGame = await prisma.$transaction(async (tx) => {
@@ -178,6 +181,7 @@ apiRouter.post('/games/:roomId/players', async (req, res) => {
       throw new Error('Failed to update game state');
     }
 
+    console.log(`[JOIN] Player added: id='${finalPlayerId}', name='${name}'`);
     res.json(updatedGame);
   } catch (error) {
     console.error('Error adding player:', error);
