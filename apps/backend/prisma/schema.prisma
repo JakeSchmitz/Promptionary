@@ -18,8 +18,9 @@ model Game {
   roomId        String    @unique
   currentRound  Int       @default(1)
   maxRounds     Int       @default(5)
-  currentWord   String?
+  currentWord   String
   phase         GamePhase @default(LOBBY)
+  hostId        String?   // ID of the host player
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   players       Player[]
@@ -30,7 +31,9 @@ model Game {
 model Player {
   id        String   @id @default(uuid())
   name      String
+  email     String?
   score     Int      @default(0)
+  isHost    Boolean  @default(false)
   gameId    String
   game      Game     @relation(fields: [gameId], references: [id])
   images    Image[]

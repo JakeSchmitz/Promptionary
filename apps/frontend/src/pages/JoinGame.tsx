@@ -10,13 +10,17 @@ import {
   Button,
   useToast,
 } from '@chakra-ui/react'
+import { useAuth } from '../context/AuthContext'
 
 const JoinGame = () => {
   const navigate = useNavigate()
   const toast = useToast()
+  const { currentUser, setGuestName } = useAuth()
   const [roomId, setRoomId] = useState('')
+  const [guestName, setLocalGuestName] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
-  const handleJoinGame = () => {
+  const handleJoinGame = async () => {
     if (!roomId.trim()) {
       toast({
         title: 'Error',
@@ -28,7 +32,70 @@ const JoinGame = () => {
       return
     }
 
-    navigate(`/game/${roomId}`)
+    // Handle guest users
+    if (!currentUser) {
+      if (!guestName.trim()) {
+        toast({
+          title: 'Error',
+          description: 'Please enter your name',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        })
+        return
+      }
+      setGuestName(guestName)
+    }
+
+    setIsLoading(true)
+    try {
+      // First verify the game exists
+      const gameResponse = await fetch(`${import.meta.env.VITE_API_URL}/games/${roomId}`)
+      if (!gameResponse.ok) {
+        throw new Error('Game not found')
+      }
+
+      // Add player to the game
+      const playerResponse = await fetch(`${import.meta.env.VITE_API_URL}/games/${roomId}/players`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: currentUser?.name || guestName,
+          playerId: currentUser?.id || `guest-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
+        }),
+      })
+
+      if (!playerResponse.ok) {
+        throw new Error('Failed to join game')
+      }
+
+      // Get the updated game state
+      const gameState = await playerResponse.json()
+      localStorage.setItem('gameState', JSON.stringify(gameState))
+
+      toast({
+        title: 'Success',
+        description: 'Successfully joined the game',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+
+      navigate(`/game/${roomId}`)
+    } catch (error) {
+      console.error('Error joining game:', error)
+      toast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to join game',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -49,11 +116,21 @@ const JoinGame = () => {
               onChange={(e) => setRoomId(e.target.value)}
               size="lg"
             />
+            {!currentUser && (
+              <Input
+                placeholder="Enter Your Name"
+                value={guestName}
+                onChange={(e) => setLocalGuestName(e.target.value)}
+                size="lg"
+              />
+            )}
             <Button
               colorScheme="blue"
               onClick={handleJoinGame}
               width="100%"
               size="lg"
+              isLoading={isLoading}
+              loadingText="Joining..."
             >
               Join Game
             </Button>

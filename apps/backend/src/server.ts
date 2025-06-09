@@ -32,16 +32,59 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
+// Create a router for all /api routes
+const apiRouter = express.Router();
+
 // Game management endpoints
-app.post('/api/games', async (req, res) => {
+apiRouter.post('/games', async (req, res) => {
   try {
-    const { roomId } = req.body;
-    const game = await prisma.game.create({
-      data: {
-        roomId,
-        currentWord: gameWords[Math.floor(Math.random() * gameWords.length)].word,
-      },
+    const { roomId, playerId, playerName } = req.body;
+    
+    if (!playerName) {
+      return res.status(400).json({ error: 'Player name is required' });
+    }
+
+    // Create the game and the host player in a transaction
+    const game = await prisma.$transaction(async (prisma) => {
+      // Create the game first
+      const game = await prisma.game.create({
+        data: {
+          roomId,
+          currentWord: gameWords[Math.floor(Math.random() * gameWords.length)].word,
+        },
+      });
+
+      // Create the host player
+      const player = await prisma.player.create({
+        data: {
+          name: playerName,
+          gameId: game.id,
+          isHost: true,
+          email: playerId, // Store the auth ID in the email field for reference
+        },
+      });
+
+      // Update the game with the host ID
+      await prisma.game.update({
+        where: { id: game.id },
+        data: { hostId: player.id },
+      });
+
+      // Return the full game state
+      return prisma.game.findUnique({
+        where: { id: game.id },
+        include: {
+          players: true,
+          images: {
+            include: {
+              player: true,
+              votes: true,
+            },
+          },
+        },
+      });
     });
+
     res.json(game);
   } catch (error) {
     console.error('Error creating game:', error);
@@ -49,7 +92,7 @@ app.post('/api/games', async (req, res) => {
   }
 });
 
-app.get('/api/games/:roomId', async (req, res) => {
+apiRouter.get('/games/:roomId', async (req, res) => {
   try {
     const { roomId } = req.params;
     const game = await prisma.game.findUnique({
@@ -74,51 +117,124 @@ app.get('/api/games/:roomId', async (req, res) => {
   }
 });
 
-app.post('/api/games/:roomId/players', async (req, res) => {
+apiRouter.post('/games/:roomId/players', async (req, res) => {
   try {
     const { roomId } = req.params;
-    const { name } = req.body;
+    const { name, playerId } = req.body;
+
+    if (!name) {
+      return res.status(400).json({ error: 'Player name is required' });
+    }
 
     const game = await prisma.game.findUnique({
       where: { roomId },
+      include: {
+        players: true,
+      },
     });
 
     if (!game) {
       return res.status(404).json({ error: 'Game not found' });
     }
 
-    const player = await prisma.player.create({
-      data: {
-        name,
-        gameId: game.id,
-      },
+    // Check if player already exists in the game
+    const existingPlayer = game.players.find(p => p.id === playerId);
+    if (existingPlayer) {
+      // If player exists, just return the current game state
+      return res.json(game);
+    }
+
+    // Generate a unique ID for the player if not provided
+    const finalPlayerId = playerId || `guest-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+
+    // Create the player and get the updated game state in a transaction
+    const updatedGame = await prisma.$transaction(async (tx) => {
+      // Create the player
+      await tx.player.create({
+        data: {
+          id: finalPlayerId,
+          name,
+          gameId: game.id,
+          isHost: false,
+        },
+      });
+
+      // Get the updated game state
+      return tx.game.findUnique({
+        where: { roomId },
+        include: {
+          players: true,
+          images: {
+            include: {
+              player: true,
+              votes: true,
+            },
+          },
+        },
+      });
     });
 
-    res.json(player);
+    if (!updatedGame) {
+      throw new Error('Failed to update game state');
+    }
+
+    res.json(updatedGame);
   } catch (error) {
     console.error('Error adding player:', error);
     res.status(500).json({ error: 'Failed to add player' });
   }
 });
 
-app.post('/api/games/:roomId/start', async (req, res) => {
+apiRouter.post('/games/:roomId/start', async (req, res) => {
   try {
     const { roomId } = req.params;
-    const game = await prisma.game.update({
+    const { playerId } = req.body; // Get the player ID from the request
+
+    // Get the game and verify the player is the host
+    const game = await prisma.game.findUnique({
+      where: { roomId },
+      include: {
+        players: true,
+      },
+    });
+
+    if (!game) {
+      return res.status(404).json({ error: 'Game not found' });
+    }
+
+    const host = game.players.find(p => p.isHost);
+    if (!host || host.id !== playerId) {
+      return res.status(403).json({ error: 'Only the host can start the game' });
+    }
+
+    const updatedGame = await prisma.game.update({
       where: { roomId },
       data: {
         phase: 'PROMPT',
         currentWord: gameWords[Math.floor(Math.random() * gameWords.length)].word,
       },
+      include: {
+        players: true,
+        images: {
+          include: {
+            player: true,
+            votes: true,
+          },
+        },
+      },
     });
-    res.json(game);
+
+    res.json(updatedGame);
   } catch (error) {
     console.error('Error starting game:', error);
     res.status(500).json({ error: 'Failed to start game' });
   }
 });
 
-app.post('/api/games/:roomId/next-round', async (req, res) => {
+// Mount the API router at /api
+app.use('/api', apiRouter);
+
+app.post('/games/:roomId/next-round', async (req, res) => {
   try {
     const { roomId } = req.params;
     const game = await prisma.game.findUnique({
