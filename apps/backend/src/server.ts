@@ -54,15 +54,32 @@ apiRouter.post('/games', async (req, res) => {
         },
       });
 
-      // Create the host player
-      const player = await prisma.player.create({
-        data: {
-          name: playerName,
-          gameId: game.id,
-          isHost: true,
-          email: playerId, // Store the auth ID in the email field for reference
-        },
+      // Check if player already exists
+      let player = await prisma.player.findUnique({
+        where: { id: playerId }
       });
+
+      // Only create the player if they don't exist
+      if (!player) {
+        player = await prisma.player.create({
+          data: {
+            id: playerId,
+            name: playerName,
+            email: playerId, // Store the auth ID in the email field for reference
+            gameId: game.id,
+            isHost: true,
+          },
+        });
+      } else {
+        // Add the player to the game
+        await prisma.player.update({
+          where: { id: playerId },
+          data: {
+            gameId: game.id,
+            isHost: true,
+          },
+        });
+      }
 
       // Update the game with the host ID
       await prisma.game.update({
@@ -143,18 +160,17 @@ apiRouter.post('/games/:roomId/players', async (req, res) => {
     // Generate a unique ID for the player if not provided
     const finalPlayerId = playerId || `guest-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
 
-    // Check if player already exists in the game
-    const existingPlayer = game.players.find(p => p.id === finalPlayerId);
-    if (existingPlayer) {
-      console.log(`[JOIN] Player already exists: id='${finalPlayerId}', name='${name}'`);
-      return res.json(game);
-    }
-
-    // Create the player and get the updated game state in a transaction
+    // Use upsert to handle both create and update cases
     const updatedGame = await prisma.$transaction(async (tx) => {
-      // Create the player
-      await tx.player.create({
-        data: {
+      // Upsert the player
+      await tx.player.upsert({
+        where: { id: finalPlayerId },
+        update: {
+          name,
+          gameId: game.id,
+          isHost: false,
+        },
+        create: {
           id: finalPlayerId,
           name,
           gameId: game.id,
@@ -181,7 +197,7 @@ apiRouter.post('/games/:roomId/players', async (req, res) => {
       throw new Error('Failed to update game state');
     }
 
-    console.log(`[JOIN] Player added: id='${finalPlayerId}', name='${name}'`);
+    console.log(`[JOIN] Player added/updated: id='${finalPlayerId}', name='${name}'`);
     res.json(updatedGame);
   } catch (error) {
     console.error('Error adding player:', error);
