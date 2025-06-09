@@ -10,6 +10,7 @@ interface User {
 interface AuthContextType {
   isAuthenticated: boolean;
   currentUser: User | null;
+  isLoading: boolean;
   login: (user: User) => void;
   logout: () => void;
   setGuestName: (name: string) => void;
@@ -41,6 +42,7 @@ const validateUser = (user: unknown): user is User => {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Load user from localStorage on mount
@@ -58,6 +60,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error) {
       console.error('Error loading user from localStorage:', error);
       localStorage.removeItem(STORAGE_KEY);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -102,8 +106,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   return (
     <AuthContext.Provider
       value={{
-        isAuthenticated: !!currentUser,
+        isAuthenticated: !!currentUser && !currentUser.isGuest,
         currentUser,
+        isLoading,
         login,
         logout,
         setGuestName,

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useAuth } from './AuthContext'
+import { useToast } from '@chakra-ui/react'
 
 // Remove the /api suffix from the fallback since it's now in the env var
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
@@ -40,12 +41,15 @@ interface GameState {
 interface GameContextType {
   gameState: GameState | null
   currentPlayer: Player | null
+  playerName: string | null
   submitPrompt: (prompt: string) => Promise<void>
   submitVote: (submissionId: string) => Promise<void>
   startNewRound: () => Promise<void>
   createGame: () => Promise<string>
   refreshGameState: () => Promise<void>
   startGame: () => Promise<void>
+  joinGame: (roomId: string) => Promise<void>
+  initializeGame: (roomId: string) => Promise<void>
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined)
@@ -55,6 +59,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null)
   const location = useLocation()
   const { currentUser } = useAuth()
+  const toast = useToast()
 
   // Update currentPlayer when auth user changes
   useEffect(() => {
@@ -93,7 +98,20 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       const data = await response.json()
+      
+      // Update game state
       setGameState(data)
+      
+      // Update current player if we have one
+      if (currentUser) {
+        const player = data.players.find((p: Player) => p.id === currentUser.id)
+        if (player) {
+          setCurrentPlayer(player)
+        }
+      }
+
+      // Store in localStorage
+      localStorage.setItem('gameState', JSON.stringify(data))
     } catch (error) {
       console.error('Error refreshing game state:', error)
       throw error
@@ -326,17 +344,116 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }
 
+  const joinGame = async (roomId: string) => {
+    try {
+      // First verify the game exists
+      const gameResponse = await fetch(`${API_URL}/games/${roomId}`);
+      if (!gameResponse.ok) {
+        throw new Error('Game not found');
+      }
+
+      // For guest users, add them to the game
+      if (currentUser?.isGuest) {
+        const playerResponse = await fetch(`${API_URL}/games/${roomId}/players`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: currentUser.name,
+            playerId: currentUser.id,
+          }),
+        });
+
+        if (!playerResponse.ok) {
+          throw new Error('Failed to join game');
+        }
+
+        // Get the updated game state
+        const updatedGameState = await playerResponse.json();
+        
+        // Update the game state directly
+        setGameState(updatedGameState);
+        
+        // Store the game state and room ID
+        localStorage.setItem('gameState', JSON.stringify(updatedGameState));
+        localStorage.setItem('roomId', roomId);
+      }
+    } catch (error) {
+      console.error('Error joining game:', error);
+      toast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to join game',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+      throw error;
+    }
+  };
+
+  const initializeGame = async (roomId: string) => {
+    try {
+      // First verify the game exists
+      const gameResponse = await fetch(`${API_URL}/games/${roomId}`);
+      if (!gameResponse.ok) {
+        throw new Error('Game not found');
+      }
+
+      // Get the current game state
+      const gameState = await gameResponse.json();
+      
+      // Check if the current user is already in the game
+      const isPlayerInGame = gameState.players.some((player: Player) => player.id === currentUser?.id);
+      
+      // Only add the player if they're a guest AND not already in the game
+      if (currentUser?.isGuest && !isPlayerInGame) {
+        const playerResponse = await fetch(`${API_URL}/games/${roomId}/players`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: currentUser.name,
+            playerId: currentUser.id,
+          }),
+        });
+
+        if (!playerResponse.ok) {
+          throw new Error('Failed to join game');
+        }
+
+        // Get the updated game state
+        const updatedGameState = await playerResponse.json();
+        setGameState(updatedGameState);
+        localStorage.setItem('gameState', JSON.stringify(updatedGameState));
+      } else {
+        // Just update the game state
+        setGameState(gameState);
+      }
+      
+      // Always store the room ID
+      localStorage.setItem('roomId', roomId);
+    } catch (error) {
+      console.error('Error initializing game:', error);
+      throw error;
+    }
+  };
+
   return (
     <GameContext.Provider
       value={{
         gameState,
         currentPlayer,
+        playerName: currentUser?.name || null,
         submitPrompt,
         submitVote,
         startNewRound,
         createGame,
         refreshGameState,
         startGame,
+        joinGame,
+        initializeGame,
       }}
     >
       {children}
