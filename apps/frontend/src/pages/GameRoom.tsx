@@ -8,46 +8,51 @@ import { useAuth } from '../context/AuthContext';
 
 const GameRoom = () => {
   const { roomId } = useParams<{ roomId: string }>();
-  const { gameState, initializeGame } = useGame();
+  const { gameState, initializeGame, joinGame } = useGame();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();
 
   // Initialize game when component mounts
   useEffect(() => {
-    if (!roomId) {
-      navigate('/');
-      return;
-    }
+    const initGame = async () => {
+      if (!roomId) {
+        navigate('/');
+        return;
+      }
 
-    let isMounted = true;
-
-    const setupGame = async () => {
       try {
-        if (isMounted) {
-          await initializeGame(roomId);
-        }
-      } catch (error) {
-        if (isMounted) {
+        // Fetch the game state directly from the API
+        const response = await fetch(`${import.meta.env.VITE_API_URL || '/api'}/games/${roomId}`);
+        if (!response.ok) {
           navigate('/');
+          return;
         }
+        const data = await response.json();
+        // If guest and not in the game, join first (but only if not already joined in this session)
+        if (
+          currentUser?.isGuest &&
+          !data.players.some((p: any) => p.id === currentUser.id) &&
+          localStorage.getItem('guestJoined') !== roomId
+        ) {
+          await joinGame(roomId);
+        }
+        await initializeGame(roomId);
+      } catch (error) {
+        navigate('/');
       }
     };
 
-    setupGame();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [roomId, navigate, initializeGame]);
+    initGame();
+  }, [roomId, currentUser]); // Depend on roomId and currentUser
 
   // If we have a game state but the room IDs don't match, redirect
   useEffect(() => {
-    if (gameState && gameState.roomId && gameState.roomId !== roomId) {
+    if (gameState?.roomId && gameState.roomId !== roomId) {
       console.warn('Room ID mismatch detected:', { urlRoomId: roomId, stateRoomId: gameState.roomId });
       navigate(`/game/${gameState.roomId}`);
     }
-  }, [gameState, roomId, navigate]);
+  }, [gameState?.roomId, roomId, navigate]);
 
   if (!gameState) {
     return null;
