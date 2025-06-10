@@ -11,6 +11,15 @@ import {
   VStack,
   HStack,
   Icon,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
+  Radio,
+  RadioGroup,
+  Stack,
 } from '@chakra-ui/react'
 import { FaPlus, FaGamepad, FaHistory, FaUser } from 'react-icons/fa'
 import { useGame } from '../context/GameContext'
@@ -19,6 +28,8 @@ const Dashboard = () => {
   const navigate = useNavigate()
   const toast = useToast()
   const [isCreating, setIsCreating] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedGameMode, setSelectedGameMode] = useState<'PROMPT_ANYTHING' | 'PROMPTOPHONE'>('PROMPT_ANYTHING')
   const { createGame } = useGame()
 
   const handleCreateGame = async () => {
@@ -26,7 +37,7 @@ const Dashboard = () => {
       console.log('Starting game creation...')
       setIsCreating(true)
       console.log('Calling createGame from context...')
-      const roomId = await createGame()
+      const roomId = await createGame(selectedGameMode)
       console.log('Game created with roomId:', roomId)
       
       toast({
@@ -50,6 +61,7 @@ const Dashboard = () => {
       })
     } finally {
       setIsCreating(false)
+      setIsModalOpen(false)
     }
   }
 
@@ -58,8 +70,7 @@ const Dashboard = () => {
       title: 'New Game',
       description: 'Create a new game room and invite friends to play',
       icon: FaPlus,
-      onClick: handleCreateGame,
-      isLoading: isCreating,
+      onClick: () => setIsModalOpen(true),
     },
     {
       title: 'Join Game',
@@ -121,7 +132,6 @@ const Dashboard = () => {
                     e.stopPropagation()
                     item.onClick()
                   }}
-                  isLoading={item.isLoading}
                   width="100%"
                   mt="auto"
                 >
@@ -132,6 +142,47 @@ const Dashboard = () => {
           ))}
         </Grid>
       </VStack>
+
+      {/* Game Mode Selection Modal */}
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Select Game Mode</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <VStack spacing={4} align="stretch">
+              <RadioGroup value={selectedGameMode} onChange={(value) => setSelectedGameMode(value as 'PROMPT_ANYTHING' | 'PROMPTOPHONE')}>
+                <Stack spacing={4}>
+                  <Radio value="PROMPT_ANYTHING">
+                    <VStack align="start" spacing={1}>
+                      <Text fontWeight="bold">Prompt Anything</Text>
+                      <Text fontSize="sm" color="gray.600">
+                        Create prompts for any word and vote on the best images
+                      </Text>
+                    </VStack>
+                  </Radio>
+                  <Radio value="PROMPTOPHONE">
+                    <VStack align="start" spacing={1}>
+                      <Text fontWeight="bold">Promptophone</Text>
+                      <Text fontSize="sm" color="gray.600">
+                        Create prompts based on phone numbers and vote on the best images
+                      </Text>
+                    </VStack>
+                  </Radio>
+                </Stack>
+              </RadioGroup>
+              <Button
+                colorScheme="blue"
+                onClick={handleCreateGame}
+                isLoading={isCreating}
+                loadingText="Creating game..."
+              >
+                Create Game
+              </Button>
+            </VStack>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Container>
   )
 }

@@ -1,37 +1,101 @@
 export interface WordData {
   word: string
   difficulty: 'easy' | 'medium' | 'hard'
+  exclusionWords: string[]
 }
 
 export const gameWords: WordData[] = [
-  { word: 'cat', difficulty: 'easy' },
-  { word: 'dog', difficulty: 'easy' },
-  { word: 'house', difficulty: 'easy' },
-  { word: 'tree', difficulty: 'easy' },
-  { word: 'sun', difficulty: 'easy' },
-  { word: 'moon', difficulty: 'easy' },
-  { word: 'star', difficulty: 'easy' },
-  { word: 'cloud', difficulty: 'easy' },
-  { word: 'rain', difficulty: 'easy' },
-  { word: 'snow', difficulty: 'easy' },
-  { word: 'beach', difficulty: 'medium' },
-  { word: 'mountain', difficulty: 'medium' },
-  { word: 'forest', difficulty: 'medium' },
-  { word: 'river', difficulty: 'medium' },
-  { word: 'ocean', difficulty: 'medium' },
-  { word: 'castle', difficulty: 'medium' },
-  { word: 'bridge', difficulty: 'medium' },
-  { word: 'tower', difficulty: 'medium' },
-  { word: 'garden', difficulty: 'medium' },
-  { word: 'fountain', difficulty: 'medium' },
-  { word: 'dragon', difficulty: 'hard' },
-  { word: 'unicorn', difficulty: 'hard' },
-  { word: 'phoenix', difficulty: 'hard' },
-  { word: 'mermaid', difficulty: 'hard' },
-  { word: 'centaur', difficulty: 'hard' },
-  { word: 'griffin', difficulty: 'hard' },
-  { word: 'pegasus', difficulty: 'hard' },
-  { word: 'kraken', difficulty: 'hard' },
-  { word: 'sphinx', difficulty: 'hard' },
-  { word: 'minotaur', difficulty: 'hard' },
+  // Iconic Movie Characters
+  { 
+    word: 'Darth Vader', 
+    difficulty: 'medium', 
+    exclusionWords: ['star wars', 'vader', 'sith', 'dark side', 'force', 'lightsaber', 'helmet', 'breathing', 'anakin'] 
+  },
+  { 
+    word: 'Iron Man', 
+    difficulty: 'medium', 
+    exclusionWords: ['tony stark', 'marvel', 'suit', 'armor', 'avengers', 'arc reactor', 'tech', 'flying', 'red'] 
+  },
+  { 
+    word: 'Mickey Mouse', 
+    difficulty: 'easy', 
+    exclusionWords: ['disney', 'mouse', 'ears', 'cartoon', 'mickey', 'minnie', 'disneyland', 'walt', 'animation'] 
+  },
+  
+  // Sports
+  { 
+    word: 'Basketball', 
+    difficulty: 'easy', 
+    exclusionWords: ['hoop', 'court', 'ball', 'nba', 'dribble', 'shoot', 'game', 'sport', 'player'] 
+  },
+  { 
+    word: 'Formula One', 
+    difficulty: 'medium', 
+    exclusionWords: ['racing', 'car', 'driver', 'track', 'speed', 'race', 'f1', 'grand prix', 'podium'] 
+  },
+  { 
+    word: 'Surfing', 
+    difficulty: 'medium', 
+    exclusionWords: ['wave', 'ocean', 'board', 'beach', 'water', 'surf', 'ride', 'sea', 'shore'] 
+  },
+  
+  // Fantasy & Mythology
+  { 
+    word: 'Dragon', 
+    difficulty: 'medium', 
+    exclusionWords: ['fire', 'wing', 'scale', 'mythical', 'beast', 'fly', 'breath', 'creature', 'monster'] 
+  },
+  { 
+    word: 'Phoenix', 
+    difficulty: 'hard', 
+    exclusionWords: ['fire', 'bird', 'rebirth', 'mythical', 'rise', 'flame', 'immortal', 'ashes', 'legend'] 
+  },
+  
+  // Landmarks & Architecture
+  { 
+    word: 'Eiffel Tower', 
+    difficulty: 'medium', 
+    exclusionWords: ['paris', 'france', 'tower', 'landmark', 'iron', 'structure', 'tourist', 'city', 'monument'] 
+  },
+  { 
+    word: 'Taj Mahal', 
+    difficulty: 'medium', 
+    exclusionWords: ['india', 'marble', 'palace', 'tomb', 'architecture', 'white', 'dome', 'monument', 'agra'] 
+  },
+  
+  // Nature & Environment
+  { 
+    word: 'Aurora Borealis', 
+    difficulty: 'hard', 
+    exclusionWords: ['northern lights', 'sky', 'color', 'aurora', 'night', 'light', 'polar', 'dance', 'green'] 
+  },
+  { 
+    word: 'Volcano', 
+    difficulty: 'medium', 
+    exclusionWords: ['mountain', 'lava', 'eruption', 'magma', 'fire', 'smoke', 'crater', 'ash', 'geyser'] 
+  },
+  
+  // Technology & Innovation
+  { 
+    word: 'Robot', 
+    difficulty: 'medium', 
+    exclusionWords: ['machine', 'metal', 'technology', 'automated', 'mechanical', 'ai', 'circuit', 'battery', 'sensor'] 
+  },
+  { 
+    word: 'Space Station', 
+    difficulty: 'hard', 
+    exclusionWords: ['space', 'orbit', 'astronaut', 'satellite', 'nasa', 'iss', 'station', 'gravity', 'module'] 
+  },
+  
+  // Entertainment & Culture
+  { 
+    word: 'Circus', 
+    difficulty: 'medium', 
+    exclusionWords: ['clown', 'tent', 'performance', 'entertainment', 'acrobat', 'ring', 'elephant', 'trapeze', 'juggler'] 
+  },
+  { 
+    word: 'Jazz Band', 
+    difficulty: 'hard', 
+    exclusionWords: ['music', 'jazz', 'band', 'instrument', 'saxophone', 'trumpet', 'piano', 'drum', 'performance'] 
+  }
 ] 

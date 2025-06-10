@@ -65,7 +65,7 @@ const apiRouter = express.Router();
 // Game management endpoints
 apiRouter.post('/games', async (req, res) => {
   try {
-    const { roomId, playerId, playerName } = req.body;
+    const { roomId, playerId, playerName, gameMode } = req.body;
     
     if (!playerName) {
       return res.status(400).json({ error: 'Player name is required' });
@@ -81,6 +81,7 @@ apiRouter.post('/games', async (req, res) => {
           currentRound: 0,
           maxRounds: 3, // Set default number of rounds
           phase: 'LOBBY',
+          gameMode: gameMode || 'PROMPT_ANYTHING', // Default to PROMPT_ANYTHING if not specified
         },
       });
 
@@ -128,11 +129,18 @@ apiRouter.post('/games', async (req, res) => {
               votes: true,
             },
           },
+          promptChains: true,
         },
       });
     });
 
-    res.json(game);
+    // Ensure the game mode is included in the response
+    const response = {
+      ...game,
+      gameMode: game.gameMode || 'PROMPT_ANYTHING',
+    };
+
+    res.json(response);
   } catch (error) {
     console.error('Error creating game:', error);
     res.status(500).json({ error: 'Failed to create game' });
@@ -142,6 +150,8 @@ apiRouter.post('/games', async (req, res) => {
 apiRouter.get('/games/:roomId', async (req, res) => {
   try {
     const { roomId } = req.params;
+    console.log('Fetching game state for room:', roomId);
+
     const game = await prisma.game.findUnique({
       where: { roomId },
       include: {
@@ -152,12 +162,55 @@ apiRouter.get('/games/:roomId', async (req, res) => {
             votes: true,
           },
         },
+        promptChains: true,
       },
     });
+
     if (!game) {
+      console.log('Game not found for room:', roomId);
       return res.status(404).json({ error: 'Game not found' });
     }
-    res.json(game);
+
+    console.log('Game state retrieved:', {
+      gameMode: game.gameMode,
+      phase: game.phase,
+      currentRound: game.currentRound,
+      playerCount: game.players.length,
+      promptChainCount: game.promptChains?.length
+    });
+
+    // Get the current word's exclusion words if we're in a prompt phase
+    let exclusionWords = game.exclusionWords || [];
+    if (game.phase === 'PROMPT' && game.currentWord) {
+      const wordData = gameWords.find(w => w.word.toLowerCase() === game.currentWord?.toLowerCase());
+      if (wordData) {
+        exclusionWords = wordData.exclusionWords;
+      }
+    }
+
+    const response = {
+      id: game.id,
+      roomId: game.roomId,
+      players: game.players,
+      currentRound: game.currentRound,
+      maxRounds: game.maxRounds,
+      currentWord: game.currentWord,
+      exclusionWords,
+      rounds: [], // TODO: Populate rounds if needed
+      isComplete: game.phase === 'ENDED',
+      phase: game.phase,
+      images: game.images,
+      gameMode: game.gameMode,
+      promptChains: game.promptChains,
+    };
+
+    console.log('Sending response:', {
+      gameMode: response.gameMode,
+      phase: response.phase,
+      currentRound: response.currentRound
+    });
+
+    res.json(response);
   } catch (error) {
     console.error('Error fetching game:', error);
     res.status(500).json({ error: 'Failed to fetch game' });
@@ -235,65 +288,194 @@ apiRouter.post('/games/:roomId/players', async (req, res) => {
   }
 });
 
-// Update the start game endpoint to set the round start time
+// Update the start game endpoint
 apiRouter.post('/games/:roomId/start', async (req, res) => {
   try {
     const { roomId } = req.params;
     const { playerId } = req.body;
 
-    // Get random target
-    const randomTarget = EXAMPLE_TARGETS[Math.floor(Math.random() * EXAMPLE_TARGETS.length)];
+    console.log('Starting game for room:', roomId, 'playerId:', playerId);
 
-    // First get the game to verify the host
-    const existingGame = await prisma.game.findUnique({
+    const game = await prisma.game.findUnique({
       where: { roomId },
-      include: {
+      include: { 
         players: true,
-      },
+        promptChains: true,
+      }
     });
 
-    if (!existingGame) {
+    if (!game) {
+      console.log('Game not found for room:', roomId);
       return res.status(404).json({ error: 'Game not found' });
     }
 
     // Verify the player is the host
-    const host = existingGame.players.find(p => p.isHost);
+    const host = game.players.find(p => p.isHost);
     if (!host || host.id !== playerId) {
+      console.log('Player is not host:', { playerId, hostId: host?.id });
       return res.status(403).json({ error: 'Only the host can start the game' });
     }
 
-    // Update the game with the new target and phase
-    const updatedGame = await prisma.game.update({
-      where: { roomId },
-      data: {
-        phase: 'PROMPT',
-        currentRound: 1,
-        currentWord: randomTarget.word,
-        exclusionWords: randomTarget.exclusionWords,
-        roundStartTime: new Date(),
-      },
-      include: {
-        players: true,
-      },
+    // Get the game mode from the game state
+    const gameMode = game.gameMode || 'PROMPT_ANYTHING';
+    console.log('Starting game with mode:', {
+      gameMode,
+      currentGameMode: game.gameMode,
+      roomId,
+      playerCount: game.players.length,
+      players: game.players.map(p => ({ id: p.id, name: p.name, isHost: p.isHost }))
     });
 
-    res.json(updatedGame);
+    if (gameMode === 'PROMPTOPHONE') {
+      try {
+        // For Promptophone, create a prompt chain for each player with unique words
+        // Shuffle the words array to get random unique words
+        const shuffledWords = [...gameWords]
+          .sort(() => Math.random() - 0.5)
+          .slice(0, game.players.length);
+
+        console.log('Creating prompt chains for Promptophone:', {
+          playerCount: game.players.length,
+          wordCount: shuffledWords.length,
+          words: shuffledWords.map(w => w.word)
+        });
+
+        // Create a prompt chain for each player with a unique word
+        const promptChains = await Promise.all(
+          game.players.map(async (player, index) => {
+            const word = shuffledWords[index];
+            console.log(`Creating chain for player ${player.name} with word: ${word.word}`);
+            return prisma.promptChain.create({
+              data: {
+                gameId: game.id,
+                playerId: player.id, // Associate the chain with the specific player
+                originalWord: word.word,
+                chain: [], // Initialize empty chain
+              },
+            });
+          })
+        );
+
+        // Get the first player's chain to start with
+        const firstPlayerChain = promptChains[0];
+        console.log('Starting with first player chain:', {
+          playerId: firstPlayerChain.playerId,
+          word: firstPlayerChain.originalWord
+        });
+
+        // Set the first word for the first round
+        const updatedGame = await prisma.game.update({
+          where: { roomId },
+          data: {
+            phase: 'PROMPT',
+            currentRound: 1,
+            currentWord: firstPlayerChain.originalWord,
+            exclusionWords: shuffledWords[0].exclusionWords,
+            roundStartTime: new Date(),
+            gameMode: 'PROMPTOPHONE', // Explicitly set the game mode
+          },
+          include: {
+            players: true,
+            images: {
+              include: {
+                player: true,
+                votes: true,
+              },
+            },
+            promptChains: true,
+          },
+        });
+
+        // Log the updated game state
+        console.log('Updated game state for Promptophone:', {
+          phase: updatedGame.phase,
+          gameMode: updatedGame.gameMode,
+          currentRound: updatedGame.currentRound,
+          currentWord: updatedGame.currentWord,
+          promptChainCount: updatedGame.promptChains?.length,
+          chains: updatedGame.promptChains?.map(chain => ({
+            playerId: chain.playerId,
+            word: chain.originalWord
+          }))
+        });
+
+        // Ensure game mode is included in the response
+        const response = {
+          ...updatedGame,
+          gameMode: 'PROMPTOPHONE',
+        };
+
+        res.json(response);
+      } catch (error) {
+        console.error('Error in Promptophone game start:', error);
+        throw error;
+      }
+    } else {
+      // Original Prompt Anything logic
+      try {
+        const randomWord = gameWords[Math.floor(Math.random() * gameWords.length)];
+        const updatedGame = await prisma.game.update({
+          where: { roomId },
+          data: {
+            phase: 'PROMPT',
+            currentRound: 1,
+            currentWord: randomWord.word,
+            exclusionWords: randomWord.exclusionWords,
+            roundStartTime: new Date(),
+            gameMode: 'PROMPT_ANYTHING', // Explicitly set the game mode
+          },
+          include: {
+            players: true,
+            images: {
+              include: {
+                player: true,
+                votes: true,
+              },
+            },
+            promptChains: true,
+          },
+        });
+
+        console.log('Updated game state for Prompt Anything:', {
+          phase: updatedGame.phase,
+          gameMode: updatedGame.gameMode,
+          currentRound: updatedGame.currentRound,
+          currentWord: updatedGame.currentWord
+        });
+
+        // Ensure game mode is included in the response
+        const response = {
+          ...updatedGame,
+          gameMode: 'PROMPT_ANYTHING',
+        };
+
+        res.json(response);
+      } catch (error) {
+        console.error('Error in Prompt Anything game start:', error);
+        throw error;
+      }
+    }
   } catch (error) {
     console.error('Error starting game:', error);
     res.status(500).json({ error: 'Failed to start game' });
   }
 });
 
-// Add endpoint to check if all players have submitted
-apiRouter.get('/games/:roomId/submissions/status', async (req, res) => {
+// Add endpoint to check submission status
+apiRouter.get('/games/:roomId/round/status', async (req, res) => {
   try {
     const { roomId } = req.params;
+    const { playerId } = req.query;
 
     const game = await prisma.game.findUnique({
       where: { roomId },
       include: {
         players: true,
-        images: true,
+        images: {
+          include: {
+            player: true,
+          },
+        },
       },
     });
 
@@ -343,10 +525,16 @@ apiRouter.post('/games/:roomId/end-round', async (req, res) => {
       where: { roomId },
       data: {
         phase: 'VOTING',
+        roundStartTime: new Date(),
       },
       include: {
         players: true,
-        images: true,
+        images: {
+          include: {
+            player: true,
+            votes: true,
+          },
+        },
       },
     });
 
@@ -357,7 +545,7 @@ apiRouter.post('/games/:roomId/end-round', async (req, res) => {
   }
 });
 
-// Add prompt submission endpoint
+// Update the prompt submission endpoint
 apiRouter.post('/games/:roomId/prompts', async (req, res) => {
   try {
     const { roomId } = req.params;
@@ -372,6 +560,7 @@ apiRouter.post('/games/:roomId/prompts', async (req, res) => {
       include: {
         players: true,
         images: true,
+        promptChains: true,
       },
     });
 
@@ -391,15 +580,56 @@ apiRouter.post('/games/:roomId/prompts', async (req, res) => {
       return res.status(400).json({ error: 'Player has already submitted a prompt' });
     }
 
-    // Create the image submission with a placeholder URL
-    const image = await prisma.image.create({
-      data: {
-        prompt,
+    if (game.gameMode === 'PROMPTOPHONE') {
+      // For Promptophone, find the appropriate prompt chain for this player
+      const promptChain = game.promptChains.find(chain => chain.playerId === playerId);
+      
+      if (!promptChain) {
+        console.error('No prompt chain found for player:', {
+          playerId,
+          availableChains: game.promptChains?.map(c => ({
+            playerId: c.playerId,
+            word: c.originalWord
+          }))
+        });
+        return res.status(400).json({ error: 'No prompt chain found for current player' });
+      }
+
+      console.log('Found prompt chain for player:', {
         playerId,
-        gameId: game.id,
-        url: `placeholder-${Date.now()}`, // Placeholder URL until we generate the actual image
-      },
-    });
+        originalWord: promptChain.originalWord,
+        chainLength: (promptChain.chain as any[]).length,
+        currentRound: game.currentRound
+      });
+
+      // Create the image submission with a placeholder URL
+      const image = await prisma.image.create({
+        data: {
+          prompt,
+          playerId,
+          gameId: game.id,
+          url: `placeholder-${Date.now()}`, // Placeholder URL until we generate the actual image
+        },
+      });
+
+      // Update the prompt chain
+      await prisma.promptChain.update({
+        where: { id: promptChain.id },
+        data: {
+          chain: [...(promptChain.chain as any[]), { playerId, prompt, imageUrl: image.url }],
+        },
+      });
+    } else {
+      // Original Prompt Anything logic
+      const image = await prisma.image.create({
+        data: {
+          prompt,
+          playerId,
+          gameId: game.id,
+          url: `placeholder-${Date.now()}`, // Placeholder URL until we generate the actual image
+        },
+      });
+    }
 
     // Get updated game state
     const updatedGame = await prisma.game.findUnique({
@@ -412,6 +642,7 @@ apiRouter.post('/games/:roomId/prompts', async (req, res) => {
             votes: true,
           },
         },
+        promptChains: true,
       },
     });
 
@@ -455,13 +686,15 @@ apiRouter.post('/games/:roomId/votes', async (req, res) => {
       return res.status(403).json({ error: 'Voter not in game' });
     }
 
-    // Check if voter has already voted
+    // Check if voter has already voted and delete their previous vote if they have
     const existingVote = game.votes.find(v => v.voterId === voterId);
     if (existingVote) {
-      return res.status(400).json({ error: 'Player has already voted' });
+      await prisma.vote.delete({
+        where: { id: existingVote.id },
+      });
     }
 
-    // Create the vote
+    // Create the new vote
     const vote = await prisma.vote.create({
       data: {
         gameId: game.id,
@@ -469,6 +702,19 @@ apiRouter.post('/games/:roomId/votes', async (req, res) => {
         voterId,
       },
     });
+
+    // Check if all players have voted
+    const allPlayersVoted = game.players.every(player => 
+      game.votes.some(vote => vote.voterId === player.id)
+    );
+
+    // If all players have voted, move to results phase
+    if (allPlayersVoted) {
+      await prisma.game.update({
+        where: { roomId },
+        data: { phase: 'RESULTS' },
+      });
+    }
 
     // Get updated game state
     const updatedGame = await prisma.game.findUnique({
@@ -601,34 +847,139 @@ apiRouter.post('/games/:roomId/end-voting', async (req, res) => {
 // Mount the API router at /api
 app.use('/api', apiRouter);
 
-app.post('/games/:roomId/next-round', async (req, res) => {
+// Update the next round endpoint
+apiRouter.post('/games/:roomId/next-round', async (req, res) => {
   try {
     const { roomId } = req.params;
+    const { playerId } = req.body;
+
     const game = await prisma.game.findUnique({
       where: { roomId },
+      include: { 
+        players: true,
+        promptChains: true,
+        images: {
+          include: {
+            player: true,
+          },
+        },
+      }
     });
 
     if (!game) {
       return res.status(404).json({ error: 'Game not found' });
     }
 
-    if (game.currentRound >= game.maxRounds) {
-      const updatedGame = await prisma.game.update({
-        where: { roomId },
-        data: { phase: 'RESULTS' },
-      });
-      return res.json(updatedGame);
+    // Verify the player is the host
+    const host = game.players.find(p => p.isHost);
+    if (!host || host.id !== playerId) {
+      return res.status(403).json({ error: 'Only the host can start the next round' });
     }
 
-    const updatedGame = await prisma.game.update({
-      where: { roomId },
-      data: {
-        currentRound: game.currentRound + 1,
-        phase: 'PROMPT',
-        currentWord: gameWords[Math.floor(Math.random() * gameWords.length)].word,
-      },
-    });
-    res.json(updatedGame);
+    if (game.gameMode === 'PROMPTOPHONE') {
+      // For Promptophone, check if we've completed all rounds
+      const totalRounds = game.players.length;
+      if (game.currentRound >= totalRounds) {
+        const updatedGame = await prisma.game.update({
+          where: { roomId },
+          data: { phase: 'RESULTS' },
+          include: {
+            players: true,
+            images: {
+              include: {
+                player: true,
+                votes: true,
+              },
+            },
+            promptChains: true,
+          },
+        });
+        return res.json(updatedGame);
+      }
+
+      // Find the next prompt chain to work on
+      const nextChainIndex = game.currentRound;
+      const nextChain = game.promptChains[nextChainIndex];
+      
+      // Get the last image from the previous round
+      const lastRoundImages = game.images.filter(img => 
+        img.createdAt > new Date(Date.now() - 60000) // Images from the last minute
+      );
+      
+      // If this is the first round, use the original word
+      // Otherwise, use the last generated image
+      const currentWord = game.currentRound === 1 
+        ? nextChain.originalWord 
+        : lastRoundImages[0]?.url || nextChain.originalWord;
+
+      // Move to next round
+      const updatedGame = await prisma.game.update({
+        where: { roomId },
+        data: {
+          currentRound: game.currentRound + 1,
+          phase: 'PROMPT',
+          currentWord: currentWord,
+          roundStartTime: new Date(),
+        },
+        include: {
+          players: true,
+          images: {
+            include: {
+              player: true,
+              votes: true,
+            },
+          },
+          promptChains: true,
+        },
+      });
+
+      res.json(updatedGame);
+    } else {
+      // Original Prompt Anything logic
+      if (game.currentRound >= game.maxRounds) {
+        const updatedGame = await prisma.game.update({
+          where: { roomId },
+          data: { phase: 'RESULTS' },
+          include: {
+            players: true,
+            images: {
+              include: {
+                player: true,
+                votes: true,
+              },
+            },
+            promptChains: true,
+          },
+        });
+        return res.json(updatedGame);
+      }
+
+      // Get a random word with its exclusion words
+      const randomWord = gameWords[Math.floor(Math.random() * gameWords.length)];
+
+      const updatedGame = await prisma.game.update({
+        where: { roomId },
+        data: {
+          currentRound: game.currentRound + 1,
+          phase: 'PROMPT',
+          currentWord: randomWord.word,
+          exclusionWords: randomWord.exclusionWords,
+          roundStartTime: new Date(),
+        },
+        include: {
+          players: true,
+          images: {
+            include: {
+              player: true,
+              votes: true,
+            },
+          },
+          promptChains: true,
+        },
+      });
+
+      res.json(updatedGame);
+    }
   } catch (error) {
     console.error('Error starting next round:', error);
     res.status(500).json({ error: 'Failed to start next round' });
@@ -636,9 +987,10 @@ app.post('/games/:roomId/next-round', async (req, res) => {
 });
 
 // Image generation endpoint
-app.post('/api/generate-image', async (req, res) => {
+apiRouter.post('/games/:roomId/generate-image', async (req, res) => {
   try {
-    const { prompt, roomId, playerId } = req.body;
+    const { prompt, playerId } = req.body;
+    const { roomId } = req.params;
     console.log('Received image generation request:', { prompt, roomId, playerId });
 
     // Validate game and player
@@ -671,14 +1023,23 @@ app.post('/api/generate-image', async (req, res) => {
     const imageUrl = response.data[0].url;
     console.log('Generated image URL:', imageUrl);
 
-    // Save the image to the database
-    const image = await prisma.image.create({
-      data: {
-        url: imageUrl,
-        prompt,
+    // Find and update the existing image entry instead of creating a new one
+    const existingImage = await prisma.image.findFirst({
+      where: {
         gameId: game.id,
         playerId,
-      },
+        url: { startsWith: 'placeholder-' }
+      }
+    });
+
+    if (!existingImage) {
+      throw new Error('No placeholder image found to update');
+    }
+
+    // Update the existing image with the generated URL
+    const updatedImage = await prisma.image.update({
+      where: { id: existingImage.id },
+      data: { url: imageUrl }
     });
 
     // Update game phase to voting if all players have submitted images
@@ -686,7 +1047,8 @@ app.post('/api/generate-image', async (req, res) => {
     const imageCount = await prisma.image.count({
       where: { 
         gameId: game.id,
-        playerId: { in: game.players.map(p => p.id) }
+        playerId: { in: game.players.map(p => p.id) },
+        url: { not: { startsWith: 'placeholder-' } }
       },
     });
 
@@ -699,9 +1061,17 @@ app.post('/api/generate-image', async (req, res) => {
           roundStartTime: new Date(),
         },
       });
+    } else {
+      // Keep the game in PROMPT phase until all images are generated
+      await prisma.game.update({
+        where: { roomId },
+        data: { 
+          phase: 'PROMPT',
+        },
+      });
     }
 
-    // Return the updated game state
+    // Return the updated game state with all images
     const updatedGame = await prisma.game.findUnique({
       where: { roomId },
       include: {
@@ -714,6 +1084,10 @@ app.post('/api/generate-image', async (req, res) => {
         },
       },
     });
+
+    if (!updatedGame) {
+      throw new Error('Failed to fetch updated game state');
+    }
 
     res.json(updatedGame);
   } catch (error) {

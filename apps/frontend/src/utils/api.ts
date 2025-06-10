@@ -43,10 +43,10 @@ export const nextRound = async (roomId: string) => {
 };
 
 export const generateImage = async (prompt: string, roomId: string, playerId: string) => {
-  const res = await fetch(`${API_BASE_URL}/generate-image`, {
+  const res = await fetch(`${API_BASE_URL}/games/${roomId}/generate-image`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ prompt, roomId, playerId }),
+    body: JSON.stringify({ prompt, playerId }),
   });
   if (!res.ok) throw new Error('Failed to generate image');
   return res.json();

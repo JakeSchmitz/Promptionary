@@ -16,44 +16,51 @@ import {
 } from '@chakra-ui/react';
 import { useGame } from '../context/GameContext';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const VOTING_DURATION = 30; // 30 seconds for voting
+const VOTING_DURATION = 60; // 60 seconds for voting phase
 
 export const VotingPhase: React.FC = () => {
-  const { gameState, currentPlayer } = useGame();
+  const { gameState, currentPlayer, onEndVoting, setGameState } = useGame();
   const { roomId } = useParams<{ roomId: string }>();
   const toast = useToast();
   const [timeRemaining, setTimeRemaining] = useState(VOTING_DURATION);
   const [hasVoted, setHasVoted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [allImagesLoaded, setAllImagesLoaded] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkVotingStatus = async () => {
-      if (!roomId) return;
-
+      if (!gameState || !currentPlayer) return;
+      
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/games/${roomId}/votes/status`);
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/games/${gameState.roomId}/votes/status?playerId=${currentPlayer.id}`
+        );
+        if (!response.ok) throw new Error('Failed to check voting status');
         const data = await response.json();
-
-        if (data.timeRemaining !== undefined) {
+        
+        // Only update timer if we're in voting phase and all images are loaded
+        if (gameState.phase === 'VOTING' && allImagesLoaded) {
           setTimeRemaining(data.timeRemaining);
+          if (data.shouldEndRound) {
+            await onEndVoting();
+          }
         }
 
         if (data.hasVoted) {
           setHasVoted(true);
         }
 
-        // Check if all images are generated
+        // Check if all images are loaded
         if (gameState?.images && gameState.images.length > 0) {
-          const allImagesGenerated = gameState.images.every(img => img.url);
-          setIsLoading(!allImagesGenerated);
-        }
-
-        if (data.shouldEndRound) {
-          // End the voting round
-          await fetch(`${import.meta.env.VITE_API_URL}/games/${roomId}/end-voting`, {
-            method: 'POST',
+          const allImagesLoaded = gameState.images.every(img => {
+            // Check if the URL is a valid image URL (not a placeholder)
+            return img.url && img.url !== '' && !img.url.startsWith('placeholder-');
           });
+          setAllImagesLoaded(allImagesLoaded);
+          setIsLoading(!allImagesLoaded);
         }
       } catch (error) {
         console.error('Error checking voting status:', error);
@@ -67,13 +74,13 @@ export const VotingPhase: React.FC = () => {
     const interval = setInterval(checkVotingStatus, 1000);
 
     return () => clearInterval(interval);
-  }, [roomId, gameState?.images]);
+  }, [gameState, currentPlayer, allImagesLoaded, onEndVoting]);
 
   const handleVote = async (imageId: string) => {
-    if (!currentPlayer || !roomId || hasVoted) return;
-
+    if (!gameState || !currentPlayer) return;
+    
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/games/${roomId}/votes`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/games/${gameState.roomId}/votes`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -84,40 +91,39 @@ export const VotingPhase: React.FC = () => {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to submit vote');
-      }
-
-      setHasVoted(true);
+      if (!response.ok) throw new Error('Failed to submit vote');
+      
+      // Update local state with the new game state
+      const updatedGameState = await response.json();
+      setGameState(updatedGameState);
+      
+      // Show success message
       toast({
-        title: 'Success',
-        description: 'Your vote has been recorded',
+        title: 'Vote Submitted',
+        description: 'Your vote has been recorded. You can change your vote until the voting phase ends.',
         status: 'success',
         duration: 3000,
         isClosable: true,
       });
-
-      // Check if all players have voted
-      const statusResponse = await fetch(`${import.meta.env.VITE_API_URL}/games/${roomId}/votes/status`);
-      const statusData = await statusResponse.json();
-
-      if (statusData.allPlayersVoted) {
-        // End the voting round
-        await fetch(`${import.meta.env.VITE_API_URL}/games/${roomId}/end-voting`, {
-          method: 'POST',
-        });
-      }
     } catch (error) {
       console.error('Error submitting vote:', error);
       toast({
         title: 'Error',
-        description: 'Failed to submit vote',
+        description: 'Failed to submit vote. Please try again.',
         status: 'error',
         duration: 3000,
         isClosable: true,
       });
     }
   };
+
+  // Check if the game has moved to results phase
+  useEffect(() => {
+    if (gameState?.phase === 'RESULTS') {
+      // Navigate to results page or trigger results phase component
+      navigate(`/games/${gameState.roomId}/results`);
+    }
+  }, [gameState?.phase, gameState?.roomId, navigate]);
 
   if (!gameState) return null;
 
@@ -126,12 +132,13 @@ export const VotingPhase: React.FC = () => {
       <Card>
         <CardBody>
           <VStack spacing={4} align="stretch">
-            <Heading size="md">Round {gameState.currentRound} - Vote for Your Favorite</Heading>
-            <Text>Choose the image that best represents the word:</Text>
-            <Text fontSize="xl" fontWeight="bold" color="blue.500">
-              {gameState.currentWord}
+            <Heading size="lg" color="blue.600">Voting Phase</Heading>
+            <Text fontSize="lg" color="gray.600">
+              Vote for the image that best represents the word. You have 1 minute to make your choice!
             </Text>
-            
+            <Text fontSize="xl" fontWeight="bold" color="blue.500">
+              Target Word: {gameState.currentWord}
+            </Text>
             <Box>
               <Text mb={2}>Time Remaining: {Math.ceil(timeRemaining)} seconds</Text>
               <Progress 

@@ -110,6 +110,9 @@ export const GameLobby: React.FC = () => {
                 </Button>
               </InputRightElement>
             </InputGroup>
+            <Badge colorScheme="purple" alignSelf="start">
+              {gameState.gameMode === 'PROMPT_ANYTHING' ? 'Prompt Anything' : 'Promptophone'}
+            </Badge>
           </VStack>
         </CardBody>
       </Card>

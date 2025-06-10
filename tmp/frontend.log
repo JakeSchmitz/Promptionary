@@ -3,12 +3,7 @@
 > vite
 
 
-  VITE v5.4.19  ready in 78 ms
+  VITE v5.4.19  ready in 91 ms
 
   ➜  Local:   http://localhost:5173/
   ➜  Network: use --host to expose
-3:27:45 PM [vite] page reload src/pages/GameRoom.tsx
-3:28:28 PM [vite] page reload src/pages/GameRoom.tsx
-3:29:21 PM [vite] page reload src/pages/GameRoom.tsx
-3:29:25 PM [vite] page reload src/pages/GameRoom.tsx
-3:29:25 PM [vite] page reload src/pages/GameRoom.tsx

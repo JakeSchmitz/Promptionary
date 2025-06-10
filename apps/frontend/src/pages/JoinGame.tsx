@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Box,
@@ -34,23 +34,27 @@ const JoinGame = () => {
       return
     }
 
-    // Handle guest users
-    if (!currentUser) {
-      if (!guestName.trim()) {
-        toast({
-          title: 'Error',
-          description: 'Please enter your name',
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        })
-        return
-      }
-      setGuestName(guestName)
-    }
-
     setIsLoading(true)
     try {
+      // Handle guest users
+      if (!currentUser) {
+        if (!guestName.trim()) {
+          toast({
+            title: 'Error',
+            description: 'Please enter your name',
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          })
+          return
+        }
+        // Set guest name first
+        setGuestName(guestName)
+        // Wait for the next render cycle to ensure state is updated
+        await new Promise(resolve => setTimeout(resolve, 0))
+      }
+
+      // Now join the game
       await joinGame(roomId)
       
       toast({
@@ -87,32 +91,37 @@ const JoinGame = () => {
         </Box>
 
         <Box w="100%" p={8} borderWidth={1} borderRadius="lg">
-          <VStack spacing={6}>
-            <Input
-              placeholder="Enter Room ID"
-              value={roomId}
-              onChange={(e) => setRoomId(e.target.value)}
-              size="lg"
-            />
-            {!currentUser && (
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            handleJoinGame();
+          }}>
+            <VStack spacing={6}>
               <Input
-                placeholder="Enter Your Name"
-                value={guestName}
-                onChange={(e) => setLocalGuestName(e.target.value)}
+                placeholder="Enter Room ID"
+                value={roomId}
+                onChange={(e) => setRoomId(e.target.value)}
                 size="lg"
               />
-            )}
-            <Button
-              colorScheme="blue"
-              onClick={handleJoinGame}
-              width="100%"
-              size="lg"
-              isLoading={isLoading}
-              loadingText="Joining..."
-            >
-              Join Game
-            </Button>
-          </VStack>
+              {!currentUser && (
+                <Input
+                  placeholder="Enter Your Name"
+                  value={guestName}
+                  onChange={(e) => setLocalGuestName(e.target.value)}
+                  size="lg"
+                />
+              )}
+              <Button
+                type="submit"
+                colorScheme="blue"
+                width="100%"
+                size="lg"
+                isLoading={isLoading}
+                loadingText="Joining..."
+              >
+                Join Game
+              </Button>
+            </VStack>
+          </form>
         </Box>
       </VStack>
     </Container>

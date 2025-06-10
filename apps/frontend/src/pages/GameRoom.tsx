@@ -7,6 +7,8 @@ import { GameLobby } from '../components/GameLobby';
 import { PromptPhase } from '../components/PromptPhase';
 import { VotingPhase } from '../components/VotingPhase';
 import { ResultsPhase } from '../components/ResultsPhase';
+import { PromptophonePhase } from '../components/PromptophonePhase';
+import { PromptophoneResults } from '../components/PromptophoneResults';
 import { Box, Spinner, Center } from '@chakra-ui/react';
 
 // Polling interval in milliseconds
@@ -83,12 +85,36 @@ export const GameRoom: React.FC = () => {
     return null;
   }
 
+  const renderGamePhase = () => {
+    if (gameState.phase === 'LOBBY') {
+      return <GameLobby />;
+    }
+
+    if (gameState.gameMode === 'PROMPTOPHONE') {
+      if (gameState.phase === 'PROMPT') {
+        return <PromptophonePhase />;
+      }
+      if (gameState.phase === 'RESULTS') {
+        return <PromptophoneResults />;
+      }
+    } else {
+      if (gameState.phase === 'PROMPT') {
+        return <PromptPhase />;
+      }
+      if (gameState.phase === 'VOTING') {
+        return <VotingPhase />;
+      }
+      if (gameState.phase === 'RESULTS') {
+        return <ResultsPhase />;
+      }
+    }
+
+    return null;
+  };
+
   return (
     <Box minH="100vh" bg="gray.50" py={8}>
-      {gameState.phase === 'LOBBY' && <GameLobby />}
-      {gameState.phase === 'PROMPT' && <PromptPhase />}
-      {gameState.phase === 'VOTING' && <VotingPhase />}
-      {gameState.phase === 'RESULTS' && <ResultsPhase />}
+      {renderGamePhase()}
     </Box>
   );
 }; 

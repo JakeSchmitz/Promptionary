@@ -1,0 +1,5 @@
+-- CreateEnum
+CREATE TYPE "GameMode" AS ENUM ('PROMPT_ANYTHING', 'PROMPTOPHONE');
+
+-- AlterTable
+ALTER TABLE "Game" ADD COLUMN     "gameMode" "GameMode" NOT NULL DEFAULT 'PROMPT_ANYTHING';

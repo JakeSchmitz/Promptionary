@@ -10,24 +10,51 @@ import {
   MenuItem,
   useColorModeValue,
   Link as ChakraLink,
+  Stack,
+  Collapse,
+  IconButton,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  useBreakpointValue,
+  useDisclosure,
+  useColorMode,
 } from '@chakra-ui/react'
-import { Link as RouterLink, useNavigate } from 'react-router-dom'
-import { ChevronDownIcon } from '@chakra-ui/icons'
+import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom'
+import { ChevronDownIcon, ChevronRightIcon, MoonIcon, SunIcon } from '@chakra-ui/icons'
 import { useGame } from '../context/GameContext'
 import { useAuth } from '../context/AuthContext'
 
 const Navbar = () => {
-  const navigate = useNavigate()
-  const { playerName } = useGame()
+  const { isOpen, onToggle } = useDisclosure()
+  const { colorMode, toggleColorMode } = useColorMode()
   const { currentUser, logout } = useAuth()
+  const { gameState } = useGame()
+  const location = useLocation()
+  const navigate = useNavigate()
   const bgColor = 'blue.500'
   const textColor = 'white'
   
-  const displayName = currentUser?.name || playerName
+  const displayName = currentUser?.name
 
   const handleLogout = () => {
     logout()
     navigate('/')
+  }
+
+  const getTitle = () => {
+    // Always show Promptionary on these pages
+    if (['/login', '/account', '/history', '/dashboard'].includes(location.pathname)) {
+      return 'Promptionary'
+    }
+
+    // Show game mode specific title in game room
+    if (location.pathname.startsWith('/game/') && gameState) {
+      return gameState.gameMode === 'PROMPTOPHONE' ? 'Promptophone' : 'Prompt Anything'
+    }
+
+    // Default title
+    return 'Promptionary'
   }
 
   return (
@@ -59,7 +86,7 @@ const Navbar = () => {
           color="white"
           _hover={{ textDecoration: 'none', color: 'blue.200' }}
         >
-          Promptionary
+          {getTitle()}
         </ChakraLink>
 
         {/* User Menu */}

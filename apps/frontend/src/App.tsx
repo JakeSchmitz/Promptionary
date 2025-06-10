@@ -7,7 +7,7 @@ import { AuthProvider, useAuth } from './context/AuthContext'
 import Layout from './components/Layout'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
-import GameRoom from './pages/GameRoom'
+import { GameRoom } from './pages/GameRoom'
 import JoinGame from './pages/JoinGame'
 import Scoreboard from './pages/Scoreboard'
 import GameHistory from './pages/GameHistory'
@@ -94,7 +94,7 @@ const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
 // Game route wrapper component (handles both authenticated and unauthenticated users)
 const GameRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated, currentUser } = useAuth()
+  const { isAuthenticated, currentUser, isLoading } = useAuth()
   const location = useLocation()
   
   // Extract room ID from URL
@@ -103,6 +103,11 @@ const GameRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // If no room ID, redirect to home
   if (!roomId) {
     return <Navigate to="/" replace />
+  }
+
+  // Wait for auth state to be loaded before making any decisions
+  if (isLoading) {
+    return null // or a loading spinner if you prefer
   }
 
   // If not authenticated and no guest name, redirect to login with return path

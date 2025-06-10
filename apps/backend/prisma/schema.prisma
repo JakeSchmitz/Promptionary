@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,32 +8,37 @@ datasource db {
 }
 
 model Game {
-  id            String    @id @default(uuid())
-  roomId        String    @unique
-  currentRound  Int       @default(1)
-  maxRounds     Int       @default(5)
-  currentWord   String
-  phase         GamePhase @default(LOBBY)
-  hostId        String?   // ID of the host player
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  players       Player[]
-  images        Image[]
-  votes         Vote[]
+  id             String    @id @default(uuid())
+  roomId         String    @unique
+  currentRound   Int       @default(1)
+  maxRounds      Int       @default(5)
+  currentWord    String
+  exclusionWords String[]  @default([])
+  phase          GamePhase @default(LOBBY)
+  roundStartTime DateTime?
+  gameMode       GameMode  @default(PROMPT_ANYTHING)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  hostId         String?
+  images         Image[]
+  players        Player[]
+  votes          Vote[]
+  promptChains   PromptChain[]
 }
 
 model Player {
-  id        String   @id @default(uuid())
-  name      String
-  email     String?
-  score     Int      @default(0)
-  isHost    Boolean  @default(false)
-  gameId    String
-  game      Game     @relation(fields: [gameId], references: [id])
-  images    Image[]
-  votes     Vote[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String        @id
+  name          String
+  score         Int          @default(0)
+  gameId        String
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  email         String?
+  isHost        Boolean      @default(false)
+  images        Image[]
+  game          Game         @relation(fields: [gameId], references: [id])
+  votes         Vote[]
+  promptChains  PromptChain[]
 }
 
 model Image {
@@ -47,24 +46,36 @@ model Image {
   url       String
   prompt    String
   gameId    String
-  game      Game     @relation(fields: [gameId], references: [id])
   playerId  String
+  createdAt DateTime @default(now())
+  game      Game     @relation(fields: [gameId], references: [id])
   player    Player   @relation(fields: [playerId], references: [id])
   votes     Vote[]
-  createdAt DateTime @default(now())
 }
 
 model Vote {
   id        String   @id @default(uuid())
   gameId    String
-  game      Game     @relation(fields: [gameId], references: [id])
   imageId   String
-  image     Image    @relation(fields: [imageId], references: [id])
   voterId   String
-  voter     Player   @relation(fields: [voterId], references: [id])
   createdAt DateTime @default(now())
+  game      Game     @relation(fields: [gameId], references: [id])
+  image     Image    @relation(fields: [imageId], references: [id])
+  voter     Player   @relation(fields: [voterId], references: [id])
 
   @@unique([gameId, voterId])
+}
+
+model PromptChain {
+  id            String   @id @default(uuid())
+  gameId        String
+  playerId      String
+  originalWord  String
+  chain         Json     // Array of { playerId, prompt, imageUrl }
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  game          Game     @relation(fields: [gameId], references: [id])
+  player        Player   @relation(fields: [playerId], references: [id])
 }
 
 enum GamePhase {
@@ -72,4 +83,10 @@ enum GamePhase {
   PROMPT
   VOTING
   RESULTS
+  ENDED
+}
+
+enum GameMode {
+  PROMPT_ANYTHING
+  PROMPTOPHONE
 }
