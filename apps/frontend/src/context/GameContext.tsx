@@ -4,13 +4,15 @@ import { useAuth } from './AuthContext'
 import { useToast } from '@chakra-ui/react'
 
 // Remove the /api suffix from the fallback since it's now in the env var
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
 console.log('API_URL:', API_URL)
 
 interface Player {
   id: string
   name: string
   score: number
+  isHost: boolean
+  email?: string
 }
 
 interface Submission {
@@ -18,7 +20,7 @@ interface Submission {
   playerId: string
   prompt: string
   imageUrl: string
-  votes: string[]
+  votes: number
 }
 
 interface Round {
@@ -32,10 +34,22 @@ interface GameState {
   roomId: string
   players: Player[]
   currentRound: number
-  totalRounds: number
+  maxRounds: number
+  currentWord?: string
+  exclusionWords?: string[]
   rounds: Round[]
   isComplete: boolean
-  phase: 'LOBBY' | 'PROMPT' | 'VOTING' | 'RESULTS'
+  phase: 'LOBBY' | 'PROMPT' | 'VOTING' | 'RESULTS' | 'ENDED'
+  images?: Array<{
+    id: string
+    url: string
+    prompt: string
+    playerId: string
+    votes: Array<{
+      id: string
+      voterId: string
+    }>
+  }>
 }
 
 interface GameContextType {
@@ -67,10 +81,22 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setCurrentPlayer({
         id: currentUser.id,
         name: currentUser.name,
-        score: 0
+        score: 0,
+        isHost: false, // Default to false, will be updated when game state is loaded
+        email: currentUser.email
       })
+    } else {
+      // Clear guest joined flag when user logs out
+      localStorage.removeItem('guestJoined')
     }
   }, [currentUser])
+
+  // Clear guest joined flag when game state changes
+  useEffect(() => {
+    if (!gameState) {
+      localStorage.removeItem('guestJoined')
+    }
+  }, [gameState])
 
   // Get room ID from URL or localStorage
   const getRoomId = () => {
@@ -193,7 +219,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         playerId: currentPlayer.id,
         prompt,
         imageUrl: data.imageUrl,
-        votes: [],
+        votes: 0,
       }
 
       const updatedRounds = [...gameState.rounds]
@@ -228,13 +254,13 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     // Remove any existing vote from this player
     currentRound.submissions.forEach(submission => {
-      submission.votes = submission.votes.filter(id => id !== currentPlayer.id)
+      submission.votes = 0
     })
 
     // Add new vote
     const submission = currentRound.submissions.find(s => s.id === submissionId)
     if (submission) {
-      submission.votes.push(currentPlayer.id)
+      submission.votes = 1
     }
 
     setGameState({
@@ -253,7 +279,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       previousRound.submissions.forEach(submission => {
         const player = updatedPlayers.find(p => p.id === submission.playerId)
         if (player) {
-          player.score += submission.votes.length
+          player.score += submission.votes
         }
       })
 
@@ -337,10 +363,13 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         roomId: data.roomId,
         players: data.players,
         currentRound: data.currentRound,
-        totalRounds: data.maxRounds,
+        maxRounds: data.maxRounds,
+        currentWord: data.currentWord,
+        exclusionWords: data.exclusionWords,
         rounds: [],
         isComplete: false,
         phase: 'LOBBY',
+        images: data.images,
       }
 
       console.log('GameContext: Setting new game state:', newGameState)
@@ -354,11 +383,17 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   const startGame = async () => {
-    if (!gameState) return
+    if (!gameState || !currentPlayer) return
 
     try {
       const response = await fetch(`${API_URL}/games/${gameState.roomId}/start`, {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          playerId: currentPlayer.id,
+        }),
       })
       if (!response.ok) {
         throw new Error('Failed to start game')
@@ -373,41 +408,34 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const joinGame = async (roomId: string) => {
     try {
-      // First verify the game exists
-      const gameResponse = await fetch(`${API_URL}/games/${roomId}`);
-      if (!gameResponse.ok) {
-        throw new Error('Game not found');
+      if (!currentUser) {
+        throw new Error('No user found');
       }
 
-      // For guest users, add them to the game
-      if (currentUser?.isGuest) {
-        const playerResponse = await fetch(`${API_URL}/games/${roomId}/players`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            name: currentUser.name,
-            playerId: currentUser.id,
-          }),
-        });
+      const playerResponse = await fetch(`${API_URL}/games/${roomId}/players`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: currentUser.name,
+          playerId: currentUser.id,
+        }),
+      });
 
-        if (!playerResponse.ok) {
-          throw new Error('Failed to join game');
-        }
-
-        // Get the updated game state
-        const updatedGameState = await playerResponse.json();
-        
-        // Update the game state directly
-        setGameState(updatedGameState);
-        
-        // Store the game state and room ID
-        localStorage.setItem('gameState', JSON.stringify(updatedGameState));
-        localStorage.setItem('roomId', roomId);
-        // Mark that this guest has joined this room
-        localStorage.setItem('guestJoined', roomId);
+      if (!playerResponse.ok) {
+        throw new Error('Failed to join game');
       }
+
+      // Get the updated game state
+      const updatedGameState = await playerResponse.json();
+      
+      // Update the game state directly
+      setGameState(updatedGameState);
+      
+      // Store the game state and room ID
+      localStorage.setItem('gameState', JSON.stringify(updatedGameState));
+      localStorage.setItem('roomId', roomId);
     } catch (error) {
       console.error('Error joining game:', error);
       toast({

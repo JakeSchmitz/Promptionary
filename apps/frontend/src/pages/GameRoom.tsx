@@ -1,27 +1,39 @@
 /// <reference types="vite/client" />
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useGame } from '../context/GameContext';
 import { useAuth } from '../context/AuthContext';
+import { useGame } from '../context/GameContext';
 import { GameLobby } from '../components/GameLobby';
+import { PromptPhase } from '../components/PromptPhase';
+import { VotingPhase } from '../components/VotingPhase';
+import { ResultsPhase } from '../components/ResultsPhase';
+import { Box, Spinner, Center } from '@chakra-ui/react';
 
-const GameRoom = () => {
+// Polling interval in milliseconds
+const POLLING_INTERVAL = 2000;
+
+export const GameRoom: React.FC = () => {
   const { roomId } = useParams<{ roomId: string }>();
   const navigate = useNavigate();
-  const { gameState, initializeGame, joinGame } = useGame();
   const { currentUser } = useAuth();
+  const { gameState, initializeGame, joinGame, refreshGameState } = useGame();
+  const [isInitializing, setIsInitializing] = useState(true);
 
+  // Initial game setup
   useEffect(() => {
     const setupGame = async () => {
-      if (!roomId) return;
+      if (!roomId) {
+        navigate('/');
+        return;
+      }
 
       try {
-        // Initialize game state
+        setIsInitializing(true);
         await initializeGame(roomId);
 
-        // If we have a guest user, make sure they're in the game
-        if (currentUser?.isGuest) {
-          const isInGame = gameState?.players.some(p => p.id === currentUser.id);
+        // Check if user is in the game
+        if (currentUser && gameState) {
+          const isInGame = gameState.players.some(p => p.id === currentUser.id);
           if (!isInGame) {
             await joinGame(roomId);
           }
@@ -29,17 +41,54 @@ const GameRoom = () => {
       } catch (error) {
         console.error('Error setting up game:', error);
         navigate('/');
+      } finally {
+        setIsInitializing(false);
       }
     };
 
     setupGame();
-  }, [roomId, currentUser?.isGuest]);
+  }, [roomId, currentUser?.id]);
+
+  // Background polling for game state updates
+  useEffect(() => {
+    if (!roomId || isInitializing) return;
+
+    const pollGameState = async () => {
+      try {
+        await refreshGameState();
+      } catch (error) {
+        console.error('Error polling game state:', error);
+      }
+    };
+
+    // Initial poll
+    pollGameState();
+
+    // Set up interval for polling
+    const intervalId = setInterval(pollGameState, POLLING_INTERVAL);
+
+    // Cleanup interval on unmount
+    return () => clearInterval(intervalId);
+  }, [roomId, isInitializing]);
+
+  if (isInitializing) {
+    return (
+      <Center h="100vh">
+        <Spinner size="xl" />
+      </Center>
+    );
+  }
 
   if (!gameState) {
     return null;
   }
 
-  return <GameLobby />;
-};
-
-export default GameRoom; 
+  return (
+    <Box minH="100vh" bg="gray.50" py={8}>
+      {gameState.phase === 'LOBBY' && <GameLobby />}
+      {gameState.phase === 'PROMPT' && <PromptPhase />}
+      {gameState.phase === 'VOTING' && <VotingPhase />}
+      {gameState.phase === 'RESULTS' && <ResultsPhase />}
+    </Box>
+  );
+}; 
