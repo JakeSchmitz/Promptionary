@@ -7,6 +7,9 @@ import { gameWords } from './data/words';
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Constants
+const ROUND_DURATION = 60; // 60 seconds per round
+
 // Enable CORS for all routes
 app.use(cors({
   origin: 'http://localhost:5173', // Vite's default port
@@ -26,6 +29,30 @@ app.use((req, res, next) => {
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
+
+// Example targets for testing
+const EXAMPLE_TARGETS = [
+  {
+    word: 'cat',
+    exclusionWords: ['kitten', 'feline', 'pet', 'animal', 'meow']
+  },
+  {
+    word: 'mountain',
+    exclusionWords: ['hill', 'peak', 'climb', 'rock', 'summit']
+  },
+  {
+    word: 'ocean',
+    exclusionWords: ['sea', 'water', 'beach', 'wave', 'fish']
+  },
+  {
+    word: 'forest',
+    exclusionWords: ['tree', 'wood', 'nature', 'green', 'leaf']
+  },
+  {
+    word: 'castle',
+    exclusionWords: ['fortress', 'palace', 'kingdom', 'royal', 'medieval']
+  }
+];
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -51,6 +78,9 @@ apiRouter.post('/games', async (req, res) => {
         data: {
           roomId,
           currentWord: gameWords[Math.floor(Math.random() * gameWords.length)].word,
+          currentRound: 0,
+          maxRounds: 3, // Set default number of rounds
+          phase: 'LOBBY',
         },
       });
 
@@ -205,16 +235,65 @@ apiRouter.post('/games/:roomId/players', async (req, res) => {
   }
 });
 
+// Update the start game endpoint to set the round start time
 apiRouter.post('/games/:roomId/start', async (req, res) => {
   try {
     const { roomId } = req.params;
-    const { playerId } = req.body; // Get the player ID from the request
+    const { playerId } = req.body;
 
-    // Get the game and verify the player is the host
+    // Get random target
+    const randomTarget = EXAMPLE_TARGETS[Math.floor(Math.random() * EXAMPLE_TARGETS.length)];
+
+    // First get the game to verify the host
+    const existingGame = await prisma.game.findUnique({
+      where: { roomId },
+      include: {
+        players: true,
+      },
+    });
+
+    if (!existingGame) {
+      return res.status(404).json({ error: 'Game not found' });
+    }
+
+    // Verify the player is the host
+    const host = existingGame.players.find(p => p.isHost);
+    if (!host || host.id !== playerId) {
+      return res.status(403).json({ error: 'Only the host can start the game' });
+    }
+
+    // Update the game with the new target and phase
+    const updatedGame = await prisma.game.update({
+      where: { roomId },
+      data: {
+        phase: 'PROMPT',
+        currentRound: 1,
+        currentWord: randomTarget.word,
+        exclusionWords: randomTarget.exclusionWords,
+        roundStartTime: new Date(),
+      },
+      include: {
+        players: true,
+      },
+    });
+
+    res.json(updatedGame);
+  } catch (error) {
+    console.error('Error starting game:', error);
+    res.status(500).json({ error: 'Failed to start game' });
+  }
+});
+
+// Add endpoint to check if all players have submitted
+apiRouter.get('/games/:roomId/submissions/status', async (req, res) => {
+  try {
+    const { roomId } = req.params;
+
     const game = await prisma.game.findUnique({
       where: { roomId },
       include: {
         players: true,
+        images: true,
       },
     });
 
@@ -222,16 +301,284 @@ apiRouter.post('/games/:roomId/start', async (req, res) => {
       return res.status(404).json({ error: 'Game not found' });
     }
 
-    const host = game.players.find(p => p.isHost);
-    if (!host || host.id !== playerId) {
-      return res.status(403).json({ error: 'Only the host can start the game' });
+    const allPlayersSubmitted = game.players.every(player => 
+      game.images.some(image => image.playerId === player.id)
+    );
+
+    const roundStartTime = game.roundStartTime;
+    const now = new Date();
+    const timeElapsed = roundStartTime ? (now.getTime() - roundStartTime.getTime()) / 1000 : 0;
+    const timeRemaining = Math.max(0, Math.ceil(ROUND_DURATION - timeElapsed));
+
+    res.json({
+      allPlayersSubmitted,
+      timeRemaining,
+      shouldEndRound: allPlayersSubmitted || timeRemaining <= 0,
+    });
+  } catch (error) {
+    console.error('Error checking submission status:', error);
+    res.status(500).json({ error: 'Failed to check submission status' });
+  }
+});
+
+// Add endpoint to end the current round
+apiRouter.post('/games/:roomId/end-round', async (req, res) => {
+  try {
+    const { roomId } = req.params;
+
+    const game = await prisma.game.findUnique({
+      where: { roomId },
+      include: {
+        players: true,
+        images: true,
+      },
+    });
+
+    if (!game) {
+      return res.status(404).json({ error: 'Game not found' });
     }
 
+    // Move to voting phase
     const updatedGame = await prisma.game.update({
       where: { roomId },
       data: {
-        phase: 'PROMPT',
-        currentWord: gameWords[Math.floor(Math.random() * gameWords.length)].word,
+        phase: 'VOTING',
+      },
+      include: {
+        players: true,
+        images: true,
+      },
+    });
+
+    res.json(updatedGame);
+  } catch (error) {
+    console.error('Error ending round:', error);
+    res.status(500).json({ error: 'Failed to end round' });
+  }
+});
+
+// Add prompt submission endpoint
+apiRouter.post('/games/:roomId/prompts', async (req, res) => {
+  try {
+    const { roomId } = req.params;
+    const { prompt, playerId } = req.body;
+
+    if (!prompt || !playerId) {
+      return res.status(400).json({ error: 'Prompt and playerId are required' });
+    }
+
+    const game = await prisma.game.findUnique({
+      where: { roomId },
+      include: {
+        players: true,
+        images: true,
+      },
+    });
+
+    if (!game) {
+      return res.status(404).json({ error: 'Game not found' });
+    }
+
+    // Verify the player is in the game
+    const player = game.players.find(p => p.id === playerId);
+    if (!player) {
+      return res.status(403).json({ error: 'Player not in game' });
+    }
+
+    // Check if player has already submitted
+    const existingSubmission = game.images.find(img => img.playerId === playerId);
+    if (existingSubmission) {
+      return res.status(400).json({ error: 'Player has already submitted a prompt' });
+    }
+
+    // Create the image submission with a placeholder URL
+    const image = await prisma.image.create({
+      data: {
+        prompt,
+        playerId,
+        gameId: game.id,
+        url: `placeholder-${Date.now()}`, // Placeholder URL until we generate the actual image
+      },
+    });
+
+    // Get updated game state
+    const updatedGame = await prisma.game.findUnique({
+      where: { roomId },
+      include: {
+        players: true,
+        images: {
+          include: {
+            player: true,
+            votes: true,
+          },
+        },
+      },
+    });
+
+    if (!updatedGame) {
+      throw new Error('Failed to fetch updated game state');
+    }
+
+    res.json(updatedGame);
+  } catch (error) {
+    console.error('Error submitting prompt:', error);
+    res.status(500).json({ error: 'Failed to submit prompt' });
+  }
+});
+
+// Add voting endpoints
+apiRouter.post('/games/:roomId/votes', async (req, res) => {
+  try {
+    const { roomId } = req.params;
+    const { imageId, voterId } = req.body;
+
+    if (!imageId || !voterId) {
+      return res.status(400).json({ error: 'Image ID and voter ID are required' });
+    }
+
+    const game = await prisma.game.findUnique({
+      where: { roomId },
+      include: {
+        players: true,
+        images: true,
+        votes: true,
+      },
+    });
+
+    if (!game) {
+      return res.status(404).json({ error: 'Game not found' });
+    }
+
+    // Verify the voter is in the game
+    const voter = game.players.find(p => p.id === voterId);
+    if (!voter) {
+      return res.status(403).json({ error: 'Voter not in game' });
+    }
+
+    // Check if voter has already voted
+    const existingVote = game.votes.find(v => v.voterId === voterId);
+    if (existingVote) {
+      return res.status(400).json({ error: 'Player has already voted' });
+    }
+
+    // Create the vote
+    const vote = await prisma.vote.create({
+      data: {
+        gameId: game.id,
+        imageId,
+        voterId,
+      },
+    });
+
+    // Get updated game state
+    const updatedGame = await prisma.game.findUnique({
+      where: { roomId },
+      include: {
+        players: true,
+        images: {
+          include: {
+            player: true,
+            votes: true,
+          },
+        },
+      },
+    });
+
+    if (!updatedGame) {
+      throw new Error('Failed to fetch updated game state');
+    }
+
+    res.json(updatedGame);
+  } catch (error) {
+    console.error('Error submitting vote:', error);
+    res.status(500).json({ error: 'Failed to submit vote' });
+  }
+});
+
+apiRouter.get('/games/:roomId/votes/status', async (req, res) => {
+  try {
+    const { roomId } = req.params;
+    const { voterId } = req.query;
+
+    const game = await prisma.game.findUnique({
+      where: { roomId },
+      include: {
+        players: true,
+        votes: true,
+      },
+    });
+
+    if (!game) {
+      return res.status(404).json({ error: 'Game not found' });
+    }
+
+    const allPlayersVoted = game.players.every(player => 
+      game.votes.some(vote => vote.voterId === player.id)
+    );
+
+    const hasVoted = voterId ? game.votes.some(vote => vote.voterId === voterId) : false;
+
+    const roundStartTime = game.roundStartTime;
+    const now = new Date();
+    const timeElapsed = roundStartTime ? (now.getTime() - roundStartTime.getTime()) / 1000 : 0;
+    const timeRemaining = Math.max(0, Math.ceil(30 - timeElapsed)); // 30 seconds for voting
+
+    res.json({
+      allPlayersVoted,
+      hasVoted,
+      timeRemaining,
+      shouldEndRound: allPlayersVoted || timeRemaining <= 0,
+    });
+  } catch (error) {
+    console.error('Error checking voting status:', error);
+    res.status(500).json({ error: 'Failed to check voting status' });
+  }
+});
+
+apiRouter.post('/games/:roomId/end-voting', async (req, res) => {
+  try {
+    const { roomId } = req.params;
+
+    const game = await prisma.game.findUnique({
+      where: { roomId },
+      include: {
+        players: true,
+        images: {
+          include: {
+            votes: true,
+          },
+        },
+      },
+    });
+
+    if (!game) {
+      return res.status(404).json({ error: 'Game not found' });
+    }
+
+    // Calculate scores for this round
+    const imageScores = game.images.map(image => ({
+      imageId: image.id,
+      playerId: image.playerId,
+      score: image.votes.length,
+    }));
+
+    // Update player scores
+    for (const score of imageScores) {
+      await prisma.player.update({
+        where: { id: score.playerId },
+        data: {
+          score: {
+            increment: score.score,
+          },
+        },
+      });
+    }
+
+    // Move to results phase
+    const updatedGame = await prisma.game.update({
+      where: { roomId },
+      data: {
+        phase: 'RESULTS',
       },
       include: {
         players: true,
@@ -246,8 +593,8 @@ apiRouter.post('/games/:roomId/start', async (req, res) => {
 
     res.json(updatedGame);
   } catch (error) {
-    console.error('Error starting game:', error);
-    res.status(500).json({ error: 'Failed to start game' });
+    console.error('Error ending voting:', error);
+    res.status(500).json({ error: 'Failed to end voting' });
   }
 });
 
@@ -344,9 +691,13 @@ app.post('/api/generate-image', async (req, res) => {
     });
 
     if (imageCount >= playerCount) {
+      // Set round start time for voting phase
       await prisma.game.update({
         where: { roomId },
-        data: { phase: 'VOTING' },
+        data: { 
+          phase: 'VOTING',
+          roundStartTime: new Date(),
+        },
       });
     }
 
