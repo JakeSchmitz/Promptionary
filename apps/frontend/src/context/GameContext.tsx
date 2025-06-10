@@ -29,6 +29,20 @@ interface Round {
   isComplete: boolean
 }
 
+interface PromptChain {
+  id: string;
+  gameId: string;
+  playerId: string;
+  originalWord: string;
+  chain: Array<{
+    playerId: string;
+    prompt: string;
+    imageUrl: string;
+  }>;
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface GameState {
   id: string
   roomId: string
@@ -40,6 +54,7 @@ interface GameState {
   rounds: Round[]
   isComplete: boolean
   phase: 'LOBBY' | 'PROMPT' | 'VOTING' | 'RESULTS' | 'ENDED'
+  gameMode: 'PROMPT_ANYTHING' | 'PROMPTOPHONE'
   images?: Array<{
     id: string
     url: string
@@ -50,6 +65,7 @@ interface GameState {
       voterId: string
     }>
   }>
+  promptChains?: PromptChain[]
 }
 
 interface GameContextType {
@@ -59,11 +75,13 @@ interface GameContextType {
   submitPrompt: (prompt: string) => Promise<void>
   submitVote: (submissionId: string) => Promise<void>
   startNewRound: () => Promise<void>
-  createGame: () => Promise<string>
+  createGame: (gameMode: 'PROMPT_ANYTHING' | 'PROMPTOPHONE') => Promise<string>
   refreshGameState: () => Promise<void>
   startGame: () => Promise<void>
   joinGame: (roomId: string) => Promise<void>
   initializeGame: (roomId: string) => Promise<void>
+  onEndVoting: () => Promise<void>
+  setGameState: (state: GameState) => void
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined)
@@ -195,10 +213,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [gameState])
 
   const submitPrompt = async (prompt: string) => {
-    if (!gameState || !currentPlayer) return
+    if (!gameState || !currentPlayer) return;
 
     try {
-      const response = await fetch(`${API_URL}/games/${gameState.id}/prompts`, {
+      // First submit the prompt
+      const promptResponse = await fetch(`${API_URL}/games/${gameState.roomId}/prompts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -207,44 +226,40 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
           playerId: currentPlayer.id,
           prompt,
         }),
-      })
+      });
 
-      if (!response.ok) {
-        throw new Error('Failed to submit prompt')
+      if (!promptResponse.ok) {
+        throw new Error('Failed to submit prompt');
       }
 
-      const data = await response.json()
-      const newSubmission: Submission = {
-        id: data.id,
-        playerId: currentPlayer.id,
-        prompt,
-        imageUrl: data.imageUrl,
-        votes: 0,
+      // Get the updated game state after prompt submission
+      const promptData = await promptResponse.json();
+      setGameState(promptData);
+
+      // Then generate the image
+      const imageResponse = await fetch(`${API_URL}/games/${gameState.roomId}/generate-image`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt,
+          playerId: currentPlayer.id,
+        }),
+      });
+
+      if (!imageResponse.ok) {
+        throw new Error('Failed to generate image');
       }
 
-      const updatedRounds = [...gameState.rounds]
-      const currentRoundIndex = gameState.currentRound
-      if (!updatedRounds[currentRoundIndex]) {
-        updatedRounds[currentRoundIndex] = {
-          targetWord: 'TODO: Get new word from backend',
-          submissions: [],
-          isComplete: false,
-        }
-      }
-      updatedRounds[currentRoundIndex].submissions.push(newSubmission)
-
-      const updatedGameState = {
-        ...gameState,
-        rounds: updatedRounds,
-      }
-
-      setGameState(updatedGameState)
-      localStorage.setItem('gameState', JSON.stringify(updatedGameState))
+      // Get the final game state with the generated image
+      const imageData = await imageResponse.json();
+      setGameState(imageData);
     } catch (error) {
-      console.error('Error submitting prompt:', error)
-      throw error
+      console.error('Error in prompt submission flow:', error);
+      throw error;
     }
-  }
+  };
 
   const submitVote = async (submissionId: string) => {
     if (!gameState || !currentPlayer) return
@@ -270,34 +285,30 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   const startNewRound = async () => {
-    if (!gameState) return
+    if (!gameState || !currentPlayer) return;
 
-    // Calculate scores for the previous round
-    const previousRound = gameState.rounds[gameState.currentRound]
-    if (previousRound) {
-      const updatedPlayers = [...gameState.players]
-      previousRound.submissions.forEach(submission => {
-        const player = updatedPlayers.find(p => p.id === submission.playerId)
-        if (player) {
-          player.score += submission.votes
-        }
-      })
+    try {
+      const response = await fetch(`${API_URL}/games/${gameState.roomId}/next-round`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          playerId: currentPlayer.id,
+        }),
+      });
 
-      setGameState({
-        ...gameState,
-        players: updatedPlayers,
-        currentRound: gameState.currentRound + 1,
-        rounds: [
-          ...gameState.rounds,
-          {
-            targetWord: 'TODO: Get new word from backend',
-            submissions: [],
-            isComplete: false
-          }
-        ]
-      })
+      if (!response.ok) {
+        throw new Error('Failed to start next round');
+      }
+
+      const data = await response.json();
+      setGameState(data);
+    } catch (error) {
+      console.error('Error starting next round:', error);
+      throw error;
     }
-  }
+  };
 
   const endGame = () => {
     if (!gameState) return
@@ -308,7 +319,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     })
   }
 
-  const createGame = async (): Promise<string> => {
+  const createGame = async (gameMode: 'PROMPT_ANYTHING' | 'PROMPTOPHONE'): Promise<string> => {
     try {
       if (!currentUser) {
         throw new Error('You must be logged in to create a game')
@@ -317,6 +328,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log('GameContext: Creating new game...')
       console.log('Current user:', currentUser)
       console.log('API URL:', `${API_URL}/games`)
+      console.log('Selected game mode:', gameMode)
       
       // Generate a random room ID
       const roomId = Math.random().toString(36).substring(2, 8)
@@ -326,6 +338,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         roomId,
         playerId: currentUser.id,
         playerName: currentUser.name,
+        gameMode,
       }
       console.log('Request body:', requestBody)
       
@@ -369,7 +382,9 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         rounds: [],
         isComplete: false,
         phase: 'LOBBY',
+        gameMode: data.gameMode || gameMode, // Ensure game mode is set
         images: data.images,
+        promptChains: data.promptChains,
       }
 
       console.log('GameContext: Setting new game state:', newGameState)
@@ -386,6 +401,14 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!gameState || !currentPlayer) return
 
     try {
+      console.log('Starting game with state:', {
+        roomId: gameState.roomId,
+        playerId: currentPlayer.id,
+        gameMode: gameState.gameMode,
+        phase: gameState.phase,
+        isHost: currentPlayer.isHost
+      });
+
       const response = await fetch(`${API_URL}/games/${gameState.roomId}/start`, {
         method: 'POST',
         headers: {
@@ -395,14 +418,28 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
           playerId: currentPlayer.id,
         }),
       })
+
       if (!response.ok) {
-        throw new Error('Failed to start game')
+        const errorText = await response.text();
+        console.error('Server error response:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorText
+        });
+        throw new Error(`Failed to start game: ${errorText}`);
       }
-      const data = await response.json()
-      setGameState(data)
+
+      const data = await response.json();
+      console.log('Game started successfully:', {
+        phase: data.phase,
+        gameMode: data.gameMode,
+        currentRound: data.currentRound,
+        currentWord: data.currentWord
+      });
+      setGameState(data);
     } catch (error) {
-      console.error('Error starting game:', error)
-      throw error
+      console.error('Error starting game:', error);
+      throw error;
     }
   }
 
@@ -469,6 +506,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const onEndVoting = async () => {
+    // Implementation of onEndVoting function
+  };
+
   return (
     <GameContext.Provider
       value={{
@@ -483,6 +524,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         startGame,
         joinGame,
         initializeGame,
+        onEndVoting,
+        setGameState,
       }}
     >
       {children}
