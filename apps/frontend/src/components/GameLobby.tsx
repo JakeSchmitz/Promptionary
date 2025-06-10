@@ -30,6 +30,7 @@ export const GameLobby: React.FC = () => {
   const navigate = useNavigate();
 
   const handleRefresh = async () => {
+    if (isRefreshing) return;
     setIsRefreshing(true);
     try {
       await refreshGameState();
@@ -59,7 +60,6 @@ export const GameLobby: React.FC = () => {
     setIsLoading(true);
     try {
       await startGame();
-      navigate('/game/prompt');
     } catch (error) {
       toast({
         title: 'Error starting game',
@@ -166,17 +166,26 @@ export const GameLobby: React.FC = () => {
 
       {/* Start Game Button - Only visible to host */}
       {isHost && (
-        <Button
-          colorScheme="blue"
-          size="lg"
-          height="60px"
-          fontSize="xl"
-          onClick={handleStartGame}
-          isLoading={isLoading}
-          loadingText="Starting game..."
-        >
-          Start Game
-        </Button>
+        <Card>
+          <CardBody>
+            <Button
+              colorScheme="blue"
+              size="lg"
+              height="60px"
+              fontSize="xl"
+              width="100%"
+              onClick={handleStartGame}
+              isLoading={isLoading}
+              loadingText="Starting game..."
+              isDisabled={!gameState.players || gameState.players.length < 2}
+              title={!gameState.players || gameState.players.length < 2 ? "Need at least 2 players to start" : "Start game"}
+            >
+              {!gameState.players || gameState.players.length < 2 
+                ? `Need ${2 - (gameState.players?.length || 0)} more player${2 - (gameState.players?.length || 0) === 1 ? '' : 's'}`
+                : "Start Game"}
+            </Button>
+          </CardBody>
+        </Card>
       )}
     </VStack>
   );
