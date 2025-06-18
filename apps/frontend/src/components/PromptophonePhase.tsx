@@ -14,6 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { useGame } from '../context/GameContext';
 import { PromptPhase } from './PromptPhase';
+import { gameWords } from '../../../shared/data/words';
 
 export const PromptophonePhase: React.FC = () => {
   const { gameState, currentPlayer, submitPrompt } = useGame();
@@ -49,8 +50,9 @@ export const PromptophonePhase: React.FC = () => {
         </Box>
       );
     }
-    console.log('PromptophonePhase - Using word from player chain:', playerChain.originalWord);
-    return <PromptPhase initialWord={playerChain.originalWord} />;
+    const exclusionWords = (gameWords.find(w => w.word.toLowerCase() === playerChain.originalWord.toLowerCase())?.exclusionWords) || [];
+    console.log('PromptophonePhase - Using word from player chain:', playerChain.originalWord, 'with exclusions:', exclusionWords);
+    return <PromptPhase initialWord={playerChain.originalWord} initialExclusionWords={exclusionWords} />;
   }
 
   // Find the current player's chain
