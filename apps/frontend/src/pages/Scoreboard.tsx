@@ -40,7 +40,7 @@ const Scoreboard = () => {
   )
 
   return (
-    <Container maxW="container.md" py={10}>
+    <Container maxW="container.md" py={10} minH="100dvh">
       <VStack spacing={8}>
         <Heading>Game Results</Heading>
         

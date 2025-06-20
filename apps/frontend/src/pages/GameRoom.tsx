@@ -9,7 +9,7 @@ import { VotingPhase } from '../components/VotingPhase';
 import { ResultsPhase } from '../components/ResultsPhase';
 import { PromptophonePhase } from '../components/PromptophonePhase';
 import { PromptophoneResults } from '../components/PromptophoneResults';
-import { Box, Spinner, Center, useColorModeValue } from '@chakra-ui/react';
+import { Box, Spinner, Center } from '@chakra-ui/react';
 import { API_URL } from '../utils/env';
 
 // Polling interval in milliseconds
@@ -21,7 +21,6 @@ export const GameRoom: React.FC = () => {
   const { currentUser } = useAuth();
   const { gameState, initializeGame, joinGame, refreshGameState } = useGame();
   const [isInitializing, setIsInitializing] = useState(true);
-  const bg = useColorModeValue('gray.50', 'gray.900');
 
   // Initial game setup
   useEffect(() => {
@@ -120,7 +119,7 @@ export const GameRoom: React.FC = () => {
   };
 
   return (
-    <Box bg={bg} py={8}>
+    <Box bg="surface" py={8}>
       {renderGamePhase()}
     </Box>
   );

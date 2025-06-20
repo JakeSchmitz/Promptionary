@@ -47,7 +47,7 @@ const Account = () => {
   ]
 
   return (
-    <Container maxW="container.lg" py={8}>
+    <Container maxW="container.lg" py={8} minH="100dvh">
       <VStack spacing={8}>
         <VStack spacing={3} textAlign="center">
           <Heading 

@@ -16,7 +16,13 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <Box bg="surface">
       {shouldShowNavbar && <Navbar />}
-      <Box pt={shouldShowNavbar ? "70px" : "0"} bg="surface">
+      <Box 
+        pt={shouldShowNavbar ? "70px" : "0"} 
+        bg="surface"
+        minH="100dvh"
+        display="flex"
+        flexDirection="column"
+      >
         {children}
       </Box>
     </Box>

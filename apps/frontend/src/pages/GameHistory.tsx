@@ -166,7 +166,7 @@ const GameHistory = () => {
   });
 
   return (
-    <Container maxW="container.xl" py={8}>
+    <Container maxW="container.xl" py={8} minH="100dvh">
       <VStack spacing={8}>
         {/* Header */}
         <VStack spacing={3} textAlign="center">

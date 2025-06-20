@@ -99,48 +99,9 @@ const Login = () => {
       alignItems="center" 
       justifyContent="center" 
       p={4}
-      bgGradient="linear(to-br, brand.900, brand.800, surface)"
-      position="relative"
-      overflow="hidden"
+      bg="surface"
+      minH="100dvh"
     >
-      {/* Background decorative elements */}
-      <Box
-        position="absolute"
-        top="-50%"
-        left="-50%"
-        w="200%"
-        h="200%"
-        bg="radial-gradient(circle, brand.500 1px, transparent 1px)"
-        bgSize="50px 50px"
-        opacity={0.1}
-        animation="float 20s ease-in-out infinite"
-        sx={{
-          '@keyframes float': {
-            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
-            '50%': { transform: 'translateY(-20px) rotate(180deg)' },
-          },
-        }}
-      />
-      
-      <Box
-        position="absolute"
-        top="20%"
-        right="10%"
-        w="300px"
-        h="300px"
-        bg="brand.400"
-        borderRadius="full"
-        filter="blur(100px)"
-        opacity={0.1}
-        animation="pulse 4s ease-in-out infinite"
-        sx={{
-          '@keyframes pulse': {
-            '0%, 100%': { opacity: 0.1, transform: 'scale(1)' },
-            '50%': { opacity: 0.2, transform: 'scale(1.1)' },
-          },
-        }}
-      />
-
       <Container maxW="md" position="relative" zIndex={1}>
         <Card
           backdropFilter="blur(10px)"
