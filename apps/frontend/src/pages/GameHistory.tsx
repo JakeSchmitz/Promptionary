@@ -183,145 +183,126 @@ const GameHistory = () => {
           </Text>
         </VStack>
 
-        {/* Stats Cards */}
-        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6} w="100%">
+        {/* Stats and Filters - Combined as two full-width tiles */}
+        <VStack spacing={6} w="100%">
+          {/* Combined Stats Card */}
           <Card
             backdropFilter="blur(10px)"
             bg="whiteAlpha.100"
             border="1px solid rgba(255,255,255,0.2)"
             borderRadius="2xl"
             boxShadow="0 8px 32px rgba(0,0,0,0.3)"
+            w="100%"
           >
-            <CardBody p={6}>
-              <Stat>
-                <StatLabel color="textSecondary" fontSize="sm">Total Games</StatLabel>
-                <StatNumber color="textPrimary" fontSize="3xl" fontWeight="bold">
-                  {gameHistory.length}
-                </StatNumber>
-                <StatHelpText color="textSecondary">
-                  <Icon as={FaGamepad} mr={2} />
-                  Games played
-                </StatHelpText>
-              </Stat>
-            </CardBody>
-          </Card>
-
-          <Card
-            backdropFilter="blur(10px)"
-            bg="whiteAlpha.100"
-            border="1px solid rgba(255,255,255,0.2)"
-            borderRadius="2xl"
-            boxShadow="0 8px 32px rgba(0,0,0,0.3)"
-          >
-            <CardBody p={6}>
-              <Stat>
-                <StatLabel color="textSecondary" fontSize="sm">Wins</StatLabel>
-                <StatNumber color="highlight" fontSize="3xl" fontWeight="bold">
-                  {gameHistory.filter(game => game.winner.name === currentUser?.name).length}
-                </StatNumber>
-                <StatHelpText color="textSecondary">
-                  <Icon as={FaTrophy} mr={2} />
-                  Games won
-                </StatHelpText>
-              </Stat>
-            </CardBody>
-          </Card>
-
-          <Card
-            backdropFilter="blur(10px)"
-            bg="whiteAlpha.100"
-            border="1px solid rgba(255,255,255,0.2)"
-            borderRadius="2xl"
-            boxShadow="0 8px 32px rgba(0,0,0,0.3)"
-          >
-            <CardBody p={6}>
-              <Stat>
-                <StatLabel color="textSecondary" fontSize="sm">Win Rate</StatLabel>
-                <StatNumber color="brand.400" fontSize="3xl" fontWeight="bold">
-                  {gameHistory.length > 0 
-                    ? Math.round((gameHistory.filter(game => game.winner.name === currentUser?.name).length / gameHistory.length) * 100)
-                    : 0}%
-                </StatNumber>
-                <StatHelpText color="textSecondary">
-                  <Icon as={FaStar} mr={2} />
-                  Success rate
-                </StatHelpText>
-              </Stat>
-            </CardBody>
-          </Card>
-        </SimpleGrid>
-
-        {/* Filters */}
-        <Card
-          backdropFilter="blur(10px)"
-          bg="whiteAlpha.100"
-          border="1px solid rgba(255,255,255,0.2)"
-          borderRadius="2xl"
-          boxShadow="0 8px 32px rgba(0,0,0,0.3)"
-        >
-          <CardBody p={6}>
-            <VStack spacing={4} align="stretch">
-              <HStack justify="space-between">
-                <Heading size="md" color="textPrimary">
-                  <Icon as={FaFilter} mr={2} />
-                  Filters
-                </Heading>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  color="textSecondary"
-                  onClick={() => {
-                    setGameModeFilter('all');
-                    setDateFilter('all');
-                  }}
-                >
-                  Clear All
-                </Button>
-              </HStack>
-              
-              <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
-                <FormControl>
-                  <FormLabel color="textSecondary" fontSize="sm">Game Mode</FormLabel>
-                  <Select
-                    value={gameModeFilter}
-                    onChange={(e) => setGameModeFilter(e.target.value)}
-                    bg="whiteAlpha.200"
-                    borderColor="whiteAlpha.300"
-                    color="textPrimary"
-                    _focus={{
-                      borderColor: 'brand.400',
-                      boxShadow: '0 0 0 1px var(--chakra-colors-brand-400)',
-                    }}
-                  >
-                    <option value="all">All Modes</option>
-                    <option value="PROMPT_ANYTHING">Prompt Anything</option>
-                    <option value="PROMPTOPHONE">Promptophone</option>
-                  </Select>
-                </FormControl>
-                
-                <FormControl>
-                  <FormLabel color="textSecondary" fontSize="sm">Date Range</FormLabel>
-                  <Select
-                    value={dateFilter}
-                    onChange={(e) => setDateFilter(e.target.value)}
-                    bg="whiteAlpha.200"
-                    borderColor="whiteAlpha.300"
-                    color="textPrimary"
-                    _focus={{
-                      borderColor: 'brand.400',
-                      boxShadow: '0 0 0 1px var(--chakra-colors-brand-400)',
-                    }}
-                  >
-                    <option value="all">All Time</option>
-                    <option value="today">Today</option>
-                    <option value="week">This Week</option>
-                    <option value="month">This Month</option>
-                  </Select>
-                </FormControl>
+            <CardBody p={8}>
+              <SimpleGrid columns={{ base: 1, sm: 3 }} spacing={6} w="100%">
+                <Stat textAlign="center">
+                  <StatLabel color="textSecondary" fontSize="sm">Total Games</StatLabel>
+                  <StatNumber color="textPrimary" fontSize="3xl" fontWeight="bold">
+                    {gameHistory.length}
+                  </StatNumber>
+                  <StatHelpText color="textSecondary">
+                    <Icon as={FaGamepad} mr={2} />
+                    Games played
+                  </StatHelpText>
+                </Stat>
+                <Stat textAlign="center">
+                  <StatLabel color="textSecondary" fontSize="sm">Wins</StatLabel>
+                  <StatNumber color="highlight" fontSize="3xl" fontWeight="bold">
+                    {gameHistory.filter(game => game.winner.name === currentUser?.name).length}
+                  </StatNumber>
+                  <StatHelpText color="textSecondary">
+                    <Icon as={FaTrophy} mr={2} />
+                    Games won
+                  </StatHelpText>
+                </Stat>
+                <Stat textAlign="center">
+                  <StatLabel color="textSecondary" fontSize="sm">Win Rate</StatLabel>
+                  <StatNumber color="brand.400" fontSize="3xl" fontWeight="bold">
+                    {gameHistory.length > 0 
+                      ? Math.round((gameHistory.filter(game => game.winner.name === currentUser?.name).length / gameHistory.length) * 100)
+                      : 0}%
+                  </StatNumber>
+                  <StatHelpText color="textSecondary">
+                    <Icon as={FaStar} mr={2} />
+                    Success rate
+                  </StatHelpText>
+                </Stat>
               </SimpleGrid>
-            </VStack>
-          </CardBody>
-        </Card>
+            </CardBody>
+          </Card>
+
+          {/* Filters Card */}
+          <Card
+            backdropFilter="blur(10px)"
+            bg="whiteAlpha.100"
+            border="1px solid rgba(255,255,255,0.2)"
+            borderRadius="2xl"
+            boxShadow="0 8px 32px rgba(0,0,0,0.3)"
+            w="100%"
+          >
+            <CardBody p={6}>
+              <VStack spacing={4} align="stretch">
+                <HStack justify="space-between">
+                  <Heading size="md" color="textPrimary">
+                    <Icon as={FaFilter} mr={2} />
+                    Filters
+                  </Heading>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    color="textSecondary"
+                    onClick={() => {
+                      setGameModeFilter('all');
+                      setDateFilter('all');
+                    }}
+                  >
+                    Clear All
+                  </Button>
+                </HStack>
+                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+                  <FormControl>
+                    <FormLabel color="textSecondary" fontSize="sm">Game Mode</FormLabel>
+                    <Select
+                      value={gameModeFilter}
+                      onChange={(e) => setGameModeFilter(e.target.value)}
+                      bg="whiteAlpha.200"
+                      borderColor="whiteAlpha.300"
+                      color="textPrimary"
+                      _focus={{
+                        borderColor: 'brand.400',
+                        boxShadow: '0 0 0 1px var(--chakra-colors-brand-400)',
+                      }}
+                    >
+                      <option value="all">All Modes</option>
+                      <option value="PROMPT_ANYTHING">Prompt Anything</option>
+                      <option value="PROMPTOPHONE">Promptophone</option>
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel color="textSecondary" fontSize="sm">Date Range</FormLabel>
+                    <Select
+                      value={dateFilter}
+                      onChange={(e) => setDateFilter(e.target.value)}
+                      bg="whiteAlpha.200"
+                      borderColor="whiteAlpha.300"
+                      color="textPrimary"
+                      _focus={{
+                        borderColor: 'brand.400',
+                        boxShadow: '0 0 0 1px var(--chakra-colors-brand-400)',
+                      }}
+                    >
+                      <option value="all">All Time</option>
+                      <option value="today">Today</option>
+                      <option value="week">This Week</option>
+                      <option value="month">This Month</option>
+                    </Select>
+                  </FormControl>
+                </SimpleGrid>
+              </VStack>
+            </CardBody>
+          </Card>
+        </VStack>
 
         {/* Game List */}
         <Box w="100%">

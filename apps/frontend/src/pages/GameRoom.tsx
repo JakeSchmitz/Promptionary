@@ -10,6 +10,7 @@ import { ResultsPhase } from '../components/ResultsPhase';
 import { PromptophonePhase } from '../components/PromptophonePhase';
 import { PromptophoneResults } from '../components/PromptophoneResults';
 import { Box, Spinner, Center } from '@chakra-ui/react';
+import { API_URL } from '../utils/env';
 
 // Polling interval in milliseconds
 const POLLING_INTERVAL = 2000;
@@ -33,9 +34,14 @@ export const GameRoom: React.FC = () => {
         setIsInitializing(true);
         await initializeGame(roomId);
 
+        // Fetch the latest game state directly after initialization
+        const response = await fetch(`${API_URL}/games/${roomId}`);
+        if (!response.ok) throw new Error('Failed to fetch game state');
+        const freshGameState = await response.json();
+
         // Check if user is in the game
-        if (currentUser && gameState) {
-          const isInGame = gameState.players.some(p => p.id === currentUser.id);
+        if (currentUser && freshGameState) {
+          const isInGame = freshGameState.players.some((p: any) => p.id === currentUser.id);
           if (!isInGame) {
             await joinGame(roomId);
           }

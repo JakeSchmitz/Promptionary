@@ -13,6 +13,7 @@ import Scoreboard from './pages/Scoreboard'
 import GameHistory from './pages/GameHistory'
 import Account from './pages/Account'
 import theme from './theme'
+import { GOOGLE_CLIENT_ID } from './utils/env'
 
 // Error boundary component
 class ErrorBoundary extends React.Component<
@@ -153,7 +154,7 @@ const GameRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
 const App = () => {
   // Get the client ID from environment variables
-  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
+  const clientId = GOOGLE_CLIENT_ID
 
   if (!clientId) {
     console.error('Google Client ID is not configured. Please check your environment variables.')

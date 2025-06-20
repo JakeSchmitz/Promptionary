@@ -37,12 +37,18 @@ const Dashboard = () => {
 
   const handleCreateGame = async () => {
     try {
-      console.log('Starting game creation...')
       setIsCreating(true)
-      console.log('Calling createGame from context...')
       const roomId = await createGame(selectedGameMode)
-      console.log('Game created with roomId:', roomId)
-      
+      if (!roomId) {
+        toast({
+          title: 'Error',
+          description: 'Failed to create game room. Please try again.',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        })
+        return
+      }
       toast({
         title: 'Game Created',
         description: `Your game room is ready! Room ID: ${roomId}`,
@@ -50,8 +56,8 @@ const Dashboard = () => {
         duration: 5000,
         isClosable: true,
       })
-      
       navigate(`/game/${roomId}`)
+      setIsModalOpen(false)
     } catch (error) {
       console.error('Error creating game:', error)
       toast({
@@ -63,7 +69,6 @@ const Dashboard = () => {
       })
     } finally {
       setIsCreating(false)
-      setIsModalOpen(false)
     }
   }
 

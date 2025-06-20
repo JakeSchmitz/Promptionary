@@ -171,44 +171,71 @@ const Navbar = () => {
                 </HStack>
               </MenuButton>
               <MenuList 
-                bg="whiteAlpha.200"
+                bg={colorMode === 'light' ? 'whiteAlpha.800' : 'gray.900'}
+                color={colorMode === 'light' ? 'gray.900' : 'white'}
                 backdropFilter="blur(10px)"
-                border="1px solid rgba(255,255,255,0.2)"
+                border="1px solid rgba(255,255,255,0.3)"
                 borderRadius="xl"
                 boxShadow="0 8px 32px rgba(0,0,0,0.3)"
                 py={2}
+                px={0}
+                minW="220px"
               >
                 {!currentUser?.isGuest && (
                   <>
                     <MenuItem 
                       onClick={() => navigate('/dashboard')}
-                      _hover={{ bg: 'whiteAlpha.300' }}
-                      color="textPrimary"
+                      _hover={{ 
+                        bgGradient: 'linear(to-r, brand.400, brand.500)',
+                        color: 'white',
+                        transform: 'scale(1.03)',
+                        boxShadow: '0 4px 16px rgba(16,163,127,0.15)',
+                      }}
+                      color={colorMode === 'light' ? 'gray.900' : 'white'}
                       icon={<FaGamepad />}
                       borderRadius="md"
-                      mx={2}
+                      fontWeight="medium"
+                      fontSize="md"
+                      px={4}
+                      py={2}
                       mb={1}
                     >
                       Dashboard
                     </MenuItem>
                     <MenuItem 
                       onClick={() => navigate('/history')}
-                      _hover={{ bg: 'whiteAlpha.300' }}
-                      color="textPrimary"
+                      _hover={{ 
+                        bgGradient: 'linear(to-r, highlight, orange.400)',
+                        color: 'white',
+                        transform: 'scale(1.03)',
+                        boxShadow: '0 4px 16px rgba(255,140,0,0.15)',
+                      }}
+                      color={colorMode === 'light' ? 'gray.900' : 'white'}
                       icon={<FaHistory />}
                       borderRadius="md"
-                      mx={2}
+                      fontWeight="medium"
+                      fontSize="md"
+                      px={4}
+                      py={2}
                       mb={1}
                     >
                       Game History
                     </MenuItem>
                     <MenuItem 
                       onClick={() => navigate('/account')}
-                      _hover={{ bg: 'whiteAlpha.300' }}
-                      color="textPrimary"
+                      _hover={{ 
+                        bgGradient: 'linear(to-r, purple.400, pink.400)',
+                        color: 'white',
+                        transform: 'scale(1.03)',
+                        boxShadow: '0 4px 16px rgba(214,31,255,0.15)',
+                      }}
+                      color={colorMode === 'light' ? 'gray.900' : 'white'}
                       icon={<FaUser />}
                       borderRadius="md"
-                      mx={2}
+                      fontWeight="medium"
+                      fontSize="md"
+                      px={4}
+                      py={2}
                       mb={1}
                     >
                       Account
@@ -217,11 +244,20 @@ const Navbar = () => {
                 )}
                 <MenuItem 
                   onClick={handleLogout}
-                  _hover={{ bg: 'whiteAlpha.300' }}
-                  color="danger"
+                  _hover={{ 
+                    bgGradient: 'linear(to-r, red.400, red.600)',
+                    color: 'white',
+                    transform: 'scale(1.03)',
+                    boxShadow: '0 4px 16px rgba(255,0,0,0.15)',
+                  }}
+                  color="red.500"
                   icon={<FaSignOutAlt />}
                   borderRadius="md"
-                  mx={2}
+                  fontWeight="bold"
+                  fontSize="md"
+                  px={4}
+                  py={2}
+                  mt={currentUser?.isGuest ? 0 : 2}
                 >
                   Logout
                 </MenuItem>
