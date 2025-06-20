@@ -8,37 +8,46 @@ datasource db {
 }
 
 model Game {
-  id             String    @id @default(uuid())
-  roomId         String    @unique
-  currentRound   Int       @default(1)
-  maxRounds      Int       @default(5)
+  id             String         @id @default(uuid())
+  roomId         String         @unique
+  currentRound   Int            @default(1)
+  maxRounds      Int            @default(5)
   currentWord    String
-  exclusionWords String[]  @default([])
-  phase          GamePhase @default(LOBBY)
+  exclusionWords String[]       @default([])
+  phase          GamePhase      @default(LOBBY)
   roundStartTime DateTime?
-  gameMode       GameMode  @default(PROMPT_ANYTHING)
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  gameMode       GameMode       @default(PROMPT_ANYTHING)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
   hostId         String?
   images         Image[]
-  players        Player[]
   votes          Vote[]
   promptChains   PromptChain[]
+  playerGames    PlayerGame[]
 }
 
 model Player {
-  id            String        @id
+  id            String         @id
   name          String
-  score         Int          @default(0)
-  gameId        String
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
   email         String?
-  isHost        Boolean      @default(false)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   images        Image[]
-  game          Game         @relation(fields: [gameId], references: [id])
   votes         Vote[]
   promptChains  PromptChain[]
+  playerGames   PlayerGame[]
+}
+
+model PlayerGame {
+  id        String   @id @default(uuid())
+  playerId  String
+  gameId    String
+  isHost    Boolean  @default(false)
+  score     Int      @default(0)
+  player    Player   @relation(fields: [playerId], references: [id])
+  game      Game     @relation(fields: [gameId], references: [id])
+
+  @@unique([playerId, gameId])
 }
 
 model Image {
