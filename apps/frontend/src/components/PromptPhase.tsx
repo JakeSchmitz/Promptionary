@@ -19,14 +19,16 @@ import {
 } from '@chakra-ui/react';
 import { useGame } from '../context/GameContext';
 import { useParams } from 'react-router-dom';
+import { API_URL } from '../utils/env';
 
 const ROUND_DURATION = 60; // 60 seconds for prompt phase
 
 interface PromptPhaseProps {
   initialWord?: string;
+  initialExclusionWords?: string[];
 }
 
-export const PromptPhase: React.FC<PromptPhaseProps> = ({ initialWord }) => {
+export const PromptPhase: React.FC<PromptPhaseProps> = ({ initialWord, initialExclusionWords }) => {
   const { gameState, currentPlayer, submitPrompt } = useGame();
   const { roomId } = useParams<{ roomId: string }>();
   const toast = useToast();
@@ -41,8 +43,8 @@ export const PromptPhase: React.FC<PromptPhaseProps> = ({ initialWord }) => {
       if (!roomId) return;
 
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/games/${roomId}/round/status`);
-        const data = await response.json();
+        const statusResponse = await fetch(`${API_URL}/games/${roomId}/round/status`);
+        const data = await statusResponse.json();
 
         if (data.timeRemaining !== undefined) {
           setTimeRemaining(data.timeRemaining);
@@ -55,7 +57,7 @@ export const PromptPhase: React.FC<PromptPhaseProps> = ({ initialWord }) => {
 
         if (data.shouldEndRound) {
           // End the round
-          await fetch(`${import.meta.env.VITE_API_URL}/games/${roomId}/end-round`, {
+          await fetch(`${API_URL}/games/${roomId}/end-round`, {
             method: 'POST',
           });
         }
@@ -79,7 +81,7 @@ export const PromptPhase: React.FC<PromptPhaseProps> = ({ initialWord }) => {
 
     const lowerText = text.toLowerCase();
     const lowerTarget = targetWord.toLowerCase();
-    const lowerExclusions = gameState?.exclusionWords?.map(w => w.toLowerCase()) || [];
+    const lowerExclusions = (initialExclusionWords || gameState?.exclusionWords || []).map(w => w.toLowerCase());
 
     // Check for target word
     if (lowerText.includes(lowerTarget)) {
@@ -141,6 +143,7 @@ export const PromptPhase: React.FC<PromptPhaseProps> = ({ initialWord }) => {
   if (!gameState) return null;
 
   const targetWord = initialWord || gameState.currentWord;
+  const exclusionWords = initialExclusionWords || gameState.exclusionWords || [];
 
   return (
     <VStack spacing={8} align="stretch" maxW="1200px" mx="auto" p={4}>
@@ -154,13 +157,13 @@ export const PromptPhase: React.FC<PromptPhaseProps> = ({ initialWord }) => {
             <Text fontSize="xl" fontWeight="bold" color="blue.500">
               Word: {targetWord}
             </Text>
-            {gameState.exclusionWords && gameState.exclusionWords.length > 0 && (
+            {exclusionWords && exclusionWords.length > 0 && (
               <Box>
                 <Text fontSize="md" fontWeight="bold" color="red.500" mb={2}>
                   Excluded Words:
                 </Text>
                 <Text fontSize="md" color="red.500">
-                  {gameState.exclusionWords.join(', ')}
+                  {exclusionWords.join(', ')}
                 </Text>
               </Box>
             )}

@@ -2,9 +2,8 @@ import React, { createContext, useContext, useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useAuth } from './AuthContext'
 import { useToast } from '@chakra-ui/react'
+import { API_URL } from '../utils/env'
 
-// Remove the /api suffix from the fallback since it's now in the env var
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
 console.log('API_URL:', API_URL)
 
 interface Player {

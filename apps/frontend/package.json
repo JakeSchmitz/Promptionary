@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "jest",
+    "lint": "eslint src --ext .ts,.tsx --fix",
+    "lint:check": "eslint src --ext .ts,.tsx"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.2.4",
@@ -23,9 +26,24 @@
     "react-router-dom": "^6.23.0"
   },
   "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/react-hooks": "^8.0.1",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^30.0.0",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
+    "@typescript-eslint/eslint-plugin": "^8.34.1",
+    "@typescript-eslint/parser": "^8.34.1",
     "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^9.29.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^30.0.2",
+    "jest-environment-jsdom": "^30.0.2",
+    "ts-jest": "^29.4.0",
     "typescript": "^5.4.2",
     "vite": "^5.2.0"
   }

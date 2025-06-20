@@ -1,5 +1,5 @@
 import React, { StrictMode, useEffect } from 'react'
-import { ChakraProvider, Box, Text } from '@chakra-ui/react'
+import { ChakraProvider, Box, Text, Spinner, Center } from '@chakra-ui/react'
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { GameProvider } from './context/GameContext'
@@ -46,8 +46,17 @@ class ErrorBoundary extends React.Component<
 
 // Protected route wrapper component (only for authenticated users)
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, isLoading } = useAuth()
   const location = useLocation()
+  
+  // Wait for auth state to be loaded before making any decisions
+  if (isLoading) {
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    )
+  }
   
   if (!isAuthenticated) {
     // Redirect to login with return path
@@ -59,8 +68,17 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 
 // Guest route wrapper component (for guest users)
 const GuestRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated, currentUser } = useAuth()
+  const { isAuthenticated, currentUser, isLoading } = useAuth()
   const location = useLocation()
+  
+  // Wait for auth state to be loaded before making any decisions
+  if (isLoading) {
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    )
+  }
   
   // If authenticated, redirect to dashboard
   if (isAuthenticated) {
@@ -77,7 +95,16 @@ const GuestRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
 // Public route wrapper component (redirects to dashboard if already logged in)
 const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated, currentUser } = useAuth()
+  const { isAuthenticated, currentUser, isLoading } = useAuth()
+  
+  // Wait for auth state to be loaded before making any decisions
+  if (isLoading) {
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    )
+  }
   
   // If authenticated, redirect to dashboard
   if (isAuthenticated) {
@@ -107,7 +134,11 @@ const GameRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   // Wait for auth state to be loaded before making any decisions
   if (isLoading) {
-    return null // or a loading spinner if you prefer
+    return (
+      <Center>
+        <Spinner />
+      </Center>
+    )
   }
 
   // If not authenticated and no guest name, redirect to login with return path

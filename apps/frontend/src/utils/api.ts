@@ -60,4 +60,10 @@ export const vote = async (roomId: string, imageId: string, voterId: string) => 
   });
   if (!res.ok) throw new Error('Failed to submit vote');
   return res.json();
+};
+
+export const getGameHistory = async (playerIdWithQuery: string) => {
+  const res = await fetch(`${API_BASE_URL}/players/${playerIdWithQuery}/games`);
+  if (!res.ok) throw new Error('Failed to fetch game history');
+  return res.json();
 }; 

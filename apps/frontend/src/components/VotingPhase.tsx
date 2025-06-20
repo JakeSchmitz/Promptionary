@@ -17,6 +17,7 @@ import {
 import { useGame } from '../context/GameContext';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../utils/env';
 
 const VOTING_DURATION = 60; // 60 seconds for voting phase
 
@@ -36,7 +37,7 @@ export const VotingPhase: React.FC = () => {
       
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/games/${gameState.roomId}/votes/status?playerId=${currentPlayer.id}`
+          `${API_URL}/games/${gameState.roomId}/votes/status?playerId=${currentPlayer.id}`
         );
         if (!response.ok) throw new Error('Failed to check voting status');
         const data = await response.json();
@@ -80,7 +81,7 @@ export const VotingPhase: React.FC = () => {
     if (!gameState || !currentPlayer) return;
     
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/games/${gameState.roomId}/votes`, {
+      const response = await fetch(`${API_URL}/games/${gameState.roomId}/votes`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
