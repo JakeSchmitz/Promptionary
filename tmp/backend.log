@@ -4128,3 +4128,887 @@ Game state retrieved: {
   promptChainCount: 0
 }
 Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T02:42:39.649Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T02:42:40.690Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T02:45:20.494Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+2025-06-20T02:45:20.504Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T02:51:19.519Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+2025-06-20T02:51:19.523Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T03:13:59.853Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+2025-06-20T03:13:59.860Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T03:39:29.242Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T03:39:29.252Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T03:39:29.253Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T03:39:29.254Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T03:39:29.276Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+2025-06-20T03:39:29.302Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+2025-06-20T13:45:17.210Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T13:45:17.319Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T13:45:17.402Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T13:45:17.547Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T13:45:17.566Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+2025-06-20T13:45:17.567Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+2025-06-20T13:52:05.081Z - GET /api/players/116427488604431001991/games
+Fetching game history for player: 116427488604431001991 with filters: {
+  status: undefined,
+  gameMode: undefined,
+  includeIncomplete: undefined
+}
+2025-06-20T13:52:05.137Z - GET /api/players/116427488604431001991/games
+Fetching game history for player: 116427488604431001991 with filters: {
+  status: undefined,
+  gameMode: undefined,
+  includeIncomplete: undefined
+}
+2025-06-20T13:52:16.793Z - GET /api/players/116427488604431001991/games
+Fetching game history for player: 116427488604431001991 with filters: {
+  status: undefined,
+  gameMode: undefined,
+  includeIncomplete: undefined
+}
+2025-06-20T13:52:16.811Z - GET /api/players/116427488604431001991/games
+Fetching game history for player: 116427488604431001991 with filters: {
+  status: undefined,
+  gameMode: undefined,
+  includeIncomplete: undefined
+}
+2025-06-20T13:55:48.246Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T13:55:48.255Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T13:55:48.255Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+2025-06-20T13:55:48.323Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T13:55:48.329Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T13:55:48.481Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+2025-06-20T16:13:36.692Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T16:13:36.695Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T16:13:36.714Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T16:13:36.817Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T16:13:36.833Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T16:13:36.834Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+2025-06-20T16:30:47.801Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+2025-06-20T16:30:47.814Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T16:30:47.829Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T16:30:47.842Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T16:30:47.860Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T16:30:47.948Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+2025-06-20T17:32:00.458Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T17:32:00.471Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T17:34:21.853Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+2025-06-20T17:34:21.864Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T17:34:21.866Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T17:34:21.867Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T17:34:21.868Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T17:34:21.877Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+2025-06-20T17:34:21.891Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T17:34:21.907Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T17:57:12.674Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+2025-06-20T17:57:12.716Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T17:57:12.717Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T17:57:12.764Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T17:57:12.765Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T17:57:12.878Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T17:57:12.887Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T17:57:12.927Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+2025-06-20T18:10:55.148Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+2025-06-20T18:10:55.164Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T18:10:55.180Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T18:10:55.191Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T18:10:55.193Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+2025-06-20T18:10:55.212Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T18:10:55.223Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T18:10:55.248Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T18:11:48.934Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T18:11:48.953Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T18:38:22.542Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T18:38:22.628Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T18:41:09.910Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+2025-06-20T18:41:09.943Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T18:41:09.946Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T18:41:09.947Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T18:41:09.951Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T18:41:09.972Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T18:41:10.031Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T18:41:10.041Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T21:51:06.207Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+2025-06-20T21:51:06.262Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T21:51:06.264Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T21:51:06.270Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T21:51:06.290Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T21:51:06.389Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T21:51:06.395Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T21:51:06.435Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+2025-06-20T22:15:17.548Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+2025-06-20T22:15:17.555Z - GET /api/games/fsmpgh
+Fetching game state for room: fsmpgh
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'VOTING',
+  currentRound: 1,
+  playerCount: 2,
+  promptChainCount: 2
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }

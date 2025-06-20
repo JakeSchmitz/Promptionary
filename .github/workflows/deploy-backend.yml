@@ -1,0 +1,42 @@
+name: Deploy Backend to GKE
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      GKE_CLUSTER: promptionary-gke
+      GKE_ZONE: us-central1-a
+      IMAGE: gcr.io/${{ secrets.GCP_PROJECT_ID }}/promptionary-backend:latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Configure Docker for GCR
+        run: gcloud auth configure-docker
+
+      - name: Build Docker image
+        run: |
+          cd apps/backend
+          docker build -t $IMAGE .
+
+      - name: Push Docker image
+        run: docker push $IMAGE
+
+      - name: Get GKE credentials
+        run: gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE
+
+      - name: Deploy to GKE
+        run: |
+          kubectl set image deployment/promptionary-backend promptionary-backend=$IMAGE || kubectl create deployment promptionary-backend --image=$IMAGE --port=3000
+          kubectl expose deployment promptionary-backend --type=LoadBalancer --port=3000 || true 
