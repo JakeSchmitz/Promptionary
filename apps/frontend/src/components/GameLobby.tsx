@@ -16,6 +16,7 @@ import {
   Badge,
   Icon,
   Spinner,
+  Divider,
 } from '@chakra-ui/react';
 import { FaCopy, FaUsers, FaPlay, FaShare } from 'react-icons/fa';
 import { useGame } from '../context/GameContext';
@@ -71,8 +72,6 @@ const GameLobby = () => {
       {/* Game Info */}
       <Card
         backdropFilter="blur(10px)"
-        bg="whiteAlpha.100"
-        border="1px solid rgba(255,255,255,0.2)"
         borderRadius="2xl"
         boxShadow="0 8px 32px rgba(0,0,0,0.3)"
       >
@@ -94,8 +93,6 @@ const GameLobby = () => {
 
             {/* Share Section */}
             <Card
-              bg="whiteAlpha.100"
-              border="1px solid rgba(255,255,255,0.2)"
               borderRadius="xl"
               overflow="hidden"
             >
@@ -114,13 +111,6 @@ const GameLobby = () => {
                     <Input
                       value={`${window.location.origin}/game/${roomId}`}
                       isReadOnly
-                      bg="whiteAlpha.200"
-                      borderColor="whiteAlpha.300"
-                      color="textPrimary"
-                      _focus={{
-                        borderColor: 'brand.400',
-                        boxShadow: '0 0 0 1px var(--chakra-colors-brand-400)',
-                      }}
                       borderRadius="xl"
                     />
                     <InputRightElement>
@@ -140,11 +130,9 @@ const GameLobby = () => {
                 </VStack>
               </CardBody>
             </Card>
-
+            <Divider my={4} />
             {/* Players Section */}
             <Card
-              bg="whiteAlpha.100"
-              border="1px solid rgba(255,255,255,0.2)"
               borderRadius="xl"
               overflow="hidden"
             >
@@ -172,9 +160,7 @@ const GameLobby = () => {
                       <HStack
                         key={player.id}
                         p={4}
-                        bg="whiteAlpha.100"
                         borderRadius="xl"
-                        border="1px solid rgba(255,255,255,0.1)"
                         justify="space-between"
                       >
                         <HStack spacing={3}>
@@ -215,7 +201,7 @@ const GameLobby = () => {
                 </VStack>
               </CardBody>
             </Card>
-
+            <Divider my={4} />
             {/* Start Game Button */}
             {isHost && (
               <VStack spacing={4}>
@@ -246,6 +232,7 @@ const GameLobby = () => {
                   disabled={!canStart}
                   leftIcon={<FaPlay />}
                   transition="all 0.2s"
+                  w={{ base: '100%', md: 'auto' }}
                 >
                   Start Game
                 </Button>

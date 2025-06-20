@@ -2,10 +2,16 @@
 > promptionary-1@0.1.0 dev
 > vite
 
-Re-optimizing dependencies because lockfile has changed
 
-  VITE v5.4.19  ready in 121 ms
+  VITE v5.4.19  ready in 124 ms
 
   ➜  Local:   http://localhost:5173/
   ➜  Network: http://192.168.1.169:5173/
-10:20:49 PM [vite] hmr update /src/pages/GameRoom.tsx
+10:26:11 PM [vite] hmr update /src/components/Layout.tsx
+10:26:11 PM [vite] hmr update /src/components/Layout.tsx
+10:26:13 PM [vite] hmr update /src/pages/GameRoom.tsx
+10:26:16 PM [vite] hmr update /src/pages/Login.tsx
+10:27:43 PM [vite] hmr update /src/components/GameLobby.tsx
+10:27:49 PM [vite] hmr update /src/components/PromptophonePhase.tsx
+10:27:49 PM [vite] hmr update /src/components/PromptophonePhase.tsx
+10:29:04 PM [vite] hmr update /src/pages/GameRoom.tsx

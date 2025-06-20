@@ -16,6 +16,7 @@ import {
   Image,
   Center,
   Spinner,
+  Divider,
 } from '@chakra-ui/react';
 import { useGame } from '../context/GameContext';
 import { useParams } from 'react-router-dom';
@@ -147,10 +148,16 @@ export const PromptPhase: React.FC<PromptPhaseProps> = ({ initialWord, initialEx
 
   return (
     <VStack spacing={8} align="stretch" maxW="1200px" mx="auto" p={4}>
-      <Card>
+      <Card
+        bg="whiteAlpha.100"
+        backdropFilter="blur(10px)"
+        border="1px solid rgba(255,255,255,0.2)"
+        borderRadius="2xl"
+        boxShadow="0 8px 32px rgba(0,0,0,0.3)"
+      >
         <CardBody>
           <VStack spacing={4} align="stretch">
-            <Heading size="lg" color="brand.600">Prompt Phase</Heading>
+            <Heading size="lg" bgGradient="linear(to-r, brand.400, highlight)" bgClip="text" fontWeight="bold">Prompt Phase</Heading>
             <Text fontSize="lg" color="textSecondary">
               Create a prompt to generate an image based on the word. You have 1 minute to submit your prompt!
             </Text>
@@ -181,9 +188,15 @@ export const PromptPhase: React.FC<PromptPhaseProps> = ({ initialWord, initialEx
           </VStack>
         </CardBody>
       </Card>
-
+      <Divider my={4} />
       {!hasSubmitted ? (
-        <Card>
+        <Card
+          bg="whiteAlpha.100"
+          backdropFilter="blur(10px)"
+          border="1px solid rgba(255,255,255,0.2)"
+          borderRadius="2xl"
+          boxShadow="0 8px 32px rgba(0,0,0,0.3)"
+        >
           <CardBody>
             <VStack spacing={4}>
               <FormControl isInvalid={!!error}>
@@ -200,13 +213,20 @@ export const PromptPhase: React.FC<PromptPhaseProps> = ({ initialWord, initialEx
                 )}
               </FormControl>
               <Button
-                colorScheme="blue"
+                bgGradient="linear(to-r, brand.400, brand.500)"
+                color="white"
+                fontWeight="bold"
+                _hover={{ opacity: 0.9, transform: 'translateY(-2px)', boxShadow: '0 8px 25px rgba(16, 163, 127, 0.3)' }}
+                _active={{ transform: 'translateY(0)' }}
+                borderRadius="xl"
+                px={8}
+                py={4}
                 size="lg"
-                width="100%"
                 onClick={handleSubmit}
                 isLoading={isSubmitting}
                 loadingText="Submitting..."
-                isDisabled={!prompt.trim() || isSubmitting || !!error}
+                w={{ base: '100%', md: 'auto' }}
+                transition="all 0.2s"
               >
                 Submit Prompt
               </Button>
@@ -214,13 +234,16 @@ export const PromptPhase: React.FC<PromptPhaseProps> = ({ initialWord, initialEx
           </CardBody>
         </Card>
       ) : (
-        <Card>
+        <Card
+          bg="whiteAlpha.100"
+          backdropFilter="blur(10px)"
+          border="1px solid rgba(255,255,255,0.2)"
+          borderRadius="2xl"
+          boxShadow="0 8px 32px rgba(0,0,0,0.3)"
+        >
           <CardBody>
             <Center>
-              <VStack spacing={4}>
-                <Spinner size="xl" />
-                <Text fontSize="lg">Waiting for other players...</Text>
-              </VStack>
+              <Text fontSize="lg" color="brand.500" fontWeight="bold">Waiting for other players...</Text>
             </Center>
           </CardBody>
         </Card>

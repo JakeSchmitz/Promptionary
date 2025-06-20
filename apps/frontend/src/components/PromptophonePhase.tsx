@@ -14,6 +14,7 @@ import {
   Center,
   Spinner,
   Progress,
+  Divider,
 } from '@chakra-ui/react';
 import { useGame } from '../context/GameContext';
 import { gameWords } from '../../../shared/data/words';
@@ -248,31 +249,39 @@ export const PromptophonePhase: React.FC = () => {
   const exclusionWords = (gameWords.find(w => w.word.toLowerCase() === assignedChain.originalWord.toLowerCase())?.exclusionWords) || [];
 
   return (
-    <VStack spacing={8} align="stretch" maxW="800px" mx="auto" p={4}>
-      <Card>
+    <VStack spacing={8} align="stretch" maxW="1200px" mx="auto" p={4}>
+      <Card
+        bg="whiteAlpha.100"
+        backdropFilter="blur(10px)"
+        border="1px solid rgba(255,255,255,0.2)"
+        borderRadius="2xl"
+        boxShadow="0 8px 32px rgba(0,0,0,0.3)"
+      >
         <CardBody>
           <VStack spacing={4} align="stretch">
-            <Heading size="md">Round {gameState.currentRound}</Heading>
-            
-            {/* Show instructions based on round */}
-            {gameState.currentRound === 1 ? (
-              <Text color="textSecondary">
-                Create a prompt for the word below
-              </Text>
-            ) : (
-              <Text color="textSecondary">
-                Create a prompt describing the image below
-              </Text>
+            <Heading size="lg" bgGradient="linear(to-r, brand.400, highlight)" bgClip="text" fontWeight="bold">Promptophone Phase</Heading>
+            <Text fontSize="lg" color="textSecondary">
+              {gameState.phase === 'PROMPT' ? 'Describe the image or word for your assigned chain.' : 'Waiting for next phase...'}
+            </Text>
+            <Text fontSize="xl" fontWeight="bold" color="brand.500">
+              Word: {assignedChain.originalWord}
+            </Text>
+            {currentImage && (
+              <Box>
+                <Text fontSize="md" fontWeight="bold" color="brand.400" mb={2}>
+                  Previous Image:
+                </Text>
+                <Image
+                  src={currentImage}
+                  alt="Previous round image"
+                  borderRadius="md"
+                  objectFit="cover"
+                  w="100%"
+                  h="300px"
+                  mb={2}
+                />
+              </Box>
             )}
-            
-            <Box>
-              <Text fontWeight="bold">Chain Word: {assignedChain.originalWord}</Text>
-              {exclusionWords.length > 0 && (
-                <Text color="red.500" fontSize="sm">Excluded: {exclusionWords.join(', ')}</Text>
-              )}
-            </Box>
-
-            {/* Timer display */}
             <Box>
               <Text mb={2}>Time Remaining: {Math.ceil(timeRemaining)} seconds</Text>
               <Progress 
@@ -284,42 +293,43 @@ export const PromptophonePhase: React.FC = () => {
                 isAnimated
               />
             </Box>
-            
-            {/* Show image from previous round if not round 1 */}
-            {currentImage && gameState.currentRound > 1 && (
-              <Box>
-                <Image
-                  src={currentImage}
-                  alt="Generated image from previous round"
-                  borderRadius="md"
-                  maxH="400px"
-                  objectFit="contain"
-                />
-              </Box>
-            )}
           </VStack>
         </CardBody>
       </Card>
-
-      {/* Show prompt input if not yet submitted, otherwise show waiting spinner */}
+      <Divider my={4} />
       {!hasSubmitted ? (
-        <Card>
+        <Card
+          bg="whiteAlpha.100"
+          backdropFilter="blur(10px)"
+          border="1px solid rgba(255,255,255,0.2)"
+          borderRadius="2xl"
+          boxShadow="0 8px 32px rgba(0,0,0,0.3)"
+        >
           <CardBody>
-            <VStack spacing={4} align="stretch">
+            <VStack spacing={4}>
               <Textarea
                 value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                placeholder="Enter your prompt..."
+                onChange={e => setPrompt(e.target.value)}
+                placeholder="Enter your prompt here..."
                 size="lg"
-                minH="150px"
                 isDisabled={isSubmitting}
+                borderRadius="xl"
               />
               <Button
-                colorScheme="blue"
+                bgGradient="linear(to-r, brand.400, brand.500)"
+                color="white"
+                fontWeight="bold"
+                _hover={{ opacity: 0.9, transform: 'translateY(-2px)', boxShadow: '0 8px 25px rgba(16, 163, 127, 0.3)' }}
+                _active={{ transform: 'translateY(0)' }}
+                borderRadius="xl"
+                px={8}
+                py={4}
+                size="lg"
                 onClick={handleSubmit}
                 isLoading={isSubmitting}
                 loadingText="Submitting..."
-                isDisabled={!prompt.trim() || isSubmitting}
+                w={{ base: '100%', md: 'auto' }}
+                transition="all 0.2s"
               >
                 Submit Prompt
               </Button>
@@ -327,16 +337,16 @@ export const PromptophonePhase: React.FC = () => {
           </CardBody>
         </Card>
       ) : (
-        <Card>
+        <Card
+          bg="whiteAlpha.100"
+          backdropFilter="blur(10px)"
+          border="1px solid rgba(255,255,255,0.2)"
+          borderRadius="2xl"
+          boxShadow="0 8px 32px rgba(0,0,0,0.3)"
+        >
           <CardBody>
             <Center>
-              <VStack spacing={4}>
-                <Spinner size="xl" />
-                <Text fontSize="lg">Waiting for other players...</Text>
-                <Text fontSize="sm" color="gray.500">
-                  Your prompt has been submitted and image is being generated
-                </Text>
-              </VStack>
+              <Text fontSize="lg" color="brand.500" fontWeight="bold">Waiting for other players...</Text>
             </Center>
           </CardBody>
         </Card>

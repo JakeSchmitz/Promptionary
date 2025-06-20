@@ -14,7 +14,7 @@ const Layout = ({ children }: LayoutProps) => {
   const shouldShowNavbar = currentUser?.name
 
   return (
-    <Box minH="100vh" bg="surface">
+    <Box bg="surface">
       {shouldShowNavbar && <Navbar />}
       <Box pt={shouldShowNavbar ? "70px" : "0"} bg="surface">
         {children}

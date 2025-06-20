@@ -13,6 +13,7 @@ import {
   Progress,
   Spinner,
   Center,
+  Divider,
 } from '@chakra-ui/react';
 import { useGame } from '../context/GameContext';
 import { useParams } from 'react-router-dom';
@@ -130,10 +131,16 @@ export const VotingPhase: React.FC = () => {
 
   return (
     <VStack spacing={8} align="stretch" maxW="1200px" mx="auto" p={4}>
-      <Card>
+      <Card
+        bg="whiteAlpha.100"
+        backdropFilter="blur(10px)"
+        border="1px solid rgba(255,255,255,0.2)"
+        borderRadius="2xl"
+        boxShadow="0 8px 32px rgba(0,0,0,0.3)"
+      >
         <CardBody>
           <VStack spacing={4} align="stretch">
-            <Heading size="lg" color="brand.600">Voting Phase</Heading>
+            <Heading size="lg" bgGradient="linear(to-r, brand.400, highlight)" bgClip="text" fontWeight="bold">Voting Phase</Heading>
             <Text fontSize="lg" color="textSecondary">
               Vote for the image that best represents the word. You have 1 minute to make your choice!
             </Text>
@@ -154,7 +161,7 @@ export const VotingPhase: React.FC = () => {
           </VStack>
         </CardBody>
       </Card>
-
+      <Divider my={4} />
       {isLoading ? (
         <Center py={20}>
           <VStack spacing={4}>
@@ -167,10 +174,15 @@ export const VotingPhase: React.FC = () => {
       ) : (
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
           {gameState.images?.map((image) => (
-            <Card 
-              key={image.id} 
-              cursor={hasVoted ? 'default' : 'pointer'} 
-              _hover={hasVoted ? {} : { transform: 'scale(1.02)', shadow: 'lg' }} 
+            <Card
+              key={image.id}
+              bg="whiteAlpha.100"
+              backdropFilter="blur(10px)"
+              border="1px solid rgba(255,255,255,0.2)"
+              borderRadius="2xl"
+              boxShadow="0 8px 32px rgba(0,0,0,0.3)"
+              cursor={hasVoted ? 'default' : 'pointer'}
+              _hover={hasVoted ? {} : { transform: 'scale(1.02)', boxShadow: '0 4px 16px rgba(16,163,127,0.15)' }}
               transition="all 0.2s"
               opacity={hasVoted ? 0.7 : 1}
               onClick={() => !hasVoted && handleVote(image.id)}
@@ -185,11 +197,12 @@ export const VotingPhase: React.FC = () => {
                     objectFit="cover"
                     w="100%"
                     h="300px"
+                    borderRadius="md"
                   />
                   <Box 
                     p={4} 
                     w="100%" 
-                    bg={hasVoted ? 'gray.100' : 'white'}
+                    bg={hasVoted ? 'gray.100' : 'whiteAlpha.200'}
                     borderTop="1px"
                     borderColor="gray.200"
                   >
