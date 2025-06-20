@@ -155,4 +155,14 @@ Desktop.ini
 *.old
 
 # Local development
-.local/ 
+.local/
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+*.tfvars
+*.tfvars.json
+.terraformrc
+terraform.rc 
