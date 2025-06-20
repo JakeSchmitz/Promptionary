@@ -12,6 +12,7 @@ import JoinGame from './pages/JoinGame'
 import Scoreboard from './pages/Scoreboard'
 import GameHistory from './pages/GameHistory'
 import Account from './pages/Account'
+import theme from './theme'
 
 // Error boundary component
 class ErrorBoundary extends React.Component<
@@ -161,7 +162,7 @@ const App = () => {
   return (
     <StrictMode>
       <ErrorBoundary>
-        <ChakraProvider>
+        <ChakraProvider theme={theme}>
           <Router>
             <GoogleOAuthProvider clientId={clientId || ''}>
               <AuthProvider>

@@ -256,11 +256,11 @@ export const PromptophonePhase: React.FC = () => {
             
             {/* Show instructions based on round */}
             {gameState.currentRound === 1 ? (
-              <Text color="gray.600">
+              <Text color="textSecondary">
                 Create a prompt for the word below
               </Text>
             ) : (
-              <Text color="gray.600">
+              <Text color="textSecondary">
                 Create a prompt describing the image below
               </Text>
             )}

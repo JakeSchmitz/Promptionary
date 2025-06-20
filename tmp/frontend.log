@@ -3,7 +3,8 @@
 > vite
 
 
-  VITE v5.4.19  ready in 87 ms
+  VITE v5.4.19  ready in 105 ms
 
   ➜  Local:   http://localhost:5173/
   ➜  Network: http://192.168.1.169:5173/
+9:56:28 PM [vite] hmr update /src/pages/GameRoom.tsx

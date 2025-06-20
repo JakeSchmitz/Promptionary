@@ -133,11 +133,11 @@ export const VotingPhase: React.FC = () => {
       <Card>
         <CardBody>
           <VStack spacing={4} align="stretch">
-            <Heading size="lg" color="blue.600">Voting Phase</Heading>
-            <Text fontSize="lg" color="gray.600">
+            <Heading size="lg" color="brand.600">Voting Phase</Heading>
+            <Text fontSize="lg" color="textSecondary">
               Vote for the image that best represents the word. You have 1 minute to make your choice!
             </Text>
-            <Text fontSize="xl" fontWeight="bold" color="blue.500">
+            <Text fontSize="xl" fontWeight="bold" color="brand.500">
               Target Word: {gameState.currentWord}
             </Text>
             <Box>
@@ -158,8 +158,8 @@ export const VotingPhase: React.FC = () => {
       {isLoading ? (
         <Center py={20}>
           <VStack spacing={4}>
-            <Spinner size="xl" color="blue.500" thickness="4px" />
-            <Text fontSize="lg" color="gray.600">
+            <Spinner size="xl" color="brand.500" thickness="4px" />
+            <Text fontSize="lg" color="textSecondary">
               Generating images... Please wait
             </Text>
           </VStack>
@@ -197,7 +197,7 @@ export const VotingPhase: React.FC = () => {
                       fontSize="lg" 
                       fontWeight="medium" 
                       textAlign="center"
-                      color={hasVoted ? 'gray.500' : 'blue.500'}
+                      color={hasVoted ? 'gray.500' : 'brand.500'}
                     >
                       {hasVoted ? 'Voted' : 'Click to Vote'}
                     </Text>

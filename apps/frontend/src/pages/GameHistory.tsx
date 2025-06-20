@@ -5,28 +5,12 @@ import {
   Heading,
   VStack,
   Text,
-  useColorModeValue,
   Card,
   CardBody,
-  CardHeader,
   Button,
   HStack,
   Badge,
-  Image,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
   Spinner,
-  Alert,
-  AlertIcon,
   SimpleGrid,
   Modal,
   ModalOverlay,
@@ -35,7 +19,6 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
-  Flex,
   Stat,
   StatLabel,
   StatNumber,
@@ -43,10 +26,10 @@ import {
   Select,
   FormControl,
   FormLabel,
-  Stack,
   Divider,
+  Icon,
 } from '@chakra-ui/react';
-import { FaTrophy, FaUsers, FaImage, FaCalendar, FaGamepad, FaFilter } from 'react-icons/fa';
+import { FaTrophy, FaUsers, FaImage, FaCalendar, FaGamepad, FaFilter, FaEye, FaStar } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import { getGameHistory } from '../utils/api';
 
@@ -67,7 +50,7 @@ interface GameHistoryItem {
   totalImages: number;
   hasPromptChains: boolean;
   status: 'Complete' | 'In Progress';
-  phase: string; // Add phase for debugging
+  phase: string;
   fullGameData: {
     playerGames: Array<{
       id: string;
@@ -121,12 +104,8 @@ const GameHistory = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   
   // Filter states
-  const [statusFilter, setStatusFilter] = useState<string>('all');
   const [gameModeFilter, setGameModeFilter] = useState<string>('all');
-
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
-  const cardBg = useColorModeValue('gray.50', 'gray.700');
+  const [dateFilter, setDateFilter] = useState<string>('all');
 
   const fetchGameHistory = async () => {
     if (!currentUser?.id) {
@@ -141,9 +120,6 @@ const GameHistory = () => {
       
       // Build query parameters
       const params = new URLSearchParams();
-      if (statusFilter !== 'all') {
-        params.append('status', statusFilter);
-      }
       if (gameModeFilter !== 'all') {
         params.append('gameMode', gameModeFilter);
       }
@@ -164,12 +140,7 @@ const GameHistory = () => {
 
   useEffect(() => {
     fetchGameHistory();
-  }, [currentUser?.id, statusFilter, gameModeFilter]);
-
-  const handleViewGameDetails = (game: GameHistoryItem) => {
-    setSelectedGame(game);
-    onOpen();
-  };
+  }, [currentUser?.id, gameModeFilter]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -181,341 +152,391 @@ const GameHistory = () => {
     });
   };
 
-  const getGameModeIcon = (gameMode: string) => {
-    return gameMode === 'PROMPTOPHONE' ? '🎤' : '🎨';
-  };
-
   const getGameModeLabel = (gameMode: string) => {
     return gameMode === 'PROMPTOPHONE' ? 'Promptophone' : 'Prompt Anything';
   };
 
-  const getStatusColor = (status: string, phase: string) => {
-    if (status === 'Complete') return 'green';
-    if (phase === 'LOBBY') return 'blue';
-    if (phase === 'PROMPT') return 'orange';
-    if (phase === 'VOTING') return 'purple';
-    if (phase === 'RESULTS') return 'yellow';
-    return 'gray';
-  };
-
-  if (isLoading) {
-    return (
-      <Container maxW="container.lg" py={10}>
-        <VStack spacing={8}>
-          <Heading>Game History</Heading>
-          <Box display="flex" justifyContent="center" alignItems="center" minH="200px">
-            <Spinner size="xl" />
-          </Box>
-        </VStack>
-      </Container>
-    );
-  }
-
-  if (error) {
-    return (
-      <Container maxW="container.lg" py={10}>
-        <VStack spacing={8}>
-          <Heading>Game History</Heading>
-          <Alert status="error">
-            <AlertIcon />
-            {error}
-          </Alert>
-        </VStack>
-      </Container>
-    );
-  }
+  // Filter games based on current filters
+  const filteredGames = gameHistory.filter(game => {
+    if (gameModeFilter !== 'all' && game.gameMode !== gameModeFilter) {
+      return false;
+    }
+    // Add date filtering logic here if needed
+    return true;
+  });
 
   return (
-    <Container maxW="container.lg" py={10}>
-      <VStack spacing={8} align="stretch">
-        <Box>
-          <Heading size="lg">Game History</Heading>
-          <Text mt={2} color="gray.600">
+    <Container maxW="container.xl" py={8}>
+      <VStack spacing={8}>
+        {/* Header */}
+        <VStack spacing={3} textAlign="center">
+          <Heading 
+            size="xl" 
+            bgGradient="linear(to-r, brand.400, highlight)"
+            bgClip="text"
+            fontWeight="bold"
+          >
+            Game History
+          </Heading>
+          <Text color="textSecondary" fontSize="lg">
             Your games and results ({gameHistory.length} games found)
           </Text>
-        </Box>
+        </VStack>
+
+        {/* Stats Cards */}
+        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6} w="100%">
+          <Card
+            backdropFilter="blur(10px)"
+            bg="whiteAlpha.100"
+            border="1px solid rgba(255,255,255,0.2)"
+            borderRadius="2xl"
+            boxShadow="0 8px 32px rgba(0,0,0,0.3)"
+          >
+            <CardBody p={6}>
+              <Stat>
+                <StatLabel color="textSecondary" fontSize="sm">Total Games</StatLabel>
+                <StatNumber color="textPrimary" fontSize="3xl" fontWeight="bold">
+                  {gameHistory.length}
+                </StatNumber>
+                <StatHelpText color="textSecondary">
+                  <Icon as={FaGamepad} mr={2} />
+                  Games played
+                </StatHelpText>
+              </Stat>
+            </CardBody>
+          </Card>
+
+          <Card
+            backdropFilter="blur(10px)"
+            bg="whiteAlpha.100"
+            border="1px solid rgba(255,255,255,0.2)"
+            borderRadius="2xl"
+            boxShadow="0 8px 32px rgba(0,0,0,0.3)"
+          >
+            <CardBody p={6}>
+              <Stat>
+                <StatLabel color="textSecondary" fontSize="sm">Wins</StatLabel>
+                <StatNumber color="highlight" fontSize="3xl" fontWeight="bold">
+                  {gameHistory.filter(game => game.winner.name === currentUser?.name).length}
+                </StatNumber>
+                <StatHelpText color="textSecondary">
+                  <Icon as={FaTrophy} mr={2} />
+                  Games won
+                </StatHelpText>
+              </Stat>
+            </CardBody>
+          </Card>
+
+          <Card
+            backdropFilter="blur(10px)"
+            bg="whiteAlpha.100"
+            border="1px solid rgba(255,255,255,0.2)"
+            borderRadius="2xl"
+            boxShadow="0 8px 32px rgba(0,0,0,0.3)"
+          >
+            <CardBody p={6}>
+              <Stat>
+                <StatLabel color="textSecondary" fontSize="sm">Win Rate</StatLabel>
+                <StatNumber color="brand.400" fontSize="3xl" fontWeight="bold">
+                  {gameHistory.length > 0 
+                    ? Math.round((gameHistory.filter(game => game.winner.name === currentUser?.name).length / gameHistory.length) * 100)
+                    : 0}%
+                </StatNumber>
+                <StatHelpText color="textSecondary">
+                  <Icon as={FaStar} mr={2} />
+                  Success rate
+                </StatHelpText>
+              </Stat>
+            </CardBody>
+          </Card>
+        </SimpleGrid>
 
         {/* Filters */}
-        <Card>
-          <CardHeader>
-            <HStack spacing={4} align="center">
-              <FaFilter />
-              <Heading size="md">Filters</Heading>
-            </HStack>
-          </CardHeader>
-          <CardBody>
-            <Stack direction={{ base: 'column', md: 'row' }} spacing={4}>
-              <FormControl>
-                <FormLabel>Status</FormLabel>
-                <Select 
-                  value={statusFilter} 
-                  onChange={(e) => setStatusFilter(e.target.value)}
+        <Card
+          backdropFilter="blur(10px)"
+          bg="whiteAlpha.100"
+          border="1px solid rgba(255,255,255,0.2)"
+          borderRadius="2xl"
+          boxShadow="0 8px 32px rgba(0,0,0,0.3)"
+        >
+          <CardBody p={6}>
+            <VStack spacing={4} align="stretch">
+              <HStack justify="space-between">
+                <Heading size="md" color="textPrimary">
+                  <Icon as={FaFilter} mr={2} />
+                  Filters
+                </Heading>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  color="textSecondary"
+                  onClick={() => {
+                    setGameModeFilter('all');
+                    setDateFilter('all');
+                  }}
                 >
-                  <option value="all">All Games</option>
-                  <option value="complete">Completed Only</option>
-                  <option value="in-progress">In Progress Only</option>
-                </Select>
-              </FormControl>
-              
-              <FormControl>
-                <FormLabel>Game Mode</FormLabel>
-                <Select 
-                  value={gameModeFilter} 
-                  onChange={(e) => setGameModeFilter(e.target.value)}
-                >
-                  <option value="all">All Modes</option>
-                  <option value="PROMPT_ANYTHING">Prompt Anything</option>
-                  <option value="PROMPTOPHONE">Promptophone</option>
-                </Select>
-              </FormControl>
-              
-              <FormControl>
-                <FormLabel>&nbsp;</FormLabel>
-                <Button 
-                  onClick={fetchGameHistory}
-                  colorScheme="blue"
-                  leftIcon={<FaFilter />}
-                >
-                  Refresh
+                  Clear All
                 </Button>
-              </FormControl>
-            </Stack>
+              </HStack>
+              
+              <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+                <FormControl>
+                  <FormLabel color="textSecondary" fontSize="sm">Game Mode</FormLabel>
+                  <Select
+                    value={gameModeFilter}
+                    onChange={(e) => setGameModeFilter(e.target.value)}
+                    bg="whiteAlpha.200"
+                    borderColor="whiteAlpha.300"
+                    color="textPrimary"
+                    _focus={{
+                      borderColor: 'brand.400',
+                      boxShadow: '0 0 0 1px var(--chakra-colors-brand-400)',
+                    }}
+                  >
+                    <option value="all">All Modes</option>
+                    <option value="PROMPT_ANYTHING">Prompt Anything</option>
+                    <option value="PROMPTOPHONE">Promptophone</option>
+                  </Select>
+                </FormControl>
+                
+                <FormControl>
+                  <FormLabel color="textSecondary" fontSize="sm">Date Range</FormLabel>
+                  <Select
+                    value={dateFilter}
+                    onChange={(e) => setDateFilter(e.target.value)}
+                    bg="whiteAlpha.200"
+                    borderColor="whiteAlpha.300"
+                    color="textPrimary"
+                    _focus={{
+                      borderColor: 'brand.400',
+                      boxShadow: '0 0 0 1px var(--chakra-colors-brand-400)',
+                    }}
+                  >
+                    <option value="all">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                  </Select>
+                </FormControl>
+              </SimpleGrid>
+            </VStack>
           </CardBody>
         </Card>
 
-        {gameHistory.length === 0 ? (
-          <Card>
-            <CardBody>
-              <VStack spacing={4}>
-                <Text fontSize="lg" color="gray.500">
-                  No games found with current filters
-                </Text>
-                <Text color="gray.400">
-                  Try adjusting your filters or start some games
-                </Text>
-              </VStack>
-            </CardBody>
-          </Card>
-        ) : (
-          <Accordion allowMultiple>
-            {gameHistory.map((game, index) => (
-              <AccordionItem key={game.id}>
-                <AccordionButton>
-                  <Box flex="1" textAlign="left">
-                    <HStack spacing={4} align="center">
-                      <Badge colorScheme={getStatusColor(game.status, game.phase)}>
-                        {game.status === 'Complete'
-                          ? (game.winner.name === game.playerName ? '🏆 Won' : 'Lost')
-                          : `${game.phase}`}
-                      </Badge>
-                      <Text fontWeight="bold">
-                        {getGameModeIcon(game.gameMode)} {getGameModeLabel(game.gameMode)}
-                      </Text>
-                      <Text color="gray.600">
-                        {formatDate(game.createdAt)}
-                      </Text>
-                      <HStack spacing={2}>
-                        <FaUsers />
-                        <Text fontSize="sm">{game.playerCount} players</Text>
-                      </HStack>
-                      <HStack spacing={2}>
-                        <FaImage />
-                        <Text fontSize="sm">{game.totalImages} images</Text>
-                      </HStack>
-                      <Text fontSize="sm" color="gray.500">
-                        Room: {game.roomId}
-                      </Text>
-                    </HStack>
-                  </Box>
-                  <AccordionIcon />
-                </AccordionButton>
-                <AccordionPanel pb={4}>
-                  <VStack spacing={4} align="stretch">
-                    {/* Game Summary */}
-                    <Card bg={cardBg}>
-                      <CardBody>
-                        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4}>
-                          <Stat>
-                            <StatLabel>Your Score</StatLabel>
-                            <StatNumber>{game.playerScore}</StatNumber>
-                            <StatHelpText>
-                              {game.status === 'Complete' 
-                                ? (game.winner.name === game.playerName ? 'Winner!' : `Winner: ${game.winner.name} (${game.winner.score})`)
-                                : 'Game in progress'
-                              }
-                            </StatHelpText>
-                          </Stat>
-                          <Stat>
-                            <StatLabel>Game Mode</StatLabel>
-                            <StatNumber>{getGameModeLabel(game.gameMode)}</StatNumber>
-                            <StatHelpText>
-                              {game.hasPromptChains ? 'With prompt chains' : 'Standard mode'}
-                            </StatHelpText>
-                          </Stat>
-                          <Stat>
-                            <StatLabel>Duration</StatLabel>
-                            <StatNumber>
-                              {Math.ceil((new Date(game.updatedAt).getTime() - new Date(game.createdAt).getTime()) / (1000 * 60))} min
-                            </StatNumber>
-                            <StatHelpText>
-                              {formatDate(game.createdAt)}
-                            </StatHelpText>
-                          </Stat>
-                        </SimpleGrid>
-                      </CardBody>
-                    </Card>
-
-                    {/* Game Details */}
-                    <Card bg={cardBg}>
-                      <CardHeader>
-                        <Heading size="md">Game Details</Heading>
-                      </CardHeader>
-                      <CardBody>
-                        <VStack spacing={3} align="stretch">
-                          <HStack justify="space-between">
-                            <Text fontWeight="bold">Status:</Text>
-                            <Badge colorScheme={getStatusColor(game.status, game.phase)}>
-                              {game.status} ({game.phase})
+        {/* Game List */}
+        <Box w="100%">
+          {isLoading ? (
+            <Card
+              backdropFilter="blur(10px)"
+              bg="whiteAlpha.100"
+              border="1px solid rgba(255,255,255,0.2)"
+              borderRadius="2xl"
+              boxShadow="0 8px 32px rgba(0,0,0,0.3)"
+            >
+              <CardBody p={8}>
+                <VStack spacing={4}>
+                  <Spinner size="xl" color="brand.500" thickness="4px" />
+                  <Text color="textSecondary">Loading your game history...</Text>
+                </VStack>
+              </CardBody>
+            </Card>
+          ) : filteredGames.length === 0 ? (
+            <Card
+              backdropFilter="blur(10px)"
+              bg="whiteAlpha.100"
+              border="1px solid rgba(255,255,255,0.2)"
+              borderRadius="2xl"
+              boxShadow="0 8px 32px rgba(0,0,0,0.3)"
+            >
+              <CardBody p={8}>
+                <VStack spacing={4}>
+                  <Icon as={FaGamepad} boxSize={12} color="textSecondary" />
+                  <Text fontSize="lg" color="textSecondary">
+                    No games found with current filters
+                  </Text>
+                  <Text color="textSecondary">
+                    Try adjusting your filters or start some games
+                  </Text>
+                </VStack>
+              </CardBody>
+            </Card>
+          ) : (
+            <VStack spacing={4} align="stretch">
+              {filteredGames.map((game) => (
+                <Card
+                  key={game.id}
+                  backdropFilter="blur(10px)"
+                  bg="whiteAlpha.100"
+                  border="1px solid rgba(255,255,255,0.2)"
+                  borderRadius="2xl"
+                  boxShadow="0 8px 32px rgba(0,0,0,0.3)"
+                  cursor="pointer"
+                  onClick={() => {
+                    setSelectedGame(game);
+                    onOpen();
+                  }}
+                  _hover={{
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0 12px 40px rgba(0,0,0,0.4)',
+                    borderColor: 'rgba(255,255,255,0.3)',
+                  }}
+                  transition="all 0.3s ease"
+                >
+                  <CardBody p={6}>
+                    <HStack justify="space-between" align="start">
+                      <VStack align="start" spacing={3} flex={1}>
+                        <HStack spacing={3}>
+                          <Badge
+                            bgGradient="linear(to-r, brand.400, brand.500)"
+                            color="white"
+                            px={3}
+                            py={1}
+                            borderRadius="full"
+                            fontSize="sm"
+                          >
+                            {getGameModeLabel(game.gameMode)}
+                          </Badge>
+                          {game.winner.name === currentUser?.name && (
+                            <Badge
+                              bgGradient="linear(to-r, highlight, orange.400)"
+                              color="white"
+                              px={3}
+                              py={1}
+                              borderRadius="full"
+                              fontSize="sm"
+                            >
+                              <Icon as={FaTrophy} mr={1} />
+                              Winner
                             </Badge>
-                          </HStack>
-                          <HStack justify="space-between">
-                            <Text fontWeight="bold">Room ID:</Text>
-                            <Text fontFamily="mono">{game.roomId}</Text>
-                          </HStack>
-                          {game.fullGameData.currentRound && (
-                            <HStack justify="space-between">
-                              <Text fontWeight="bold">Current Round:</Text>
-                              <Text>{game.fullGameData.currentRound} / {game.fullGameData.maxRounds}</Text>
-                            </HStack>
                           )}
-                          {game.fullGameData.currentWord && (
-                            <HStack justify="space-between">
-                              <Text fontWeight="bold">Current Word:</Text>
-                              <Text>{game.fullGameData.currentWord}</Text>
-                            </HStack>
-                          )}
+                        </HStack>
+                        
+                        <VStack align="start" spacing={1}>
+                          <HStack>
+                            <Icon as={FaCalendar} color="textSecondary" />
+                            <Text color="textSecondary" fontSize="sm">
+                              {formatDate(game.createdAt)}
+                            </Text>
+                          </HStack>
+                          <HStack>
+                            <Icon as={FaUsers} color="textSecondary" />
+                            <Text color="textSecondary" fontSize="sm">
+                              {game.playerCount} players
+                            </Text>
+                          </HStack>
+                          <HStack>
+                            <Icon as={FaImage} color="textSecondary" />
+                            <Text color="textSecondary" fontSize="sm">
+                              {game.totalImages} images
+                            </Text>
+                          </HStack>
                         </VStack>
-                      </CardBody>
-                    </Card>
-
-                    {/* Final Scores */}
-                    <Card bg={cardBg}>
-                      <CardHeader>
-                        <Heading size="md">Player Scores</Heading>
-                      </CardHeader>
-                      <CardBody>
-                        <Table variant="simple" size="sm">
-                          <Thead>
-                            <Tr>
-                              <Th>Player</Th>
-                              <Th>Score</Th>
-                              <Th>Status</Th>
-                            </Tr>
-                          </Thead>
-                          <Tbody>
-                            {game.fullGameData.playerGames?.map((playerGame) => (
-                              <Tr key={playerGame.id}>
-                                <Td>
-                                  <HStack>
-                                    <Text>{playerGame.player.name}</Text>
-                                    {playerGame.isHost && <Badge size="sm">Host</Badge>}
-                                  </HStack>
-                                </Td>
-                                <Td>{playerGame.score}</Td>
-                                <Td>
-                                  {game.status === 'Complete' ? (
-                                    playerGame.playerId === game.winner.playerId ? (
-                                      <Badge colorScheme="green">Winner</Badge>
-                                    ) : (
-                                      <Badge colorScheme="gray">Runner-up</Badge>
-                                    )
-                                  ) : (
-                                    <Badge colorScheme="yellow">Playing</Badge>
-                                  )}
-                                </Td>
-                              </Tr>
-                            )) || (
-                              <Tr>
-                                <Td colSpan={3}>
-                                  <Text color="gray.500" textAlign="center">
-                                    No player data available
-                                  </Text>
-                                </Td>
-                              </Tr>
-                            )}
-                          </Tbody>
-                        </Table>
-                      </CardBody>
-                    </Card>
-
-                    {/* Action Buttons */}
-                    <HStack justify="center" spacing={4}>
-                      <Button
-                        colorScheme="blue"
-                        onClick={() => handleViewGameDetails(game)}
-                        leftIcon={<FaGamepad />}
-                      >
-                        View Details
-                      </Button>
+                      </VStack>
+                      
+                      <VStack align="end" spacing={2}>
+                        <Text fontSize="sm" color="textSecondary">
+                          Room: {game.roomId}
+                        </Text>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          color="brand.400"
+                          _hover={{ bg: 'whiteAlpha.200' }}
+                          leftIcon={<FaEye />}
+                        >
+                          View Details
+                        </Button>
+                      </VStack>
                     </HStack>
-                  </VStack>
-                </AccordionPanel>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        )}
-
-        {/* Game Details Modal */}
-        <Modal isOpen={isOpen} onClose={onClose} size="xl">
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>
-              {selectedGame && (
-                <VStack align="stretch" spacing={2}>
-                  <Text>Game Details</Text>
-                  <Text fontSize="sm" color="gray.600">
-                    {getGameModeLabel(selectedGame.gameMode)} • {formatDate(selectedGame.createdAt)}
-                  </Text>
-                </VStack>
-              )}
-            </ModalHeader>
-            <ModalCloseButton />
-            <ModalBody pb={6}>
-              {selectedGame && (
-                <VStack spacing={4} align="stretch">
-                  <Text>
-                    <strong>Room ID:</strong> {selectedGame.roomId}
-                  </Text>
-                  <Text>
-                    <strong>Status:</strong> {selectedGame.status} ({selectedGame.phase})
-                  </Text>
-                  {selectedGame.status === 'Complete' && (
-                    <Text>
-                      <strong>Winner:</strong> {selectedGame.winner.name} ({selectedGame.winner.score} points)
-                    </Text>
-                  )}
-                  <Text>
-                    <strong>Your Score:</strong> {selectedGame.playerScore} points
-                  </Text>
-                  <Text>
-                    <strong>Total Images:</strong> {selectedGame.totalImages}
-                  </Text>
-                  {selectedGame.fullGameData.currentWord && (
-                    <Text>
-                      <strong>Current Word:</strong> {selectedGame.fullGameData.currentWord}
-                    </Text>
-                  )}
-                  {selectedGame.fullGameData.currentRound && (
-                    <Text>
-                      <strong>Round:</strong> {selectedGame.fullGameData.currentRound} / {selectedGame.fullGameData.maxRounds}
-                    </Text>
-                  )}
-                </VStack>
-              )}
-            </ModalBody>
-          </ModalContent>
-        </Modal>
+                  </CardBody>
+                </Card>
+              ))}
+            </VStack>
+          )}
+        </Box>
       </VStack>
+
+      {/* Game Details Modal */}
+      <Modal isOpen={isOpen} onClose={onClose} size="xl" isCentered>
+        <ModalOverlay backdropFilter="blur(10px)" bg="blackAlpha.300" />
+        <ModalContent
+          backdropFilter="blur(10px)"
+          bg="whiteAlpha.200"
+          border="1px solid rgba(255,255,255,0.2)"
+          borderRadius="2xl"
+          boxShadow="0 8px 32px rgba(0,0,0,0.3)"
+        >
+          <ModalHeader color="textPrimary">Game Details</ModalHeader>
+          <ModalCloseButton color="textPrimary" />
+          <ModalBody pb={6}>
+            {selectedGame && (
+              <VStack spacing={6} align="stretch">
+                <Card
+                  bg="whiteAlpha.100"
+                  border="1px solid rgba(255,255,255,0.2)"
+                  borderRadius="xl"
+                >
+                  <CardBody p={6}>
+                    <VStack spacing={4} align="stretch">
+                      <HStack justify="space-between">
+                        <VStack align="start" spacing={1}>
+                          <Text fontWeight="bold" color="textPrimary">
+                            {getGameModeLabel(selectedGame.gameMode)}
+                          </Text>
+                          <Text fontSize="sm" color="textSecondary">
+                            {formatDate(selectedGame.createdAt)}
+                          </Text>
+                        </VStack>
+                        {selectedGame.winner && (
+                          <Badge
+                            bgGradient="linear(to-r, highlight, orange.400)"
+                            color="white"
+                            px={3}
+                            py={1}
+                            borderRadius="full"
+                            fontSize="sm"
+                          >
+                            <Icon as={FaTrophy} mr={1} />
+                            Winner: {selectedGame.winner.name}
+                          </Badge>
+                        )}
+                      </HStack>
+                      
+                      <Divider borderColor="whiteAlpha.300" />
+                      
+                      <VStack spacing={3} align="stretch">
+                        <Text fontWeight="bold" color="textPrimary">
+                          Players ({selectedGame.playerCount})
+                        </Text>
+                        <SimpleGrid columns={2} spacing={3}>
+                          {selectedGame.fullGameData.playerGames?.map((playerGame) => (
+                            <HStack key={playerGame.id} p={3} bg="whiteAlpha.100" borderRadius="md">
+                              <Text color="textPrimary" fontSize="sm">
+                                {playerGame.player.name}
+                              </Text>
+                              {playerGame.player.email && (
+                                <Text color="textSecondary" fontSize="xs">
+                                  {playerGame.player.email}
+                                </Text>
+                              )}
+                            </HStack>
+                          )) || (
+                            <HStack p={3} bg="whiteAlpha.100" borderRadius="md">
+                              <Text color="textSecondary" fontSize="sm">
+                                No player data available
+                              </Text>
+                            </HStack>
+                          )}
+                        </SimpleGrid>
+                      </VStack>
+                    </VStack>
+                  </CardBody>
+                </Card>
+              </VStack>
+            )}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Container>
   );
 };

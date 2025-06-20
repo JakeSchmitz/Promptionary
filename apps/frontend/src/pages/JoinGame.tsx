@@ -85,7 +85,7 @@ const JoinGame = () => {
       <VStack spacing={8}>
         <Box textAlign="center">
           <Heading size="lg">Join a Game</Heading>
-          <Text mt={2} color="gray.600">
+          <Text mt={2} color="textSecondary">
             Enter the room ID to join an existing game
           </Text>
         </Box>

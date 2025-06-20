@@ -21,7 +21,7 @@ export const PromptophoneResults: React.FC = () => {
   return (
     <VStack spacing={8} align="stretch" maxW="1200px" mx="auto" p={4}>
       <Heading size="lg">Game Results</Heading>
-      <Text color="gray.600">
+      <Text color="textSecondary">
         Here's how each word evolved through the game:
       </Text>
 
@@ -47,7 +47,7 @@ export const PromptophoneResults: React.FC = () => {
                         <Badge colorScheme="blue">Round {stepIndex + 1}</Badge>
                         <Text fontWeight="bold">{player?.name}</Text>
                       </HStack>
-                      <Text color="gray.600">{step.prompt}</Text>
+                      <Text color="textSecondary">{step.prompt}</Text>
                       <Image
                         src={step.imageUrl}
                         alt={`Generated image for round ${stepIndex + 1}`}

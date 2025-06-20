@@ -1,16 +1,22 @@
 import React from 'react'
 import { Box } from '@chakra-ui/react'
 import Navbar from './Navbar'
+import { useAuth } from '../context/AuthContext'
 
 interface LayoutProps {
   children: React.ReactNode
 }
 
 const Layout = ({ children }: LayoutProps) => {
+  const { currentUser } = useAuth()
+  
+  // Show navbar only if user is authenticated or has a guest name
+  const shouldShowNavbar = currentUser?.name
+
   return (
-    <Box minH="100vh" bg="white">
-      <Navbar />
-      <Box pt="60px" bg="white">
+    <Box minH="100vh" bg="surface">
+      {shouldShowNavbar && <Navbar />}
+      <Box pt={shouldShowNavbar ? "70px" : "0"} bg="surface">
         {children}
       </Box>
     </Box>

@@ -48,14 +48,14 @@ export const ResultsPhase: React.FC = () => {
       <Card>
         <CardBody>
           <VStack spacing={4} align="stretch">
-            <Heading size="lg" color="blue.600">Results Phase</Heading>
-            <Text fontSize="lg" color="gray.600">
+            <Heading size="lg" color="brand.600">Results Phase</Heading>
+            <Text fontSize="lg" color="textSecondary">
               {isLastRound 
-                ? "Game Over! Here are the final results."
-                : `Round ${gameState.currentRound} Results - ${isHost ? "Start the next round when ready" : "Waiting for host to start next round"}`
+                ? 'This was the final round! The game is complete.'
+                : 'Here are the results for this round!'
               }
             </Text>
-            <Text fontSize="xl" fontWeight="bold" color="blue.500">
+            <Text fontSize="xl" fontWeight="bold" color="brand.500">
               Target Word: {gameState.currentWord}
             </Text>
           </VStack>
@@ -84,7 +84,7 @@ export const ResultsPhase: React.FC = () => {
                   <Text fontSize="lg" fontWeight="bold">
                     Votes: {image.votes.length}
                   </Text>
-                  <Text color="gray.600">
+                  <Text color="textSecondary">
                     Prompt: {image.prompt}
                   </Text>
                 </Box>
@@ -132,6 +132,10 @@ export const ResultsPhase: React.FC = () => {
           </CardBody>
         </Card>
       )}
+
+      <Text color="textSecondary">
+        {isLastRound ? 'Game Complete!' : 'Round Complete!'}
+      </Text>
     </VStack>
   );
 }; 

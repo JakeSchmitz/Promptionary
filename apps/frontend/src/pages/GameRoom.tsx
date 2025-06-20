@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useGame } from '../context/GameContext';
-import { GameLobby } from '../components/GameLobby';
+import GameLobby from '../components/GameLobby';
 import { PromptPhase } from '../components/PromptPhase';
 import { VotingPhase } from '../components/VotingPhase';
 import { ResultsPhase } from '../components/ResultsPhase';

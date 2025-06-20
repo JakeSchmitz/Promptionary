@@ -150,11 +150,11 @@ export const PromptPhase: React.FC<PromptPhaseProps> = ({ initialWord, initialEx
       <Card>
         <CardBody>
           <VStack spacing={4} align="stretch">
-            <Heading size="lg" color="blue.600">Prompt Phase</Heading>
-            <Text fontSize="lg" color="gray.600">
+            <Heading size="lg" color="brand.600">Prompt Phase</Heading>
+            <Text fontSize="lg" color="textSecondary">
               Create a prompt to generate an image based on the word. You have 1 minute to submit your prompt!
             </Text>
-            <Text fontSize="xl" fontWeight="bold" color="blue.500">
+            <Text fontSize="xl" fontWeight="bold" color="brand.500">
               Word: {targetWord}
             </Text>
             {exclusionWords && exclusionWords.length > 0 && (

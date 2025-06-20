@@ -19,9 +19,13 @@ import {
   useBreakpointValue,
   useDisclosure,
   useColorMode,
+  HStack,
+  Avatar,
+  Badge,
 } from '@chakra-ui/react'
 import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom'
 import { ChevronDownIcon, ChevronRightIcon, MoonIcon, SunIcon } from '@chakra-ui/icons'
+import { FaGamepad, FaUser, FaHistory, FaSignOutAlt } from 'react-icons/fa'
 import { useGame } from '../context/GameContext'
 import { useAuth } from '../context/AuthContext'
 
@@ -32,8 +36,6 @@ const Navbar = () => {
   const { gameState } = useGame()
   const location = useLocation()
   const navigate = useNavigate()
-  const bgColor = 'blue.500'
-  const textColor = 'white'
   
   const displayName = currentUser?.name
 
@@ -57,6 +59,26 @@ const Navbar = () => {
     return 'Promptionary'
   }
 
+  const getGameModeBadge = () => {
+    if (location.pathname.startsWith('/game/') && gameState) {
+      return (
+        <Badge
+          bgGradient="linear(to-r, brand.400, brand.500)"
+          color="white"
+          px={3}
+          py={1}
+          borderRadius="full"
+          fontSize="xs"
+          fontWeight="bold"
+          ml={3}
+        >
+          {gameState.gameMode === 'PROMPTOPHONE' ? 'Promptophone' : 'Prompt Anything'}
+        </Badge>
+      )
+    }
+    return null
+  }
+
   return (
     <Box
       position="fixed"
@@ -64,73 +86,148 @@ const Navbar = () => {
       left={0}
       right={0}
       zIndex={1000}
-      bg={bgColor}
-      borderBottom="1px"
-      borderColor="slate.700"
-      shadow="md"
+      backdropFilter="blur(10px)"
+      bg="whiteAlpha.100"
+      borderBottom="1px solid rgba(255,255,255,0.2)"
+      boxShadow="0 4px 20px rgba(0,0,0,0.1)"
     >
       <Flex
         maxW="container.xl"
         mx="auto"
-        px={4}
-        h="60px"
+        px={6}
+        h="70px"
         align="center"
         justify="space-between"
       >
         {/* Game Name */}
-        <ChakraLink
-          as={RouterLink}
-          to="/"
-          fontSize="xl"
-          fontWeight="bold"
-          color="white"
-          _hover={{ textDecoration: 'none', color: 'blue.200' }}
-        >
-          {getTitle()}
-        </ChakraLink>
+        <HStack spacing={3}>
+          <ChakraLink
+            as={RouterLink}
+            to="/"
+            fontSize="2xl"
+            fontWeight="bold"
+            bgGradient="linear(to-r, brand.400, highlight)"
+            bgClip="text"
+            _hover={{ 
+              textDecoration: 'none',
+              transform: 'scale(1.05)',
+            }}
+            transition="all 0.2s"
+          >
+            {getTitle()}
+          </ChakraLink>
+          {getGameModeBadge()}
+        </HStack>
 
         {/* User Menu */}
         {displayName && (
-          <Menu>
-            <MenuButton
-              as={Button}
-              rightIcon={<ChevronDownIcon />}
+          <HStack spacing={4}>
+            {/* Color Mode Toggle */}
+            <IconButton
+              aria-label="Toggle color mode"
+              icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+              onClick={toggleColorMode}
               variant="ghost"
               size="sm"
-              color={textColor}
-              _hover={{ bg: 'blue.600' }}
-              _active={{ bg: 'blue.700' }}
-            >
-              {displayName}
-            </MenuButton>
-            <MenuList bg="white" borderColor="blue.400" boxShadow="md">
-              {!currentUser?.isGuest && (
-                <>
-                  <MenuItem 
-                    onClick={() => navigate('/history')}
-                    _hover={{ bg: 'blue.50' }}
-                    color="blue.500"
-                  >
-                    Game History
-                  </MenuItem>
-                  <MenuItem 
-                    onClick={() => navigate('/account')}
-                    _hover={{ bg: 'blue.50' }}
-                    color="blue.500"
-                  >
-                    Account
-                  </MenuItem>
-                </>
-              )}
-              <MenuItem 
-                onClick={handleLogout}
-                _hover={{ bg: 'blue.50' }}
-                color="blue.500"
+              color="textPrimary"
+              _hover={{ 
+                bg: 'whiteAlpha.200',
+                transform: 'scale(1.1)',
+              }}
+              transition="all 0.2s"
+            />
+
+            <Menu>
+              <MenuButton
+                as={Button}
+                rightIcon={<ChevronDownIcon />}
+                variant="ghost"
+                size="md"
+                color="textPrimary"
+                bg="whiteAlpha.200"
+                border="1px solid rgba(255,255,255,0.2)"
+                borderRadius="xl"
+                px={4}
+                _hover={{ 
+                  bg: 'whiteAlpha.300',
+                  transform: 'translateY(-1px)',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                }}
+                _active={{ 
+                  bg: 'whiteAlpha.400',
+                  transform: 'translateY(0)',
+                }}
+                transition="all 0.2s"
               >
-                Logout
-              </MenuItem>
-            </MenuList>
-          </Menu>
+                <HStack spacing={3}>
+                  <Avatar 
+                    size="sm" 
+                    name={displayName}
+                    bgGradient="linear(to-r, brand.400, brand.500)"
+                    color="white"
+                    fontWeight="bold"
+                  />
+                  <Text fontWeight="medium">{displayName}</Text>
+                </HStack>
+              </MenuButton>
+              <MenuList 
+                bg="whiteAlpha.200"
+                backdropFilter="blur(10px)"
+                border="1px solid rgba(255,255,255,0.2)"
+                borderRadius="xl"
+                boxShadow="0 8px 32px rgba(0,0,0,0.3)"
+                py={2}
+              >
+                {!currentUser?.isGuest && (
+                  <>
+                    <MenuItem 
+                      onClick={() => navigate('/dashboard')}
+                      _hover={{ bg: 'whiteAlpha.300' }}
+                      color="textPrimary"
+                      icon={<FaGamepad />}
+                      borderRadius="md"
+                      mx={2}
+                      mb={1}
+                    >
+                      Dashboard
+                    </MenuItem>
+                    <MenuItem 
+                      onClick={() => navigate('/history')}
+                      _hover={{ bg: 'whiteAlpha.300' }}
+                      color="textPrimary"
+                      icon={<FaHistory />}
+                      borderRadius="md"
+                      mx={2}
+                      mb={1}
+                    >
+                      Game History
+                    </MenuItem>
+                    <MenuItem 
+                      onClick={() => navigate('/account')}
+                      _hover={{ bg: 'whiteAlpha.300' }}
+                      color="textPrimary"
+                      icon={<FaUser />}
+                      borderRadius="md"
+                      mx={2}
+                      mb={1}
+                    >
+                      Account
+                    </MenuItem>
+                  </>
+                )}
+                <MenuItem 
+                  onClick={handleLogout}
+                  _hover={{ bg: 'whiteAlpha.300' }}
+                  color="danger"
+                  icon={<FaSignOutAlt />}
+                  borderRadius="md"
+                  mx={2}
+                >
+                  Logout
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </HStack>
         )}
       </Flex>
     </Box>
