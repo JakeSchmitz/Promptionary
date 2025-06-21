@@ -246,7 +246,7 @@ export const PromptophonePhase: React.FC = () => {
   };
 
   // Get exclusion words for the chain's original word
-  const exclusionWords = (gameWords.find(w => w.word.toLowerCase() === assignedChain.originalWord.toLowerCase())?.exclusionWords) || [];
+  const exclusionWords = (gameWords.find(w => w.word.toLowerCase() === assignedChain.originalWord.toLowerCase())?.excluded) || [];
 
   return (
     <VStack spacing={8} align="stretch" maxW="1200px" mx="auto" p={4}>

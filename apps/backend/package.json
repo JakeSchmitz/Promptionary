@@ -12,6 +12,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "engines": {
+    "npm": ">=11.4.2"
+  },
   "dependencies": {
     "@prisma/client": "^6.9.0",
     "cors": "^2.8.5",
