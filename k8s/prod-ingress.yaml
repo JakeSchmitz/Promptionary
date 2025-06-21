@@ -16,14 +16,14 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: promptionary-backend-service
+            name: promptionary-backend
             port:
               number: 3000
       - path: /*
         pathType: ImplementationSpecific
         backend:
           service:
-            name: promptionary-frontend-service
+            name: promptionary-frontend
             port:
               number: 80
   - host: www.promptionary.ai
@@ -33,14 +33,14 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: promptionary-backend-service
+            name: promptionary-backend
             port:
               number: 3000
       - path: /*
         pathType: ImplementationSpecific
         backend:
           service:
-            name: promptionary-frontend-service
+            name: promptionary-frontend
             port:
               number: 80
 ---
