@@ -70,11 +70,11 @@ resource "google_container_node_pool" "primary_nodes" {
   cluster    = google_container_cluster.primary.name
   node_count = var.gke_node_count
   
-  # Autoscaling
-  autoscaling {
-    min_node_count = var.environment == "production" ? 2 : 1
-    max_node_count = var.environment == "production" ? 10 : 5
-  }
+  # Autoscaling - disabled for single node setup
+  # autoscaling {
+  #   min_node_count = var.environment == "production" ? 2 : 1
+  #   max_node_count = var.environment == "production" ? 10 : 5
+  # }
   
   # Node management
   management {
