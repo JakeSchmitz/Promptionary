@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "engines": {
-    "npm": ">=8.0.0"
+    "npm": ">=11.4.2"
   },
   "dependencies": {
     "@prisma/client": "^6.10.1",
