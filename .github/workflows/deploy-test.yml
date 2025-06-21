@@ -15,7 +15,7 @@ jobs:
     env:
       PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
       GKE_CLUSTER: promptionary-gke-test
-      GKE_ZONE: us-central1
+      GKE_ZONE: us-central1-a
       IMAGE: gcr.io/${{ secrets.GCP_PROJECT_ID }}/promptionary-backend:test-${{ github.run_id }}
     
     steps:
@@ -156,7 +156,7 @@ jobs:
     env:
       PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
       GKE_CLUSTER: promptionary-gke-test
-      GKE_ZONE: us-central1
+      GKE_ZONE: us-central1-a
       IMAGE: gcr.io/${{ secrets.GCP_PROJECT_ID }}/promptionary-frontend:test-${{ github.run_id }}
     
     steps:

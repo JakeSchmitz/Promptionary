@@ -10,7 +10,7 @@ jobs:
     env:
       PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
       GKE_CLUSTER: promptionary-gke-prod
-      GKE_ZONE: us-central1
+      GKE_ZONE: us-central1-a
       IMAGE: gcr.io/${{ secrets.GCP_PROJECT_ID }}/promptionary-frontend:latest
     steps:
       - name: Checkout code
