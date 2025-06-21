@@ -38,6 +38,11 @@ spec:
             secretKeyRef:
               name: promptionary-backend-secret
               key: openai-api-key
+        - name: INSTANCE_CONNECTION_NAME
+          valueFrom:
+            secretKeyRef:
+              name: promptionary-backend-secret
+              key: instance-connection-name
         resources:
           requests:
             memory: "256Mi"
