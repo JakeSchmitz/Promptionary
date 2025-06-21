@@ -144,4 +144,4 @@ The infrastructure includes DNS configuration for promptionary.ai:
 
 4. Wait for SSL certificate provisioning (up to 15 minutes)
 
-5. Access your application at https://promptionary.ai 
+5. Access your application at https://promptionary.ai

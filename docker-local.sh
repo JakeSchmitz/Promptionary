@@ -208,6 +208,19 @@ fi
 # Wait a moment for backend to start
 sleep 3
 
+# Run database migrations
+print_status "Running database migrations..."
+docker exec $BACKEND_CONTAINER npx prisma migrate deploy
+
+if [ $? -eq 0 ]; then
+    print_status "✅ Database migrations completed successfully"
+else
+    print_error "❌ Database migrations failed"
+    print_error "Check the backend logs for more details:"
+    docker logs $BACKEND_CONTAINER
+    exit 1
+fi
+
 # Start frontend container with .env file if available
 print_status "Starting frontend container..."
 if [ -n "$FRONTEND_ENV_FILE" ]; then
