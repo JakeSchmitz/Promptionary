@@ -15,7 +15,7 @@ jobs:
     env:
       PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
       GKE_CLUSTER: promptionary-gke-test
-      GKE_ZONE: us-central1-a
+      GKE_REGION: us-central1
       IMAGE: gcr.io/${{ secrets.GCP_PROJECT_ID }}/promptionary-backend:test-${{ github.run_id }}
     
     steps:
@@ -45,7 +45,7 @@ jobs:
           echo "use-gcp-auth-plugin: true" >> $HOME/.kube/config
 
       - name: Get GKE credentials
-        run: gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE
+        run: gcloud container clusters get-credentials $GKE_CLUSTER --region $GKE_REGION
 
       - name: Create Cloud SQL Credentials Secret
         run: |
@@ -156,7 +156,7 @@ jobs:
     env:
       PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
       GKE_CLUSTER: promptionary-gke-test
-      GKE_ZONE: us-central1-a
+      GKE_REGION: us-central1
       IMAGE: gcr.io/${{ secrets.GCP_PROJECT_ID }}/promptionary-frontend:test-${{ github.run_id }}
     
     steps:
@@ -186,7 +186,7 @@ jobs:
           echo "use-gcp-auth-plugin: true" >> $HOME/.kube/config
 
       - name: Get GKE credentials
-        run: gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE
+        run: gcloud container clusters get-credentials $GKE_CLUSTER --region $GKE_REGION
 
       - name: Build Docker image
         run: |

@@ -11,7 +11,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   GKE_CLUSTER: promptionary-gke-prod
-  GKE_ZONE: us-central1-a
+  GKE_REGION: us-central1
   IMAGE_NAME: promptionary-frontend
   REGISTRY_HOSTNAME: gcr.io
 
@@ -78,7 +78,7 @@ jobs:
         run: gcloud components install gke-gcloud-auth-plugin
 
       - name: Get GKE credentials
-        run: gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }}
+        run: gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --region ${{ env.GKE_REGION }}
 
       - name: Install Kustomize
         run: |
