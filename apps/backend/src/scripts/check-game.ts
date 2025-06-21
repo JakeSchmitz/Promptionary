@@ -5,7 +5,11 @@ async function checkGame(roomId: string) {
     const game = await prisma.game.findUnique({
       where: { roomId },
       include: {
-        players: true,
+        playerGames: {
+          include: {
+            player: true,
+          },
+        },
       },
     });
 
@@ -22,12 +26,13 @@ async function checkGame(roomId: string) {
     console.log(`Created At: ${game.createdAt}`);
     console.log('\nPlayers:');
     console.log('--------');
-    game.players.forEach((player, index) => {
+    game.playerGames.forEach((playerGame: any, index: number) => {
+      const player = playerGame.player;
       console.log(`\nPlayer ${index + 1}:`);
       console.log(`  ID: ${player.id}`);
       console.log(`  Name: ${player.name}`);
-      console.log(`  Is Host: ${player.isHost}`);
-      console.log(`  Score: ${player.score}`);
+      console.log(`  Is Host: ${playerGame.isHost}`);
+      console.log(`  Score: ${playerGame.score}`);
       console.log(`  Email: ${player.email || 'N/A'}`);
       console.log(`  Created At: ${player.createdAt}`);
     });

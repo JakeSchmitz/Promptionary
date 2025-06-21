@@ -782,7 +782,7 @@ apiRouter.post('/games/:roomId/prompts', async (req, res) => {
     const response = {
       id: _game.id,
       roomId: _game.roomId,
-      players: _game.playerGames.map(pg => pg.player),
+      players: _game.playerGames.map((pg: any) => pg.player),
       currentRound: _game.currentRound,
       maxRounds: _game.maxRounds,
       currentWord: _game.currentWord,
@@ -849,12 +849,16 @@ apiRouter.post('/games/:roomId/votes', async (req, res) => {
     });
 
     // Check if all players have voted
-    const allPlayersVoted = game.playerGames.every(pg => 
-      game.votes.some(vote => vote.voterId === pg.playerId)
-    );
+    const playerCount = await prisma.playerGame.count({
+      where: { gameId: game.id },
+    });
+
+    const voteCount = await prisma.vote.count({
+      where: { gameId: game.id },
+    });
 
     // If all players have voted, move to results phase
-    if (allPlayersVoted) {
+    if (voteCount >= playerCount) {
       await prisma.game.update({
         where: { roomId },
         data: { phase: 'RESULTS' },
@@ -955,8 +959,11 @@ apiRouter.post('/games/:roomId/end-voting', async (req, res) => {
 
     // Update player scores
     for (const score of imageScores) {
-      await prisma.player.update({
-        where: { id: score.playerId },
+      await prisma.playerGame.updateMany({
+        where: { 
+          playerId: score.playerId,
+          gameId: game.id
+        },
         data: {
           score: {
             increment: score.score,
@@ -1297,7 +1304,7 @@ app.post('/api/games/:roomId/vote', async (req, res) => {
     });
 
     // Check if all players have voted
-    const playerCount = await prisma.player.count({
+    const playerCount = await prisma.playerGame.count({
       where: { gameId: game.id },
     });
 
@@ -1317,9 +1324,16 @@ app.post('/api/games/:roomId/vote', async (req, res) => {
       );
 
       // Update the winning player's score
-      await prisma.player.update({
-        where: { id: winningImage.playerId },
-        data: { score: { increment: 1 } },
+      await prisma.playerGame.updateMany({
+        where: { 
+          playerId: winningImage.playerId,
+          gameId: game.id
+        },
+        data: {
+          score: {
+            increment: 1,
+          },
+        },
       });
 
       // Update game phase to results
@@ -1534,7 +1548,7 @@ apiRouter.post('/games/:roomId/auto-submit', async (req, res) => {
     const response = {
       id: _game.id,
       roomId: _game.roomId,
-      players: _game.playerGames.map(pg => pg.player),
+      players: _game.playerGames.map((pg: any) => pg.player),
       currentRound: _game.currentRound,
       maxRounds: _game.maxRounds,
       currentWord: _game.currentWord,

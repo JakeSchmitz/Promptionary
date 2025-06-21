@@ -5,238 +5,83 @@
 [INFO] 22:26:04 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.8.3)
 Server running at http://localhost:3000
 Environment: { NODE_ENV: undefined, PORT: '3000', OPENAI_API_KEY: 'Set' }
-2025-06-20T02:26:06.693Z - GET /api/games/588kl4
-Fetching game state for room: 588kl4
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:26:08.680Z - GET /api/games/588kl4
-Fetching game state for room: 588kl4
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:26:11.925Z - GET /api/games/588kl4
-Fetching game state for room: 588kl4
-2025-06-20T02:26:11.930Z - GET /api/games/fsmpgh
-Fetching game state for room: fsmpgh
-2025-06-20T02:26:11.932Z - GET /api/games/fsmpgh
-Fetching game state for room: fsmpgh
-2025-06-20T02:26:11.942Z - GET /api/games/fsmpgh
-Fetching game state for room: fsmpgh
-2025-06-20T02:26:11.944Z - GET /api/games/fsmpgh
-Fetching game state for room: fsmpgh
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'VOTING',
-  currentRound: 1,
-  playerCount: 2,
-  promptChainCount: 2
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:26:12.237Z - GET /api/games/588kl4
-Fetching game state for room: 588kl4
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:26:12.247Z - GET /api/games/588kl4
-Fetching game state for room: 588kl4
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'VOTING',
-  currentRound: 1,
-  playerCount: 2,
-  promptChainCount: 2
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:26:12.261Z - GET /api/games/588kl4
-Fetching game state for room: 588kl4
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'VOTING',
-  currentRound: 1,
-  playerCount: 2,
-  promptChainCount: 2
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'VOTING',
-  currentRound: 1,
-  playerCount: 2,
-  promptChainCount: 2
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
-2025-06-20T02:26:12.302Z - GET /api/games/588kl4
-Fetching game state for room: 588kl4
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:26:12.336Z - GET /api/games/588kl4
-Fetching game state for room: 588kl4
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:26:12.357Z - GET /api/games/588kl4
-Fetching game state for room: 588kl4
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:26:13.911Z - GET /api/games/588kl4
-Fetching game state for room: 588kl4
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:26:13.915Z - GET /api/games/588kl4
-Fetching game state for room: 588kl4
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:26:13.937Z - GET /api/games/588kl4
-Fetching game state for room: 588kl4
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:26:13.958Z - GET /api/games/588kl4
-Fetching game state for room: 588kl4
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:26:15.960Z - GET /api/games/588kl4
-Fetching game state for room: 588kl4
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:26:17.449Z - GET /api/games/588kl4
-Fetching game state for room: 588kl4
-2025-06-20T02:26:17.455Z - GET /api/games/588kl4
-Fetching game state for room: 588kl4
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:26:17.488Z - GET /api/games/588kl4
-Fetching game state for room: 588kl4
-2025-06-20T02:26:17.489Z - GET /api/games/588kl4
-Fetching game state for room: 588kl4
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:26:17.512Z - GET /api/games/588kl4
-Fetching game state for room: 588kl4
-2025-06-20T02:26:17.514Z - GET /api/games/588kl4
-Fetching game state for room: 588kl4
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+[INFO] 20:05:47 Restarting: /Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts has been modified
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Function.listen (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts:1557:5)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
+    at Module._compile (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-9024811713484828.js:69:33)
+    at node:internal/modules/cjs/loader:1706:10
+    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-9024811713484828.js:114:20)
+[ERROR] 20:05:51 Error: listen EADDRINUSE: address already in use :::3000
+[INFO] 20:06:16 Restarting: /Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts has been modified
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Function.listen (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts:1557:5)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
+    at Module._compile (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-7328183292638542.js:69:33)
+    at node:internal/modules/cjs/loader:1706:10
+    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-7328183292638542.js:114:20)
+[ERROR] 20:06:18 Error: listen EADDRINUSE: address already in use :::3000
+[INF[INFO] 20:07:21 Reinitializing TS compilat[INF[INFO] 20:07:22 Restarting: /Users/jacobschmitz/Development/Promptionary/apps/backend/tsconfig.json has been modifErroError: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Function.listen (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts:1557:5)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
+    at Module._compile (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-43627363001044683.js:69:33)
+    at node:internal/modules/cjs/loader:1706:10
+    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-43627363001044683.js:11[ERROR[ERROR] 20:07:52 Error: listen EADDRINUSE: address already in use ::[INFO] 20:09:44 Restarting: /Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts has been modified
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1937:Error: write EPIPE
+    at process.target._send (node:internal/child_process:877:20)
+    at process.target.send (node:internal/child_process:751:19)
+    at Object.exports.send (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/ts-node-dev/lib/ipc.js:17:14)
+    at /Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/ts-node-dev/lib/wrap.js:88:9
+    at Object.nodeDevHook [as .js] (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/ts-node-dev/lib/hook.js:61:17)
+    at Module.load (node:internal/modules/cjs/loader:1289:32)
+    at Function._load (node:internal/modules/cjs/loader:1108:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:220:24)
+    at Module.require (node:internal/modules/cjs/loader:1311:12)
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Function.listen (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts:1571:5)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
+    at Module._compile (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-7328183292638542.js:69:33)
+    at node:internal/modules/cjs/loader:1706:10
+    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-7328183292638542.js:114:20)
+[ERROR] 20:10:47 Error: listen EADDRINUSE: address already in use :::3000
+0
+:3000
+pment/Promptionary/apps/backend/src/server.ts has been modified
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Function.listen (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts:1571:5)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
+    at Module._compile (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-8773781363819078.js:69:33)
+    at node:internal/modules/cjs/loader:1706:10
+    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-8773781363819078.js:114:20)
+[ERROR] 20:10:35 Error: listen EADDRINUSE: address already in use :::3000
+nding response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
 Game state retrieved: {
   gameMode: 'PROMPTOPHONE',
   phase: 'LOBBY',
@@ -1189,200 +1034,72 @@ Game state retrieved: {
 Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
 2025-06-20T02:30:16.541Z - GET /api/games/8xk2f7
 Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:30:17.544Z - GET /api/games/fsmpgh
-Fetching game state for room: fsmpgh
-2025-06-20T02:30:17.545Z - GET /api/games/fsmpgh
-Fetching game state for room: fsmpgh
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'VOTING',
-  currentRound: 1,
-  playerCount: 2,
-  promptChainCount: 2
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'VOTING',
-  currentRound: 1,
-  playerCount: 2,
-  promptChainCount: 2
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
-2025-06-20T02:30:18.143Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:30:20.142Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:30:22.142Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:30:24.142Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:30:26.144Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:30:28.673Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:30:30.674Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:30:32.673Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:30:34.671Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:30:36.673Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:30:38.673Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:30:40.674Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:30:42.671Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:30:44.674Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:30:46.673Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:30:48.673Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:30:50.673Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
+Game state retriev[INFO] 20:05:47 Restarting: /Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts has been modified
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Function.listen (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts:1557:5)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
+    at Module._compile (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-5659295725582814.js:69:33)
+    at node:internal/modules/cjs/loader:1706:10
+    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-5659295725582814.js:114:20)
+[ERROR] 20:05:51 Error: listen EADDRINUSE: address already in use :::3000
+[INFO] 20:06:16 Restarting: /Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts has been modified
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Function.listen (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts:1557:5)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
+    at Module._compile (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-5659295725582814.js:69:33)
+    at node:internal/modules/cjs/loader:1706:10
+    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-5659295725582814.js:114:20)
+[ERROR] 20:06:17 Error: listen EADDRINUSE: address already in use :::3000
+[INFO] 20:07:21 Reinitializing TS compilation
+[INFO] 20:07:21 Restarting: /Users/jacobschmitz/Development/Promptionary/apps/backend/tsconfig.json has been modified
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Function.listen (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts:1557:5)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
+    at Module._compile (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-5659295725582814.js:69:33)
+    at node:internal/modules/cjs/loader:1706:10
+    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-5659295725582814.js:114:20)
+[ERROR] 20:07:51 Error: listen EADDRINUSE: address already in use :::3000
+[INFO] 20:09:44 Restarting: /Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts has been modified
+[INFO] 20:10:27 Restarting: /Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts has been modified
+Error: write EPIPE
+    at process.target._send (node:internal/child_process:877:20)
+    at process.target.send (node:internal/child_process:751:19)
+    at Object.exports.send (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/ts-node-dev/lib/ipc.js:17:14)
+    at /Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/ts-node-dev/lib/wrap.js:88:9
+    at Object.nodeDevHook [as .js] (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/ts-node-dev/lib/hook.js:61:17)
+    at Module.load (node:internal/modules/cjs/loader:1289:32)
+    at Function._load (node:internal/modules/cjs/loader:1108:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:220:24)
+    at Module.require (node:internal/modules/cjs/loader:1311:12)
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Function.listen (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts:1571:5)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
+    at Module._compile (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-5659295725582814.js:69:33)
+    at node:internal/modules/cjs/loader:1706:10
+    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-5659295725582814.js:114:20)
+[ERROR] 20:10:45 Error: listen EADDRINUSE: address already in use :::3000
+,
   playerCount: 1,
   promptChainCount: 0
 }
@@ -1986,348 +1703,120 @@ Game state retrieved: {
   playerCount: 1,
   promptChainCount: 0
 }
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:06.535Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:08.534Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:10.533Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:12.528Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:14.530Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:16.526Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:18.527Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:20.528Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:22.534Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:24.671Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:26.671Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:28.671Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:30.548Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:32.255Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:32.259Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:32.397Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-2025-06-20T02:32:32.399Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:32.444Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:32.454Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:32.491Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:34.490Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:36.442Z - GET /api/games/fsmpgh
-Fetching game state for room: fsmpgh
-2025-06-20T02:32:36.443Z - GET /api/games/fsmpgh
-Fetching game state for room: fsmpgh
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'VOTING',
-  currentRound: 1,
-  playerCount: 2,
-  promptChainCount: 2
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'VOTING',
-  currentRound: 1,
-  playerCount: 2,
-  promptChainCount: 2
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
-2025-06-20T02:32:36.490Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:38.492Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:40.492Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:42.492Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:44.491Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:46.493Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:48.491Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:50.491Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:52.492Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:54.673Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:56.671Z - GET /api/games/8xk2f7
-Fetching game state for room: 8xk2f7
-Game state retrieved: {
-  gameMode: 'PROMPTOPHONE',
-  phase: 'LOBBY',
-  currentRound: 0,
-  playerCount: 1,
-  promptChainCount: 0
-}
-Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
-2025-06-20T02:32:58.496Z - GET /api/games/8xk2f7
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', cu[INFO] 20:05:47 Restarting: /Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts has been modified
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Function.listen (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts:1557:5)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
+    at Module._compile (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-7984224399835695.js:69:33)
+    at node:internal/modules/cjs/loader:1706:10
+    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-7984224399835695.js:114:20)
+[ERROR] 20:05:51 Error: listen EADDRINUSE: address already in use :::3000
+[INFO] 20:06:16 Restarting: /Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts has been modified
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Function.listen (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts:1557:5)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
+    at Module._compile (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-7984224399835695.js:69:33)
+    at node:internal/modules/cjs/loader:1706:10
+    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-7984224399835695.js:114:20)
+[ERROR] 20:06:18 Error: listen EADDRINUSE: address already in use :::3000
+[INFO] 20:07:21 Reinitializing TS compilation
+[INFO] 20:07:22 Restarting: /Users/jacobschmitz/Development/Promptionary/apps/backend/tsconfig.json has been modified
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Function.listen (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts:1557:5)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
+    at Module._compile (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-7984224399835695.js:69:33)
+    at node:internal/modules/cjs/loader:1706:10
+    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-7984224399835695.js:114:20)
+[ERROR] 20:07:50 Error: listen EADDRINUSE: address already in use :::3000
+[INFO] 20:09:44 Restarting: /Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts has been modified
+[INFO] 20:10:26 Restarting: /Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts has been modified
+Error: write EPIPE
+    at process.target._send (node:internal/child_process:877:20)
+    at process.target.send (node:internal/child_process:751:19)
+    at Object.exports.send (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/ts-node-dev/lib/ipc.js:17:14)
+    at /Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/ts-node-dev/lib/wrap.js:88:9
+    at Object.nodeDevHook [as .js] (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/ts-node-dev/lib/hook.js:61:17)
+    at Module.load (node:internal/modules/cjs/loader:1289:32)
+    at Function._load (node:internal/modules/cjs/loader:1108:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:220:24)
+    at Module.require (node:internal/modules/cjs/loader:1311:12)
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Function.listen (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts:1571:5)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
+    at Module._compile (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-7984224399835695.js:69:33)
+    at node:internal/modules/cjs/loader:1706:10
+    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-7984224399835695.js:114:20)
+[ERROR] 20:10:47 Error: listen EADDRINUSE: address already in use :::3000
+schmitz/Development/Promptionary/apps/backend/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts:1557:5)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
+    at Module._compile (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-26553454246703456.js:69:33)
+    at node:internal/modules/cjs/loader:1706:10
+    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-26553454246703456.js:114:20)
+[ERROR] 20:05:51 Error: listen EADDRINUSE: address already in use :::3000
+[INFO] 20:06:16 Restarting: /Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts has been modified
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Function.listen (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts:1557:5)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
+    at Module._compile (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-26553454246703456.js:69:33)
+    at node:internal/modules/cjs/loader:1706:10
+    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-26553454246703456.js:114:20)
+[ERROR] 20:06:18 Error: listen EADDRINUSE: address already in use :::3000
+[INFO] 20:07:21 Reinitializing TS compilation
+[INFO] 20:07:22 Restarting: /Users/jacobschmitz/Development/Promptionary/apps/backend/tsconfig.json has been modified
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Function.listen (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts:1557:5)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
+    at Module._compile (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-26553454246703456.js:69:33)
+    at node:internal/modules/cjs/loader:1706:10
+    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-26553454246703456.js:114:20)
+[ERROR] 20:07:49 Error: listen EADDRINUSE: address already in use :::3000
+[INFO] 20:09:44 Restarting: /Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts has been modified
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Function.listen (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts:1571:5)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
+    at Module._compile (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-26553454246703456.js:69:33)
+    at node:internal/modules/cjs/loader:1706:10
+    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-26553454246703456.js:114:20)
+[ERROR] 20:10:36 Error: listen EADDRINUSE: address already in use :::3000
+5-06-20T02:32:58.496Z - GET /api/games/8xk2f7
 Fetching game state for room: 8xk2f7
 Game state retrieved: {
   gameMode: 'PROMPTOPHONE',
@@ -5012,3 +4501,78 @@ Game state retrieved: {
   promptChainCount: 2
 }
 Sending response: { gameMode: 'PROMPTOPHONE', phase: 'VOTING', currentRound: 1 }
+2025-06-20T23:37:30.718Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T23:37:30.807Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Game state retrieved: {
+  gameMode: 'PROMPTOPHONE',
+  phase: 'LOBBY',
+  currentRound: 0,
+  playerCount: 1,
+  promptChainCount: 0
+}
+Sending response: { gameMode: 'PROMPTOPHONE', phase: 'LOBBY', currentRound: 0 }
+2025-06-20T23:37:32.364Z - GET /api/players/116427488604431001991/games
+Fetching game history for player: 116427488604431001991 with filters: {
+  status: undefined,
+  gameMode: undefined,
+  includeIncomplete: undefined
+}
+2025-06-20T23:37:32.405Z - GET /api/players/116427488604431001991/games
+Fetching game history for player: 116427488604431001991 with filters: {
+  status: undefined,
+  gameMode: undefined,
+  includeIncomplete: undefined
+}
+[INFO] 20:05:47 Restarting: /Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts has been modified
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Function.listen (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts:1557:5)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
+    at Module._compile (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-7025239779550374.js:69:33)
+    at node:internal/modules/cjs/loader:1706:10
+    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-7025239779550374.js:114:20)
+[ERROR] 20:05:51 Error: listen EADDRINUSE: address already in use :::3000
+[INFO] 20:06:16 Restarting: /Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts has been modified
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Function.listen (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts:1557:5)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
+    at Module._compile (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-7025239779550374.js:69:33)
+    at node:internal/modules/cjs/loader:1706:10
+    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-7025239779550374.js:114:20)
+[ERROR] 20:06:17 Error: listen EADDRINUSE: address already in use :::3000
+[INFO] 20:07:21 Reinitializing TS compilation
+[INFO] 20:07:22 Restarting: /Users/jacobschmitz/Development/Promptionary/apps/backend/tsconfig.json has been modified
+Server running at http://localhost:3000
+Environment: { NODE_ENV: undefined, PORT: '3000', OPENAI_API_KEY: 'Set' }
+[INFO] 20:09:44 Restarting: /Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts has been modified
+Error: listen EADDRINUSE: address already in use :::3000
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at Server.listen (node:net:2099:7)
+    at Function.listen (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/express/lib/application.js:635:24)
+    at Object.<anonymous> (/Users/jacobschmitz/Development/Promptionary/apps/backend/src/server.ts:1571:5)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1554:14)
+    at Module._compile (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/source-map-support/source-map-support.js:568:25)
+    at Module.m._compile (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-7025239779550374.js:69:33)
+    at node:internal/modules/cjs/loader:1706:10
+    at require.extensions..jsx.require.extensions..js (/private/var/folders/7h/ncr7sfjd7jn274d6ytc8wk500000gn/T/ts-node-dev-hook-7025239779550374.js:114:20)
+[ERROR] 20:10:37 Error: listen EADDRINUSE: address already in use :::3000
