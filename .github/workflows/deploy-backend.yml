@@ -131,11 +131,8 @@ jobs:
             - protocol: TCP
               port: 3000
               targetPort: 3000
-            type: ClusterIP
+            type: NodePort
           EOF
-          
-          # Create external LoadBalancer service
-          kubectl expose deployment promptionary-backend --type=LoadBalancer --port=3000 --target-port=3000 --name=promptionary-backend-external || true
 
       - name: Run Database Migrations
         run: |

@@ -1,4 +1,5 @@
-const API_BASE_URL = 'http://localhost:3000/api';
+// Use environment variable for API URL, defaulting to relative path for production
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 export const createGame = async (roomId: string) => {
   const res = await fetch(`${API_BASE_URL}/games`, {

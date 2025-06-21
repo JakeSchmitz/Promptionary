@@ -48,9 +48,9 @@ jobs:
 
       - name: Deploy to GKE
         run: |
-          # Create ConfigMap for environment variables using internal service name
+          # Create ConfigMap for environment variables
           kubectl create configmap promptionary-frontend-config \
-            --from-literal=VITE_API_URL="http://promptionary-backend-service:3000" \
+            --from-literal=NODE_ENV="production" \
             --dry-run=client -o yaml | kubectl apply -f -
           
           # Create or update deployment
@@ -99,8 +99,16 @@ jobs:
             - protocol: TCP
               port: 80
               targetPort: 80
-            type: ClusterIP
+            type: NodePort
           EOF
           
-          # Create external LoadBalancer service
-          kubectl expose deployment promptionary-frontend --type=LoadBalancer --port=80 --target-port=80 --name=promptionary-frontend-external || true 
+          # Deploy Ingress for domain routing
+          kubectl apply -f k8s/prod-ingress.yaml
+          
+          # Wait for Ingress to be ready
+          echo "Waiting for Ingress to be ready..."
+          kubectl wait --for=condition=ready --timeout=300s ingress/promptionary-ingress
+          
+          echo "Application deployed!"
+          echo "Production URL: https://promptionary.ai"
+          echo "Production URL (www): https://www.promptionary.ai" 

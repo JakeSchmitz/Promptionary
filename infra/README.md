@@ -103,4 +103,45 @@ After deployment, Terraform will output:
 - `db_name`: Database name
 - `db_user`: Database username
 - `db_instance_name`: Cloud SQL instance name
-- `gke_cluster_name`: GKE cluster name 
+- `gke_cluster_name`: GKE cluster name
+- `nameservers`: DNS nameservers for your domain
+- `prod_ip_address`: Production environment IP address
+- `test_ip_address`: Test environment IP address
+
+## Domain Setup
+
+The infrastructure includes DNS configuration for promptionary.ai:
+
+1. **After deploying the infrastructure**, you'll get a list of nameservers
+2. Update your domain registrar to use these Google Cloud DNS nameservers
+3. The following domains will be configured:
+   - `promptionary.ai` → Production environment
+   - `www.promptionary.ai` → Production environment
+   - `test.promptionary.ai` → Test environment
+
+### SSL Certificates
+
+- SSL certificates are automatically provisioned by Google
+- Certificate provisioning can take up to 15 minutes after deployment
+- The application enforces HTTPS for all traffic
+
+### DNS Propagation
+
+- DNS changes can take up to 48 hours to fully propagate
+- You can check propagation status at: https://www.whatsmydns.net/
+
+## Deployment Process
+
+1. Deploy infrastructure:
+   ```bash
+   terraform workspace select prod
+   terraform apply -var-file=environments/prod.tfvars
+   ```
+
+2. Note the nameservers output and update your domain registrar
+
+3. Deploy the application (automatic via GitHub Actions on push to main)
+
+4. Wait for SSL certificate provisioning (up to 15 minutes)
+
+5. Access your application at https://promptionary.ai 

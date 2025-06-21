@@ -1,4 +1,4 @@
-name: Deploy to Test Environment
+THIS SHOULD BE A LINTER ERRORname: Deploy to Test Environment
 
 on:
   workflow_dispatch:
@@ -142,10 +142,8 @@ jobs:
             - protocol: TCP
               port: 3000
               targetPort: 3000
-            type: ClusterIP
+            type: NodePort
           EOF
-          
-          kubectl expose deployment promptionary-backend --type=LoadBalancer --port=3000 --target-port=3000 --name=promptionary-backend-external || true
 
       - name: Run Database Migrations
         run: |
@@ -254,17 +252,18 @@ jobs:
             - protocol: TCP
               port: 80
               targetPort: 80
-            type: ClusterIP
+            type: NodePort
           EOF
           
-          kubectl expose deployment promptionary-frontend --type=LoadBalancer --port=80 --target-port=80 --name=promptionary-frontend-external || true
+          # Deploy Ingress for test domain routing
+          kubectl apply -f k8s/test-ingress.yaml
 
       - name: Get Service URLs
         run: |
-          echo "Waiting for external IPs..."
-          sleep 30
-          echo "Frontend URL:"
-          kubectl get service promptionary-frontend-external -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+          echo "Waiting for Ingress to be ready..."
+          kubectl wait --for=condition=ready --timeout=300s ingress/promptionary-ingress || true
+          
+          echo "Test environment deployed!"
+          echo "Test URL: https://test.promptionary.ai"
           echo ""
-          echo "Backend URL:"
-          kubectl get service promptionary-backend-external -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+          echo "Note: SSL certificate provisioning may take up to 15 minutes."
