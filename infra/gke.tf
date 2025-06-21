@@ -5,10 +5,19 @@ resource "google_container_cluster" "primary" {
   network    = google_compute_network.vpc_network.id
   subnetwork = google_compute_subnetwork.subnet.id
 
-  initial_node_count = 1
   deletion_protection = false
 
   ip_allocation_policy {}
+
+  remove_default_node_pool = true
+  initial_node_count       = 1
+}
+
+resource "google_container_node_pool" "primary_nodes" {
+  name       = "promptionary-node-pool"
+  location   = "us-central1-a"
+  cluster    = google_container_cluster.primary.name
+  node_count = 1
 
   node_config {
     machine_type = var.environment == "prod" ? "e2-small" : "e2-micro"

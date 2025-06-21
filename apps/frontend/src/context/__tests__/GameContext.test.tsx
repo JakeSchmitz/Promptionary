@@ -1,6 +1,6 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { renderHook, act } from '@testing-library/react-hooks';
+import { render, screen, fireEvent, waitFor, renderHook } from '@testing-library/react';
+import { act } from '@testing-library/react';
 import { AuthProvider, useAuth } from '../AuthContext';
 import { BrowserRouter } from 'react-router-dom';
 import { GameProvider, useGame } from '../GameContext';
