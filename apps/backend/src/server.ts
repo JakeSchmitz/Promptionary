@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
+import prisma from './db';
 
 // Import routes
 import gamesRouter from './routes/games';
@@ -39,6 +40,16 @@ app.use((req, res, next) => {
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
+});
+
+// Ready check endpoint - checks database connectivity
+app.get('/ready', async (req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.json({ status: 'ready', database: 'connected' });
+  } catch (error) {
+    res.status(503).json({ status: 'not ready', error: 'Database connection failed' });
+  }
 });
 
 // Create a router for all /api routes
