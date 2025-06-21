@@ -14,6 +14,8 @@ FRONTEND_IMAGE="promptionary-frontend:local"
 BACKEND_IMAGE="promptionary-backend:local"
 FRONTEND_CONTAINER="promptionary-frontend-local"
 BACKEND_CONTAINER="promptionary-backend-local"
+POSTGRES_CONTAINER="promptionary-postgres-local"
+NETWORK_NAME="promptionary-network"
 
 # Function to print colored output
 print_status() {
@@ -31,8 +33,8 @@ print_error() {
 # Function to cleanup containers (only when explicitly called)
 cleanup() {
     print_status "Stopping and removing containers..."
-    docker stop $FRONTEND_CONTAINER $BACKEND_CONTAINER 2>/dev/null || true
-    docker rm $FRONTEND_CONTAINER $BACKEND_CONTAINER 2>/dev/null || true
+    docker stop $FRONTEND_CONTAINER $BACKEND_CONTAINER $POSTGRES_CONTAINER 2>/dev/null || true
+    docker rm $FRONTEND_CONTAINER $BACKEND_CONTAINER $POSTGRES_CONTAINER 2>/dev/null || true
     print_status "Containers stopped and removed"
 }
 
@@ -57,6 +59,12 @@ fi
 if [ "$1" = "status" ]; then
     echo "Container Status:"
     echo "================="
+    if docker ps | grep -q $POSTGRES_CONTAINER; then
+        print_status "✅ PostgreSQL container is running"
+    else
+        print_error "❌ PostgreSQL container is not running"
+    fi
+    
     if docker ps | grep -q $BACKEND_CONTAINER; then
         print_status "✅ Backend container is running"
     else
@@ -73,7 +81,7 @@ fi
 
 if [ "$1" = "logs" ]; then
     print_status "Showing container logs (Ctrl+C to stop)..."
-    docker logs -f $BACKEND_CONTAINER $FRONTEND_CONTAINER
+    docker logs -f $POSTGRES_CONTAINER $BACKEND_CONTAINER $FRONTEND_CONTAINER
     exit 0
 fi
 
@@ -99,6 +107,12 @@ if [ ! -f "$FRONTEND_ENV_FILE" ]; then
 fi
 
 # Check if containers are already running
+if docker ps | grep -q $POSTGRES_CONTAINER; then
+    print_warning "PostgreSQL container is already running. Stopping it first..."
+    docker stop $POSTGRES_CONTAINER
+    docker rm $POSTGRES_CONTAINER
+fi
+
 if docker ps | grep -q $BACKEND_CONTAINER; then
     print_warning "Backend container is already running. Stopping it first..."
     docker stop $BACKEND_CONTAINER
@@ -109,6 +123,12 @@ if docker ps | grep -q $FRONTEND_CONTAINER; then
     print_warning "Frontend container is already running. Stopping it first..."
     docker stop $FRONTEND_CONTAINER
     docker rm $FRONTEND_CONTAINER
+fi
+
+# Create network if it doesn't exist
+if ! docker network ls | grep -q $NETWORK_NAME; then
+    print_status "Creating network: $NETWORK_NAME"
+    docker network create $NETWORK_NAME
 fi
 
 # Build frontend
@@ -125,8 +145,8 @@ fi
 
 # Build backend
 print_status "Building backend Docker image..."
-cd "$PROJECT_ROOT/apps/backend"
-docker build -t $BACKEND_IMAGE .
+cd "$PROJECT_ROOT"
+docker build -t $BACKEND_IMAGE -f apps/backend/Dockerfile .
 
 if [ $? -eq 0 ]; then
     print_status "✅ Backend build successful"
@@ -135,12 +155,35 @@ else
     exit 1
 fi
 
+# Start PostgreSQL container
+print_status "Starting PostgreSQL container..."
+docker run -d \
+    --name $POSTGRES_CONTAINER \
+    --network $NETWORK_NAME \
+    -e POSTGRES_PASSWORD=promptionary_pass \
+    -e POSTGRES_USER=promptionary_user \
+    -e POSTGRES_DB=promptionary_db \
+    -p 5433:5432 \
+    postgres:14-alpine
+
+if [ $? -eq 0 ]; then
+    print_status "✅ PostgreSQL container started"
+else
+    print_error "❌ PostgreSQL container failed to start"
+    exit 1
+fi
+
+# Wait for PostgreSQL to be ready
+print_status "Waiting for PostgreSQL to be ready..."
+sleep 10
+
 # Start backend container with .env file if available
 print_status "Starting backend container..."
 if [ -n "$BACKEND_ENV_FILE" ]; then
     print_status "Using backend .env file: $BACKEND_ENV_FILE"
     docker run -d \
         --name $BACKEND_CONTAINER \
+        --network $NETWORK_NAME \
         -p $BACKEND_PORT:3000 \
         --env-file "$BACKEND_ENV_FILE" \
         $BACKEND_IMAGE
@@ -148,8 +191,9 @@ else
     print_warning "Using default backend environment variables"
     docker run -d \
         --name $BACKEND_CONTAINER \
+        --network $NETWORK_NAME \
         -p $BACKEND_PORT:3000 \
-        -e DATABASE_URL="postgresql://postgres:password@localhost:5432/promptionary" \
+        -e DATABASE_URL="postgresql://promptionary_user:promptionary_pass@$POSTGRES_CONTAINER:5432/promptionary_db" \
         -e OPENAI_API_KEY="test-key" \
         $BACKEND_IMAGE
 fi
@@ -193,6 +237,14 @@ print_status "Waiting for containers to be ready..."
 sleep 5
 
 # Check if containers are running
+if docker ps | grep -q $POSTGRES_CONTAINER; then
+    print_status "✅ PostgreSQL is running on localhost:5433"
+else
+    print_error "❌ PostgreSQL container is not running"
+    docker logs $POSTGRES_CONTAINER
+    exit 1
+fi
+
 if docker ps | grep -q $BACKEND_CONTAINER; then
     print_status "✅ Backend is running on http://localhost:$BACKEND_PORT"
 else

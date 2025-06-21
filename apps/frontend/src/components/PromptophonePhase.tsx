@@ -17,7 +17,7 @@ import {
   Divider,
 } from '@chakra-ui/react';
 import { useGame } from '../context/GameContext';
-import { gameWords } from '../../shared/data/words';
+import { gameWords } from '../data/words';
 import { API_URL } from '../utils/env';
 
 const ROUND_DURATION = 60; // 60 seconds for prompt phase
@@ -246,7 +246,7 @@ export const PromptophonePhase: React.FC = () => {
   };
 
   // Get exclusion words for the chain's original word
-  const exclusionWords = (gameWords.find(w => w.word.toLowerCase() === assignedChain.originalWord.toLowerCase())?.exclusionWords) || [];
+  const exclusionWords = (gameWords.find(w => w.word.toLowerCase() === assignedChain.originalWord.toLowerCase())?.excluded) || [];
 
   return (
     <VStack spacing={8} align="stretch" maxW="1200px" mx="auto" p={4}>
