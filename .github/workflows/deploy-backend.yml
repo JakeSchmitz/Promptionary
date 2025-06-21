@@ -10,7 +10,7 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  GKE_CLUSTER: promptionary-gke
+  GKE_CLUSTER: promptionary-gke-prod
   GKE_ZONE: us-central1-a
   IMAGE_NAME: promptionary-backend
   REGISTRY_HOSTNAME: gcr.io
@@ -93,7 +93,7 @@ jobs:
           
           # Wait for rollout to complete
           kubectl rollout status deployment/promptionary-backend --timeout=5m
-          
+
       - name: Run database migrations
         run: |
           kubectl exec deployment/promptionary-backend -- npx prisma migrate deploy 

@@ -2,15 +2,7 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "~> 5.0"
-    }
-    google-beta = {
-      source  = "hashicorp/google-beta"
-      version = "~> 5.0"
-    }
-    random = {
-      source  = "hashicorp/random"
-      version = "~> 3.5"
+      version = ">= 4.0.0"
     }
   }
   required_version = ">= 1.3.0"
@@ -24,11 +16,6 @@ terraform {
 }
 
 provider "google" {
-  project = var.project_id
-  region  = var.region
-}
-
-provider "google-beta" {
   project = var.project_id
   region  = var.region
 }
@@ -50,11 +37,6 @@ resource "google_project_service" "required_apis" {
 }
 
 # Outputs for easy access
-output "gke_cluster_name" {
-  description = "GKE cluster name"
-  value       = google_container_cluster.primary.name
-}
-
 output "gke_cluster_endpoint" {
   description = "GKE cluster endpoint"
   value       = google_container_cluster.primary.endpoint
@@ -63,7 +45,7 @@ output "gke_cluster_endpoint" {
 
 output "vpc_network_name" {
   description = "VPC network name"
-  value       = google_compute_network.vpc.name
+  value       = google_compute_network.vpc_network.name
 }
 
 output "database_instance_name" {

@@ -1,26 +1,13 @@
-resource "google_compute_network" "vpc" {
-  name                    = var.network_name
+resource "google_compute_network" "vpc_network" {
+  name = "promptionary-network-${var.environment}"
   auto_create_subnetworks = false
-  routing_mode            = "REGIONAL"
 }
 
 resource "google_compute_subnetwork" "subnet" {
-  name          = "${var.project_name}-subnet-${var.region}"
-  ip_cidr_range = var.subnet_cidr
+  name          = "promptionary-subnet-${var.environment}"
+  ip_cidr_range = var.environment == "prod" ? "10.0.0.0/16" : "10.1.0.0/16"
   region        = var.region
-  network       = google_compute_network.vpc.id
-  
-  secondary_ip_range {
-    range_name    = "gke-pods"
-    ip_cidr_range = "10.1.0.0/16"
-  }
-  
-  secondary_ip_range {
-    range_name    = "gke-services"
-    ip_cidr_range = "10.2.0.0/16"
-  }
-  
-  private_ip_google_access = true
+  network       = google_compute_network.vpc_network.id
 }
 
 # Reserve IP range for private service connection
@@ -29,12 +16,12 @@ resource "google_compute_global_address" "private_ip_address" {
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
   prefix_length = 16
-  network       = google_compute_network.vpc.id
+  network       = google_compute_network.vpc_network.id
 }
 
 # Create private service connection for Cloud SQL
 resource "google_service_networking_connection" "private_vpc_connection" {
-  network                 = google_compute_network.vpc.id
+  network                 = google_compute_network.vpc_network.id
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.private_ip_address.name]
 }
@@ -43,7 +30,7 @@ resource "google_service_networking_connection" "private_vpc_connection" {
 resource "google_compute_router" "router" {
   name    = "${var.project_name}-router"
   region  = var.region
-  network = google_compute_network.vpc.id
+  network = google_compute_network.vpc_network.id
 }
 
 # Cloud NAT for outbound internet access
@@ -63,7 +50,7 @@ resource "google_compute_router_nat" "nat" {
 # Firewall rules
 resource "google_compute_firewall" "allow_internal" {
   name    = "${var.project_name}-allow-internal"
-  network = google_compute_network.vpc.name
+  network = google_compute_network.vpc_network.name
   
   allow {
     protocol = "tcp"

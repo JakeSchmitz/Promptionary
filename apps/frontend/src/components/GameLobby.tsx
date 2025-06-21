@@ -11,7 +11,6 @@ import {
   Input,
   InputGroup,
   InputRightElement,
-  Box,
   Avatar,
   Badge,
   Icon,
@@ -21,13 +20,11 @@ import {
 import { FaCopy, FaUsers, FaPlay, FaShare } from 'react-icons/fa';
 import { useGame } from '../context/GameContext';
 import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 
 const GameLobby = () => {
   const { gameState, currentPlayer, startGame } = useGame();
   const { roomId } = useParams<{ roomId: string }>();
   const toast = useToast();
-  const navigate = useNavigate();
   const [isStarting, setIsStarting] = useState(false);
 
   const handleStartGame = async () => {
@@ -37,6 +34,7 @@ const GameLobby = () => {
       setIsStarting(true);
       await startGame();
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Error starting game:', error);
       toast({
         title: 'Error',

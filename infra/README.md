@@ -1,128 +1,147 @@
 # Promptionary Infrastructure
 
-This directory contains the Terraform configuration for deploying Promptionary to Google Cloud Platform (GCP).
+This directory contains Terraform configurations for deploying the Promptionary infrastructure on Google Cloud Platform.
 
 ## Architecture
 
-The infrastructure includes:
+The infrastructure supports multiple environments:
+- **Production** (`prod`): Main environment for users
+- **Test** (`test`): Testing environment for deploying any branch
 
-- **VPC Network**: Custom VPC with private subnets for GKE
-- **GKE Cluster**: Managed Kubernetes cluster with autoscaling
-- **Cloud SQL**: PostgreSQL database with private IP, backups, and high availability
-- **Cloud NAT**: For outbound internet access from private nodes
-- **Secret Manager**: For secure storage of sensitive data
+Each environment includes:
+- GKE cluster for running containers
+- Cloud SQL PostgreSQL database
+- VPC network with subnet
+- Load balancers for external access
 
 ## Prerequisites
 
-1. GCP Project with billing enabled
-2. Terraform >= 1.3.0
-3. `gcloud` CLI installed and configured
-4. Required GCP APIs enabled (handled by Terraform)
+1. Google Cloud SDK installed
+2. Terraform installed (>= 1.3.0)
+3. GCP project with billing enabled
+4. Service account with appropriate permissions
 
-## Configuration
+## Terraform Workspaces
 
-### Environment Variables
+We use Terraform workspaces to manage multiple environments:
 
-Create a `terraform.tfvars` file:
+```bash
+# Create workspaces
+terraform workspace new prod
+terraform workspace new test
 
-```hcl
-project_id    = "your-gcp-project-id"
-environment   = "production"  # or "development", "staging"
-region        = "us-central1"
-zone          = "us-central1-a"
+# Switch between workspaces
+terraform workspace select prod
+terraform workspace select test
 ```
-
-### Key Features
-
-1. **Security Best Practices**
-   - Private GKE nodes with Cloud NAT for outbound access
-   - Cloud SQL with private IP only
-   - Workload Identity enabled
-   - Binary Authorization (production only)
-   - Shielded GKE nodes
-   - SSL required for database connections
-
-2. **High Availability**
-   - Regional Cloud SQL configuration (production)
-   - Multi-zone GKE cluster with autoscaling
-   - Automated backups with point-in-time recovery
-
-3. **Cost Optimization**
-   - Preemptible nodes for non-production environments
-   - Autoscaling based on load
-   - Appropriate machine types for workload
 
 ## Deployment
 
+### Initial Setup
+
 1. Initialize Terraform:
-   ```bash
-   terraform init
-   ```
+```bash
+terraform init
+```
 
-2. Review the plan:
-   ```bash
-   terraform plan
-   ```
+2. Create workspaces:
+```bash
+terraform workspace new prod
+terraform workspace new test
+```
 
-3. Apply the configuration:
-   ```bash
-   terraform apply
-   ```
+### Deploy Production Environment
+
+```bash
+terraform workspace select prod
+terraform plan -var-file=environments/prod.tfvars
+terraform apply -var-file=environments/prod.tfvars
+```
+
+### Deploy Test Environment
+
+```bash
+terraform workspace select test
+terraform plan -var-file=environments/test.tfvars
+terraform apply -var-file=environments/test.tfvars
+```
+
+## Required Variables
+
+- `project_id`: Your GCP project ID
+- `db_password`: Password for the PostgreSQL database
+
+## GitHub Secrets Required
+
+For the GitHub Actions workflows to work, you need to set up the following secrets:
+
+### For Production:
+- `GCP_PROJECT_ID`: Your GCP project ID
+- `GCP_SA_KEY`: Service account key JSON
+- `DB_USER`: Database username (default: postgres)
+- `DB_PASSWORD`: Database password
+- `DB_NAME`: Database name (default: promptionary)
+- `DB_INSTANCE_CONNECTION_NAME`: Cloud SQL instance connection name
+- `OPENAI_API_KEY`: OpenAI API key
+
+### For Test Environment:
+- `TEST_DB_USER`: Test database username
+- `TEST_DB_PASSWORD`: Test database password
+- `TEST_DB_NAME`: Test database name
+- `TEST_DB_INSTANCE_CONNECTION_NAME`: Test Cloud SQL instance connection name
+
+## Resource Naming Convention
+
+Resources are named with the environment suffix:
+- Production: `promptionary-{resource}-prod`
+- Test: `promptionary-{resource}-test`
 
 ## Outputs
 
 After deployment, Terraform will output:
+- `db_connection_name`: Cloud SQL connection name
+- `db_name`: Database name
+- `db_user`: Database username
+- `db_instance_name`: Cloud SQL instance name
+- `gke_cluster_name`: GKE cluster name
+- `nameservers`: DNS nameservers for your domain
+- `prod_ip_address`: Production environment IP address
+- `test_ip_address`: Test environment IP address
 
-- `gke_cluster_name`: Name of the GKE cluster
-- `gke_cluster_endpoint`: Cluster API endpoint
-- `database_connection_name`: Cloud SQL connection string
-- `database_instance_name`: Cloud SQL instance name
-- `db_password_secret_id`: Secret Manager ID for database password
+## Domain Setup
 
-## Connecting to Resources
+The infrastructure includes DNS configuration for promptionary.ai:
 
-### GKE Cluster
-```bash
-gcloud container clusters get-credentials $(terraform output -raw gke_cluster_name) \
-  --zone $(terraform output -raw zone)
-```
+1. **After deploying the infrastructure**, you'll get a list of nameservers
+2. Update your domain registrar to use these Google Cloud DNS nameservers
+3. The following domains will be configured:
+   - `promptionary.ai` → Production environment
+   - `www.promptionary.ai` → Production environment
+   - `test.promptionary.ai` → Test environment
 
-### Database Password
-```bash
-gcloud secrets versions access latest \
-  --secret=$(terraform output -raw db_password_secret_id)
-```
+### SSL Certificates
 
-## Maintenance
+- SSL certificates are automatically provisioned by Google
+- Certificate provisioning can take up to 15 minutes after deployment
+- The application enforces HTTPS for all traffic
 
-### Database Backups
-- Automated daily backups at 2 AM
-- 30-day retention for production
-- Point-in-time recovery enabled
+### DNS Propagation
 
-### GKE Updates
-- Nodes auto-upgrade during maintenance window
-- Stable release channel for production
-- Regular channel for development
+- DNS changes can take up to 48 hours to fully propagate
+- You can check propagation status at: https://www.whatsmydns.net/
 
-### Monitoring
-- Cloud SQL Query Insights enabled
-- GKE monitoring and logging enabled
-- Network flow logs for debugging
+## Deployment Process
 
-## Cost Estimation
+1. Deploy infrastructure:
+   ```bash
+   terraform workspace select prod
+   terraform apply -var-file=environments/prod.tfvars
+   ```
 
-Monthly costs (approximate):
-- GKE Cluster: $75-150 (depends on node usage)
-- Cloud SQL: $50-100 (db-g1-small with backups)
-- Network: $10-30 (egress traffic)
-- Total: ~$135-280/month
+2. Note the nameservers output and update your domain registrar
 
-## Cleanup
+3. Deploy the application (automatic via GitHub Actions on push to main)
 
-To destroy all resources:
-```bash
-terraform destroy
-```
+4. Wait for SSL certificate provisioning (up to 15 minutes)
 
-⚠️ **Warning**: This will delete all resources including the database. Ensure you have backups before proceeding. 
+5. Access your application at https://promptionary.ai

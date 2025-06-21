@@ -1,4 +1,7 @@
-const API_BASE_URL = 'http://localhost:3000/api';
+import { API_URL } from './env';
+
+// Get API URL from environment or use relative path for production
+const API_BASE_URL = API_URL;
 
 export const createGame = async (roomId: string) => {
   const res = await fetch(`${API_BASE_URL}/games`, {

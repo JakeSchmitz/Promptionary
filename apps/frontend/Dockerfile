@@ -2,7 +2,7 @@
 FROM node:18-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-COPY apps/frontend ./apps/frontend
+COPY apps/ ./apps/
 RUN npm install --legacy-peer-deps
 RUN cd apps/frontend && npm install --legacy-peer-deps && npm run build
 

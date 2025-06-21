@@ -1,6 +1,6 @@
-import React, { StrictMode, useEffect } from 'react'
+import React, { StrictMode } from 'react'
 import { ChakraProvider, Box, Text, Spinner, Center } from '@chakra-ui/react'
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { GameProvider } from './context/GameContext'
 import { AuthProvider, useAuth } from './context/AuthContext'
@@ -25,11 +25,12 @@ class ErrorBoundary extends React.Component<
     this.state = { hasError: false }
   }
 
-  static getDerivedStateFromError(error: any) {
+  static getDerivedStateFromError(_error: Error) {
     return { hasError: true }
   }
 
-  componentDidCatch(error: any, errorInfo: any) {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    // eslint-disable-next-line no-console
     console.error('Error in component:', error, errorInfo)
   }
 
@@ -157,6 +158,7 @@ const App = () => {
   const clientId = GOOGLE_CLIENT_ID
 
   if (!clientId) {
+    // eslint-disable-next-line no-console
     console.error('Google Client ID is not configured. Please check your environment variables.')
   }
 

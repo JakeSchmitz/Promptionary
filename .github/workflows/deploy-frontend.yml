@@ -10,7 +10,7 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  GKE_CLUSTER: promptionary-gke
+  GKE_CLUSTER: promptionary-gke-prod
   GKE_ZONE: us-central1-a
   IMAGE_NAME: promptionary-frontend
   REGISTRY_HOSTNAME: gcr.io
@@ -95,4 +95,4 @@ jobs:
           kustomize build . | kubectl apply -f -
           
           # Wait for rollout to complete
-          kubectl rollout status deployment/promptionary-frontend --timeout=5m 
+          kubectl rollout status deployment/promptionary-frontend --timeout=5m
