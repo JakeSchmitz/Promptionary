@@ -74,10 +74,17 @@ app.use('/api', apiRouter);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
+  
+  // Log database connection info (with password masked)
+  const dbUrl = process.env.DATABASE_URL;
+  const maskedDbUrl = dbUrl ? dbUrl.replace(/\/\/[^:]+:[^@]+@/, '//***:***@') : 'Not set';
+  
   console.log('Environment:', {
     NODE_ENV: process.env.NODE_ENV,
     PORT: port,
-    OPENAI_API_KEY: process.env.OPENAI_API_KEY ? 'Set' : 'Not set'
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY ? 'Set' : 'Not set',
+    DATABASE_URL: maskedDbUrl,
+    INSTANCE_CONNECTION_NAME: process.env.INSTANCE_CONNECTION_NAME || 'Not set'
   });
 });
 
