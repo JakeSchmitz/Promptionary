@@ -32,6 +32,8 @@ jobs:
       - name: Install gke-gcloud-auth-plugin
         run: |
           gcloud components install gke-gcloud-auth-plugin
+          mkdir -p $HOME/.kube
+          touch $HOME/.kube/config
           echo "use-gcp-auth-plugin: true" >> $HOME/.kube/config
 
       - name: Get GKE credentials
