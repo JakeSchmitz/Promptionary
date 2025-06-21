@@ -29,15 +29,20 @@ jobs:
       - name: Configure Docker for GCR
         run: gcloud auth configure-docker
 
+      - name: Install gke-gcloud-auth-plugin
+        run: |
+          gcloud components install gke-gcloud-auth-plugin
+          echo "use-gcp-auth-plugin: true" >> $HOME/.kube/config
+
+      - name: Get GKE credentials
+        run: gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE
+
       - name: Build Docker image
         run: |
           docker build -t $IMAGE -f apps/frontend/Dockerfile .
 
       - name: Push Docker image
         run: docker push $IMAGE
-
-      - name: Get GKE credentials
-        run: gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE
 
       - name: Deploy to GKE
         run: |
