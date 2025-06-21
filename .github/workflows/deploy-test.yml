@@ -64,7 +64,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t $IMAGE -f apps/backend/Dockerfile .
+          cd apps/backend
+          docker build -t $IMAGE .
 
       - name: Push Docker image
         run: docker push $IMAGE
@@ -228,7 +229,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t $IMAGE -f apps/frontend/Dockerfile .
+          cd apps/frontend
+          docker build -t $IMAGE .
 
       - name: Push Docker image
         run: docker push $IMAGE
