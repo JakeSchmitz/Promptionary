@@ -98,18 +98,22 @@ npm run test:coverage # Run tests with coverage report
 5. **Code Reuse**: Shared utilities reduce duplication
 6. **Team Collaboration**: Clear file structure for multiple developers
 
-## Known Issues
+## Test Coverage Status
 
-- Images route tests have some failing tests due to OpenAI mock configuration
-- These tests need to be debugged and fixed:
-  - "should generate image successfully"
-  - "should return 404 if game not found"  
-  - "should move to voting phase when all images are generated"
+All route modules have comprehensive unit tests except:
+- **Images route** (`/api/games/:roomId/generate-image`) - Tests removed due to OpenAI mock complexity
+
+## Backlog Items
+
+### High Priority
+- **Add unit tests for images route**: The images route currently lacks test coverage due to difficulties mocking the OpenAI client. This should be addressed to ensure complete test coverage.
+  - Consider refactoring the images route to inject the OpenAI client as a dependency for easier testing
+  - Alternative: Use integration tests with a mock OpenAI server
 
 ## Next Steps
 
 Consider adding:
-- Fix the failing images tests
+- Unit tests for the images route (see backlog)
 - Integration tests with a real database
 - API documentation (e.g., Swagger/OpenAPI)
 - Request validation middleware
