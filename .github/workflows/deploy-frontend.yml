@@ -3,104 +3,96 @@ name: Deploy Frontend to GKE
 on:
   push:
     branches: [main]
+    paths:
+      - 'apps/frontend/**'
+      - 'k8s/frontend/**'
+      - '.github/workflows/deploy-frontend.yml'
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GKE_CLUSTER: promptionary-gke
+  GKE_ZONE: us-central1-a
+  IMAGE_NAME: promptionary-frontend
+  REGISTRY_HOSTNAME: gcr.io
 
 jobs:
-  build-and-deploy:
+  test:
     runs-on: ubuntu-latest
-    env:
-      PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-      GKE_CLUSTER: promptionary-gke
-      GKE_ZONE: us-central1
-      IMAGE: gcr.io/${{ secrets.GCP_PROJECT_ID }}/promptionary-frontend:latest
+    defaults:
+      run:
+        working-directory: apps/frontend
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: apps/frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test -- --passWithNoTests
+
+      - name: Build application
+        run: npm run build
+
+  build-and-deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-
-      - name: Authenticate to Google Cloud
-        run: |
-          echo '${{ secrets.GCP_SA_KEY }}' > /tmp/service-account-key.json
-          gcloud auth activate-service-account --key-file=/tmp/service-account-key.json
+          project_id: ${{ env.PROJECT_ID }}
 
       - name: Configure Docker for GCR
         run: gcloud auth configure-docker
 
-      - name: Install gke-gcloud-auth-plugin
+      - name: Build and push Docker image
         run: |
-          gcloud components install gke-gcloud-auth-plugin
-          mkdir -p $HOME/.kube
-          touch $HOME/.kube/config
-          echo "use-gcp-auth-plugin: true" >> $HOME/.kube/config
+          IMAGE_TAG="${{ env.REGISTRY_HOSTNAME }}/${{ env.PROJECT_ID }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
+          docker build -t $IMAGE_TAG apps/frontend
+          docker push $IMAGE_TAG
+          
+          # Also tag as latest
+          docker tag $IMAGE_TAG ${{ env.REGISTRY_HOSTNAME }}/${{ env.PROJECT_ID }}/${{ env.IMAGE_NAME }}:latest
+          docker push ${{ env.REGISTRY_HOSTNAME }}/${{ env.PROJECT_ID }}/${{ env.IMAGE_NAME }}:latest
+
+      - name: Install gke-gcloud-auth-plugin
+        run: gcloud components install gke-gcloud-auth-plugin
 
       - name: Get GKE credentials
-        run: gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE
+        run: gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }}
 
-      - name: Build Docker image
+      - name: Install Kustomize
         run: |
-          docker build -t $IMAGE -f apps/frontend/Dockerfile .
-
-      - name: Push Docker image
-        run: docker push $IMAGE
+          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+          sudo mv kustomize /usr/local/bin/
 
       - name: Deploy to GKE
         run: |
-          # Create ConfigMap for environment variables using internal service name
-          kubectl create configmap promptionary-frontend-config \
-            --from-literal=VITE_API_URL="http://promptionary-backend-service:3000" \
-            --dry-run=client -o yaml | kubectl apply -f -
+          # Update image tag in kustomization
+          cd k8s/frontend
+          kustomize edit set image gcr.io/PROJECT_ID/promptionary-frontend=${{ env.REGISTRY_HOSTNAME }}/${{ env.PROJECT_ID }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           
-          # Create or update deployment
-          kubectl apply -f - <<EOF
-          apiVersion: apps/v1
-          kind: Deployment
-          metadata:
-            name: promptionary-frontend
-          spec:
-            replicas: 1
-            selector:
-              matchLabels:
-                app: promptionary-frontend
-            template:
-              metadata:
-                labels:
-                  app: promptionary-frontend
-              spec:
-                containers:
-                - name: promptionary-frontend
-                  image: $IMAGE
-                  ports:
-                  - containerPort: 80
-                  envFrom:
-                  - configMapRef:
-                      name: promptionary-frontend-config
-                  resources:
-                    requests:
-                      memory: "64Mi"
-                      cpu: "50m"
-                    limits:
-                      memory: "128Mi"
-                      cpu: "100m"
-          EOF
+          # Apply the manifests
+          kustomize build . | kubectl apply -f -
           
-          # Create service for internal communication
-          kubectl apply -f - <<EOF
-          apiVersion: v1
-          kind: Service
-          metadata:
-            name: promptionary-frontend-service
-          spec:
-            selector:
-              app: promptionary-frontend
-            ports:
-            - protocol: TCP
-              port: 80
-              targetPort: 80
-            type: ClusterIP
-          EOF
-          
-          # Create external LoadBalancer service
-          kubectl expose deployment promptionary-frontend --type=LoadBalancer --port=80 --target-port=80 --name=promptionary-frontend-external || true 
+          # Wait for rollout to complete
+          kubectl rollout status deployment/promptionary-frontend --timeout=5m 
