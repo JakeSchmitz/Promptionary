@@ -2,6 +2,62 @@
 > promptionary-backend@1.0.0 dev
 > ts-node-dev --respawn --transpile-only src/server.ts
 
-[INFO] 10:07:54 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.8.3)
+[INFO] 15:04:38 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.8.3)
 Server running at http://localhost:3000
-Environment: { NODE_ENV: undefined, PORT: '3000', OPENAI_API_KEY: 'Set' }
+Environment: { NODE_ENV: undefined, PORT: 3000, OPENAI_API_KEY: 'Set' }
+2025-06-21T19:04:49.305Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Error fetching game: PrismaClientInitializationError: 
+Invalid `prisma.game.findUnique()` invocation in
+/Users/jacobschmitz/Development/Promptionary/apps/backend/src/routes/games.ts:100:36
+
+   97 const { roomId } = req.params;
+   98 console.log('Fetching game state for room:', roomId);
+   99 
+→ 100 const game = await prisma.game.findUnique(
+Can't reach database server at `promptionary-postgres-local:5432`
+
+Please make sure your database server is running at `promptionary-postgres-local:5432`.
+    at Zn.handleRequestError (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/@prisma/client/runtime/library.js:121:7759)
+    at Zn.handleAndLogRequestError (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/@prisma/client/runtime/library.js:121:6784)
+    at Zn.request (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/@prisma/client/runtime/library.js:121:6491)
+    at l (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/@prisma/client/runtime/library.js:130:9778)
+    at /Users/jacobschmitz/Development/Promptionary/apps/backend/src/routes/games.ts:100:18 {
+  clientVersion: '6.10.1',
+  errorCode: undefined,
+  retryable: undefined
+}
+2025-06-21T19:04:49.326Z - GET /api/games/o85a5i
+Fetching game state for room: o85a5i
+Error fetching game: PrismaClientInitializationError: 
+Invalid `prisma.game.findUnique()` invocation in
+/Users/jacobschmitz/Development/Promptionary/apps/backend/src/routes/games.ts:100:36
+
+   97 const { roomId } = req.params;
+   98 console.log('Fetching game state for room:', roomId);
+   99 
+→ 100 const game = await prisma.game.findUnique(
+Can't reach database server at `promptionary-postgres-local:5432`
+
+Please make sure your database server is running at `promptionary-postgres-local:5432`.
+    at Zn.handleRequestError (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/@prisma/client/runtime/library.js:121:7759)
+    at Zn.handleAndLogRequestError (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/@prisma/client/runtime/library.js:121:6784)
+    at Zn.request (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/@prisma/client/runtime/library.js:121:6491)
+    at l (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/@prisma/client/runtime/library.js:130:9778)
+    at /Users/jacobschmitz/Development/Promptionary/apps/backend/src/routes/games.ts:100:18 {
+  clientVersion: '6.10.1',
+  errorCode: undefined,
+  retryable: undefined
+}
+2025-06-21T19:04:53.222Z - POST /api/games
+Error creating game: PrismaClientInitializationError: Can't reach database server at `promptionary-postgres-local:5432`
+
+Please make sure your database server is running at `promptionary-postgres-local:5432`.
+    at r (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/@prisma/client/runtime/library.js:112:2565)
+    at Gr.transaction (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/@prisma/client/runtime/library.js:111:12343)
+    at Proxy._transactionWithCallback (/Users/jacobschmitz/Development/Promptionary/apps/backend/node_modules/@prisma/client/runtime/library.js:130:8063)
+    at /Users/jacobschmitz/Development/Promptionary/apps/backend/src/routes/games.ts:18:18 {
+  clientVersion: '6.10.1',
+  errorCode: 'P1001',
+  retryable: undefined
+}
