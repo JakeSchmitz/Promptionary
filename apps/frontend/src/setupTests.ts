@@ -3,14 +3,24 @@ import '@testing-library/jest-dom';
 declare global {
   var localStorage: Storage;
   var console: Console;
+  var process: {
+    env: {
+      [key: string]: string | undefined;
+    };
+  };
 }
+
+// Set up process.env for transformed code
+process.env.VITE_API_URL = 'http://localhost:3000/api';
+process.env.VITE_GOOGLE_CLIENT_ID = 'test-client-id';
 
 // Mock import.meta.env for Vite environment variables
 Object.defineProperty(globalThis, 'import', {
   value: {
     meta: {
       env: {
-        VITE_API_URL: 'http://localhost:3000/api'
+        VITE_API_URL: 'http://localhost:3000/api',
+        VITE_GOOGLE_CLIENT_ID: 'test-client-id'
       }
     }
   },
