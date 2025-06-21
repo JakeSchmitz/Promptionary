@@ -17,7 +17,7 @@ import {
   Divider,
 } from '@chakra-ui/react';
 import { useGame } from '../context/GameContext';
-import { gameWords } from '../../shared/data/words';
+import { gameWords } from '../data/words';
 import { API_URL } from '../utils/env';
 
 const ROUND_DURATION = 60; // 60 seconds for prompt phase

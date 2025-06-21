@@ -13,7 +13,7 @@ const ROUND_DURATION = 60; // 60 seconds per round
 
 // Enable CORS for all routes
 app.use(cors({
-  origin: 'http://localhost:5173', // Vite's default port
+  origin: ['http://localhost:5173', 'http://localhost:8080'], // Allow both Vite dev server and Docker setup
   methods: ['GET', 'POST', 'PATCH'],
   credentials: true
 }));
