@@ -1,0 +1,7 @@
+# Production environment variables
+# Copy this file to prod.tfvars and fill in your actual values
+
+project_id = "your-gcp-project-id"
+environment = "prod"
+region = "us-central1"
+db_password = "your-secure-database-password" 
