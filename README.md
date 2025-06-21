@@ -1,5 +1,7 @@
 # Promptionary
 
+A multiplayer game where players craft creative AI prompts, vote on the best submissions, and discover how AI interprets their ideas.
+
 A game for friends and fun
 
 ## About
@@ -84,3 +86,58 @@ This will start both the backend (on port 3000) and frontend (on port 5173) serv
 - Backend: Express.js, TypeScript
 - Database: PostgreSQL with Prisma ORM
 - AI: OpenAI DALL-E 3
+
+## CI/CD and Deployment
+
+### Continuous Integration
+
+The project uses GitHub Actions for CI/CD with the following workflows:
+
+1. **PR Checks**: Automatically runs on pull requests to main
+   - Frontend: Linting, tests, and build verification
+   - Backend: Type checking and build verification
+   - All checks must pass before merging
+
+2. **Production Deployment**: Automatically deploys to GKE on push to main
+   - Builds and pushes Docker images
+   - Deploys to production Kubernetes cluster
+   - Runs database migrations
+
+3. **Test Environment Deployment**: Manual deployment of any branch
+   - Trigger via GitHub Actions UI
+   - Select any branch to deploy
+   - Separate test environment with its own database
+
+### Infrastructure
+
+The infrastructure is managed with Terraform and includes:
+- Google Kubernetes Engine (GKE) clusters
+- Cloud SQL PostgreSQL databases
+- VPC networking
+- Load balancers for external access
+
+See [infra/README.md](infra/README.md) for detailed infrastructure documentation.
+
+### Setting up Branch Protection
+
+To enable required PR checks:
+1. Go to Settings → Branches in your GitHub repository
+2. Add a rule for the `main` branch
+3. Enable "Require status checks to pass before merging"
+4. Select the required checks:
+   - Frontend Tests and Linting
+   - Backend Type Checking and Build
+
+### Deployment Commands
+
+Deploy to production (automatic on push to main):
+```bash
+git push origin main
+```
+
+Deploy to test environment (manual via GitHub Actions):
+1. Go to Actions → Deploy to Test Environment
+2. Enter the branch name
+3. Run the workflow
+
+For detailed workflow documentation, see [.github/workflows/README.md](.github/workflows/README.md).

@@ -1,5 +1,5 @@
 resource "google_container_cluster" "primary" {
-  name     = "promptionary-gke"
+  name     = "promptionary-gke-${var.environment}"
   location = var.region
 
   network    = google_compute_network.vpc_network.id
@@ -11,7 +11,7 @@ resource "google_container_cluster" "primary" {
   ip_allocation_policy {}
 
   node_config {
-    machine_type = "e2-micro"
+    machine_type = var.environment == "prod" ? "e2-small" : "e2-micro"
     disk_size_gb = 20
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"

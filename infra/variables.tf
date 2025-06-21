@@ -9,6 +9,17 @@ variable "region" {
   default     = "us-central1"
 }
 
+variable "environment" {
+  description = "Environment name (prod or test)"
+  type        = string
+  default     = "prod"
+  
+  validation {
+    condition     = contains(["prod", "test"], var.environment)
+    error_message = "Environment must be either 'prod' or 'test'."
+  }
+}
+
 variable "db_name" {
   description = "The name of the Cloud SQL database"
   type        = string

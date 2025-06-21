@@ -1,10 +1,16 @@
 resource "google_sql_database_instance" "main" {
-  name             = var.db_name
+  name             = "${var.db_name}-${var.environment}"
   database_version = "POSTGRES_15"
   region           = var.region
 
   settings {
-    tier = "db-f1-micro"
+    tier = var.environment == "prod" ? "db-f1-micro" : "db-f1-micro"
+    disk_size    = var.environment == "prod" ? 10 : 10
+    disk_type    = "PD_SSD"
+    
+    backup_configuration {
+      enabled = var.environment == "prod"
+    }
   }
 }
 
@@ -38,4 +44,9 @@ output "db_user" {
 output "db_instance_name" {
   description = "Cloud SQL instance name"
   value       = google_sql_database_instance.main.name
+}
+
+output "gke_cluster_name" {
+  description = "GKE cluster name"
+  value       = google_container_cluster.primary.name
 } 

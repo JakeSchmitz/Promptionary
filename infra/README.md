@@ -1,32 +1,106 @@
-# Infrastructure as Code for Promptionary
+# Promptionary Infrastructure
 
-This directory contains Terraform configuration to provision Google Kubernetes Engine (GKE), Cloud SQL (PostgreSQL), and required networking for Promptionary on Google Cloud Platform.
+This directory contains Terraform configurations for deploying the Promptionary infrastructure on Google Cloud Platform.
+
+## Architecture
+
+The infrastructure supports multiple environments:
+- **Production** (`prod`): Main environment for users
+- **Test** (`test`): Testing environment for deploying any branch
+
+Each environment includes:
+- GKE cluster for running containers
+- Cloud SQL PostgreSQL database
+- VPC network with subnet
+- Load balancers for external access
 
 ## Prerequisites
-- [Terraform](https://www.terraform.io/) v1.3+
-- Google Cloud SDK (`gcloud`)
-- A Google Cloud project with billing enabled
 
-## Setup Steps
-1. Authenticate with Google Cloud:
-   ```bash
-   gcloud auth application-default login
-   gcloud config set project <YOUR_PROJECT_ID>
-   ```
-2. Initialize Terraform:
-   ```bash
-   cd infra
-   terraform init
-   ```
-3. Review and apply the configuration:
-   ```bash
-   terraform plan
-   terraform apply
-   ```
+1. Google Cloud SDK installed
+2. Terraform installed (>= 1.3.0)
+3. GCP project with billing enabled
+4. Service account with appropriate permissions
 
-This will provision:
-- A GKE cluster for running backend and frontend containers
-- A Cloud SQL PostgreSQL instance
-- Networking (VPC, subnets, firewall rules)
+## Terraform Workspaces
 
-See the individual `.tf` files for resource details. 
+We use Terraform workspaces to manage multiple environments:
+
+```bash
+# Create workspaces
+terraform workspace new prod
+terraform workspace new test
+
+# Switch between workspaces
+terraform workspace select prod
+terraform workspace select test
+```
+
+## Deployment
+
+### Initial Setup
+
+1. Initialize Terraform:
+```bash
+terraform init
+```
+
+2. Create workspaces:
+```bash
+terraform workspace new prod
+terraform workspace new test
+```
+
+### Deploy Production Environment
+
+```bash
+terraform workspace select prod
+terraform plan -var-file=environments/prod.tfvars
+terraform apply -var-file=environments/prod.tfvars
+```
+
+### Deploy Test Environment
+
+```bash
+terraform workspace select test
+terraform plan -var-file=environments/test.tfvars
+terraform apply -var-file=environments/test.tfvars
+```
+
+## Required Variables
+
+- `project_id`: Your GCP project ID
+- `db_password`: Password for the PostgreSQL database
+
+## GitHub Secrets Required
+
+For the GitHub Actions workflows to work, you need to set up the following secrets:
+
+### For Production:
+- `GCP_PROJECT_ID`: Your GCP project ID
+- `GCP_SA_KEY`: Service account key JSON
+- `DB_USER`: Database username (default: postgres)
+- `DB_PASSWORD`: Database password
+- `DB_NAME`: Database name (default: promptionary)
+- `DB_INSTANCE_CONNECTION_NAME`: Cloud SQL instance connection name
+- `OPENAI_API_KEY`: OpenAI API key
+
+### For Test Environment:
+- `TEST_DB_USER`: Test database username
+- `TEST_DB_PASSWORD`: Test database password
+- `TEST_DB_NAME`: Test database name
+- `TEST_DB_INSTANCE_CONNECTION_NAME`: Test Cloud SQL instance connection name
+
+## Resource Naming Convention
+
+Resources are named with the environment suffix:
+- Production: `promptionary-{resource}-prod`
+- Test: `promptionary-{resource}-test`
+
+## Outputs
+
+After deployment, Terraform will output:
+- `db_connection_name`: Cloud SQL connection name
+- `db_name`: Database name
+- `db_user`: Database username
+- `db_instance_name`: Cloud SQL instance name
+- `gke_cluster_name`: GKE cluster name 
