@@ -1,15 +1,7 @@
-// Get API URL from environment or use relative path for production
-let API_BASE_URL = '/api';
+import { API_URL } from './env';
 
-try {
-  // Try to access import.meta.env (works in Vite)
-  API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
-} catch {
-  // In test environment, check process.env
-  if (typeof process !== 'undefined' && process.env?.VITE_API_URL) {
-    API_BASE_URL = process.env.VITE_API_URL;
-  }
-}
+// Get API URL from environment or use relative path for production
+const API_BASE_URL = API_URL;
 
 export const createGame = async (roomId: string) => {
   const res = await fetch(`${API_BASE_URL}/games`, {

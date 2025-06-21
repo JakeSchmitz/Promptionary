@@ -8,6 +8,8 @@ export default {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^./utils/env$': '<rootDir>/src/utils/env.node.ts',
     '^../utils/env$': '<rootDir>/src/utils/env.node.ts',
+    '^./env$': '<rootDir>/src/utils/env.node.ts',
+    '^../env$': '<rootDir>/src/utils/env.node.ts',
   },
   transform: {
     '^.+\\.(t|j)sx?$': [
