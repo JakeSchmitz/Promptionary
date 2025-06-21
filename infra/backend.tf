@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    # bucket = "YOUR_TERRAFORM_STATE_BUCKET"
-    # prefix = "promptionary"
+    bucket = "promptionary-terraform-state"
+    prefix = "promptionary"
   }
 }
