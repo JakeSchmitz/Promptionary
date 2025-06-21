@@ -38,35 +38,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// OpenAI configuration
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-// Example targets for testing
-const EXAMPLE_TARGETS = [
-  {
-    word: 'cat',
-    exclusionWords: ['kitten', 'feline', 'pet', 'animal', 'meow']
-  },
-  {
-    word: 'mountain',
-    exclusionWords: ['hill', 'peak', 'climb', 'rock', 'summit']
-  },
-  {
-    word: 'ocean',
-    exclusionWords: ['sea', 'water', 'beach', 'wave', 'fish']
-  },
-  {
-    word: 'forest',
-    exclusionWords: ['tree', 'wood', 'nature', 'green', 'leaf']
-  },
-  {
-    word: 'castle',
-    exclusionWords: ['fortress', 'palace', 'kingdom', 'royal', 'medieval']
-  }
-];
-
 // Health check endpoints
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
