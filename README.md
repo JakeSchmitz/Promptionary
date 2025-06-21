@@ -141,3 +141,16 @@ Deploy to test environment (manual via GitHub Actions):
 3. Run the workflow
 
 For detailed workflow documentation, see [.github/workflows/README.md](.github/workflows/README.md).
+
+### Domain Configuration
+
+The application is configured to be accessible at:
+- **Production**: https://promptionary.ai and https://www.promptionary.ai
+- **Test**: https://test.promptionary.ai
+
+Domain setup includes:
+- Automatic SSL certificate provisioning
+- DNS management through Google Cloud DNS
+- Forced HTTPS for all traffic
+
+For detailed domain setup instructions, see [infra/DOMAIN_SETUP.md](infra/DOMAIN_SETUP.md).

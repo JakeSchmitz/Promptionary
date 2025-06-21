@@ -1,4 +1,4 @@
-THIS SHOULD BE A LINTER ERRORname: Deploy to Test Environment
+name: Deploy to Test Environment
 
 on:
   workflow_dispatch:
@@ -199,7 +199,7 @@ jobs:
         run: |
           # Create ConfigMap for environment variables
           kubectl create configmap promptionary-frontend-config \
-            --from-literal=VITE_API_URL="http://promptionary-backend-service:3000" \
+            --from-literal=NODE_ENV="production" \
             --from-literal=ENVIRONMENT="test" \
             --dry-run=client -o yaml | kubectl apply -f -
           

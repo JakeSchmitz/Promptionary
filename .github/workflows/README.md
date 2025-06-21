@@ -32,7 +32,7 @@ This directory contains GitHub Actions workflows for CI/CD of the Promptionary a
 - Pushes to Google Container Registry
 - Deploys to `promptionary-gke-prod` cluster
 - Runs database migrations
-- Creates LoadBalancer service
+- Creates NodePort service for internal access
 
 ### 3. Deploy Frontend (`deploy-frontend.yml`)
 
@@ -44,7 +44,8 @@ This directory contains GitHub Actions workflows for CI/CD of the Promptionary a
 - Builds Docker image
 - Pushes to Google Container Registry
 - Deploys to `promptionary-gke-prod` cluster
-- Creates LoadBalancer service
+- Creates NodePort service
+- Deploys Ingress for domain routing (promptionary.ai, www.promptionary.ai)
 
 ### 4. Deploy to Test Environment (`deploy-test.yml`)
 
@@ -59,7 +60,8 @@ This directory contains GitHub Actions workflows for CI/CD of the Promptionary a
 - Checks out the specified branch
 - Builds and deploys backend to `promptionary-gke-test`
 - Builds and deploys frontend to `promptionary-gke-test`
-- Outputs the service URLs for testing
+- Deploys Ingress for test.promptionary.ai domain
+- Outputs the test URL (https://test.promptionary.ai)
 
 ## Branch Protection
 
@@ -76,6 +78,18 @@ To enforce PR checks before merging:
 ## Required GitHub Secrets
 
 See [infra/README.md](../../infra/README.md) for the complete list of required secrets.
+
+## Domain URLs
+
+Once deployed, the application will be accessible at:
+
+- **Production**: 
+  - https://promptionary.ai
+  - https://www.promptionary.ai
+- **Test**: 
+  - https://test.promptionary.ai
+
+SSL certificates are automatically provisioned and may take up to 15 minutes to become active.
 
 ## Usage Examples
 

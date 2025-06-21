@@ -122,3 +122,40 @@ If issues occur:
 - The new setup maintains backward compatibility with existing deployments
 - No application code changes are required
 - Database data is preserved during the migration
+
+## Domain Migration
+
+If you've already migrated to the multi-environment setup and want to add domain support:
+
+1. **Reserve Static IPs**:
+   ```bash
+   gcloud compute addresses create promptionary-prod-ip --global
+   gcloud compute addresses create promptionary-test-ip --global
+   ```
+
+2. **Update Terraform**:
+   ```bash
+   terraform workspace select prod
+   terraform apply -var-file=environments/prod.tfvars
+   
+   terraform workspace select test
+   terraform apply -var-file=environments/test.tfvars
+   ```
+
+3. **Update Domain Nameservers**:
+   - Get nameservers from terraform output
+   - Update at your domain registrar
+
+4. **Deploy Updated Applications**:
+   - Push to main branch (triggers production deployment with Ingress)
+   - Run test deployment workflow for test environment
+
+5. **Wait for SSL Certificates**:
+   - Certificate provisioning takes up to 15 minutes
+   - Check status: `kubectl get managedcertificate`
+
+6. **Clean Up Old LoadBalancers** (optional):
+   ```bash
+   kubectl delete service promptionary-frontend-external
+   kubectl delete service promptionary-backend-external
+   ```
