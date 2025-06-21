@@ -10,7 +10,7 @@ jobs:
     env:
       PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
       GKE_CLUSTER: promptionary-gke
-      GKE_ZONE: us-central1-a
+      GKE_ZONE: us-central1
       IMAGE: gcr.io/${{ secrets.GCP_PROJECT_ID }}/promptionary-frontend:latest
     steps:
       - name: Checkout code
@@ -41,9 +41,9 @@ jobs:
 
       - name: Deploy to GKE
         run: |
-          # Create ConfigMap for environment variables
+          # Create ConfigMap for environment variables using internal service name
           kubectl create configmap promptionary-frontend-config \
-            --from-literal=VITE_API_URL="${{ secrets.API_URL }}" \
+            --from-literal=VITE_API_URL="http://promptionary-backend-service:3000" \
             --dry-run=client -o yaml | kubectl apply -f -
           
           # Create or update deployment
@@ -79,5 +79,21 @@ jobs:
                       cpu: "200m"
           EOF
           
-          # Create service if it doesn't exist
-          kubectl expose deployment promptionary-frontend --type=LoadBalancer --port=80 --target-port=80 || true 
+          # Create service for internal communication
+          kubectl apply -f - <<EOF
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: promptionary-frontend-service
+          spec:
+            selector:
+              app: promptionary-frontend
+            ports:
+            - protocol: TCP
+              port: 80
+              targetPort: 80
+            type: ClusterIP
+          EOF
+          
+          # Create external LoadBalancer service
+          kubectl expose deployment promptionary-frontend --type=LoadBalancer --port=80 --target-port=80 --name=promptionary-frontend-external || true 
