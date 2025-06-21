@@ -2,6 +2,7 @@ resource "google_sql_database_instance" "main" {
   name             = "${var.db_name}-${var.environment}"
   database_version = "POSTGRES_15"
   region           = var.region
+  deletion_protection = false
 
   settings {
     tier = var.environment == "prod" ? "db-f1-micro" : "db-f1-micro"
